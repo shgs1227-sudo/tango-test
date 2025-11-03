@@ -651,7 +651,7 @@
         
         /* Content Padding for Bottom Nav */
         .content-wrapper {
-            padding-bottom: 90px;
+            padding-bottom: 150px;
         }
         
         /* Scrollbar - Hidden on Mobile */
@@ -1206,9 +1206,12 @@
             }
         });
         
-        // Tap to reveal answer
+        // Tap to toggle answer
         questionDisplay.addEventListener('click', () => {
-            if (!state.answerVisible) {
+            if (state.answerVisible) {
+                answerSection.classList.add('hidden');
+                state.answerVisible = false;
+            } else {
                 answerSection.classList.remove('hidden');
                 state.answerVisible = true;
             }
