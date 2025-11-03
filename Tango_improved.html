@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Memory Test App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles - Theme Support */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Dark Theme Colors */
+            --bg-gradient-start: #1e3a8a;
+            --bg-gradient-end: #1e293b;
+            --bg-radial-1: rgba(59, 130, 246, 0.15);
+            --bg-radial-2: rgba(14, 165, 233, 0.15);
+            --glass-bg: rgba(30, 58, 138, 0.6);
+            --glass-border: rgba(100, 150, 255, 0.1);
+            --glass-shadow: rgba(0, 0, 0, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #e0f2fe;
+            --text-muted: #cbd5e1;
+            --input-bg: rgba(30, 41, 59, 0.6);
+            --input-border: rgba(6, 182, 212, 0.3);
+            --input-focus-bg: rgba(30, 41, 59, 0.8);
+            --input-text: #ffffff;
+            --summary-bg: rgba(59, 130, 246, 0.15);
+            --summary-hover: rgba(59, 130, 246, 0.25);
+            --summary-open: rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="light"] {
+            /* Light Theme Colors */
+            --bg-gradient-start: #e0f2fe;
+            --bg-gradient-end: #f0f9ff;
+            --bg-radial-1: rgba(59, 130, 246, 0.08);
+            --bg-radial-2: rgba(14, 165, 233, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(59, 130, 246, 0.3);
+            --input-focus-bg: rgba(255, 255, 255, 1);
+            --input-text: #1e293b;
+            --summary-bg: rgba(59, 130, 246, 0.1);
+            --summary-hover: rgba(59, 130, 246, 0.15);
+            --summary-open: rgba(59, 130, 246, 0.2);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.3s ease;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--bg-radial-1), transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--bg-radial-2), transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 640px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 4px 12px var(--glass-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-size: 24px;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+        
+        /* Glass Morphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px 0 var(--glass-shadow),
+                inset 0 0 0 1px var(--glass-border);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+        
+        .details-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 12px 40px 0 var(--glass-shadow),
+                inset 0 0 0 1px var(--glass-border);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .details-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 16px 48px 0 var(--glass-shadow),
+                inset 0 0 0 1px var(--glass-border);
+        }
+        
+        details {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        summary {
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            background: var(--summary-bg);
+            transition: all 0.4s ease;
+            position: relative;
+            text-align: center;
+        }
+        
+        summary:hover {
+            background: var(--summary-hover);
+        }
+        
+        details[open] summary {
+            background: var(--summary-open);
+            color: var(--text-primary);
+            border-bottom: 2px solid rgba(14, 165, 233, 0.4);
+        }
+        
+        .summary-indicator {
+            margin-left: 0.75rem;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+        
+        details[open] .summary-indicator {
+            transform: rotate(180deg);
+        }
+        
+        .phrase-content {
+            padding: 2rem 2rem 2.5rem;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .reading {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .meaning {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        
+        /* Buttons - Symbols Only */
+        .report-btn {
+            position: relative;
+            border: none;
+            border-radius: 20px;
+            font-size: 4rem;
+            font-weight: 900;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .report-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .report-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .report-btn:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+        
+        .report-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .btn-review {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        
+        .btn-correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        /* Navigation Buttons */
+        .nav-btn {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+            font-weight: 700;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Edit Button */
+        .edit-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .edit-btn:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
+        }
+        
+        /* Statistics Badge */
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-badge-correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .stat-badge-review {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        
+        .stat-badge-incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .stat-badge-unevaluated {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+        }
+        
+        .stat-badge-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            height: 12px;
+            position: relative;
+        }
+        
+        [data-theme="light"] .progress-container {
+            background: rgba(203, 213, 225, 0.5);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4 0%, #0ea5e9 100%);
+            border-radius: 12px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
+        }
+        
+        .progress-bar-unevaluated {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+        }
+        
+        .progress-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Modal */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Common Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(6, 182, 212, 0.5);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(16, 185, 129, 0.5);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Input Forms - FIXED COLOR */
+        textarea, input[type="text"], input[type="number"], input[type="checkbox"] {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 14px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            color: var(--input-text) !important;
+        }
+        
+        input[type="checkbox"] {
+            padding: 0;
+            width: auto;
+            height: auto;
+        }
+        
+        textarea::placeholder, input[type="text"]::placeholder, input[type="number"]::placeholder {
+            color: var(--text-muted);
+        }
+        
+        textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #06b6d4;
+            background: var(--input-focus-bg);
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Loading */
+        .loading-dot {
+            animation: bounce 0.6s infinite alternate;
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+        }
+        
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-12px); }
+        }
+        
+        /* Title */
+        .app-title {
+            color: var(--text-primary);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        
+        /* Scrollbar Customization */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 10px;
+        }
+        
+        [data-theme="light"] ::-webkit-scrollbar-track {
+            background: rgba(203, 213, 225, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        }
+        
+        /* View Transition Animation */
+        .view-transition {
+            animation: viewFadeIn 0.5s ease;
+        }
+        
+        @keyframes viewFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Text Color Adjustments */
+        .text-light {
+            color: var(--text-primary);
+        }
+        
+        .text-muted {
+            color: var(--text-muted);
+        }
+        
+        label {
+            color: var(--text-primary);
+        }
+        
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+        🌙
+    </button>
+
+    <!-- Main Container -->
+    <div id="app" class="container mx-auto mt-4">
+
+        <h1 class="text-4xl font-black text-center mb-8 app-title">📚 Vocabulary Memory Test</h1>
+        
+        <!-- Status/Load Display -->
+        <div id="status-message" class="text-center mb-4 font-semibold" style="color: #06b6d4;">
+            <!-- JavaScript will insert content here -->
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="hidden text-center p-8 view-transition">
+            <div class="flex justify-center space-x-3">
+                <div class="w-4 h-4 rounded-full loading-dot"></div>
+                <div class="w-4 h-4 rounded-full loading-dot"></div>
+                <div class="w-4 h-4 rounded-full loading-dot"></div>
+            </div>
+            <p class="mt-4 font-medium" style="color: #06b6d4;">Loading data...</p>
+        </div>
+
+        <!-- Setup View / Word Registration Screen -->
+        <div id="setup-view" class="glass-card p-8 space-y-6 view-transition">
+            <div>
+                <h2 class="text-2xl font-bold text-light mb-2">1. Register/Add Words to Database</h2>
+                <p class="text-sm text-muted">Enter words in the following format and press "Add to DB".<br>(Format: "word_reading_meaning" or "word_meaning")</p>
+            </div>
+            <textarea id="word-input" class="w-full h-48 text-sm" placeholder="Example:&#10;wordA_readingA_meaningA&#10;wordB_meaningB&#10;wordC_readingC_meaningC"></textarea>
+            <button id="save-words-btn" class="w-full btn-primary">
+                Add Words to Database
+            </button>
+
+            <div class="mt-8 pt-6 border-t-2" style="border-color: rgba(6, 182, 212, 0.3);">
+                <h2 class="text-2xl font-bold text-light mb-2">2. Resume Test</h2>
+                <p id="resume-info" class="text-sm text-muted mb-3">No saved test data available.</p>
+                <button id="resume-test-btn" class="w-full btn-secondary" disabled>
+                    Resume Test (<span id="last-updated-time">--</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- Test View -->
+        <div id="test-view" class="hidden view-transition">
+            
+            <!-- Reverse Mode Toggle -->
+            <div class="glass-card p-4 mb-4 flex items-center justify-between">
+                <span class="text-light font-semibold">🔄 Reverse Mode (Meaning → Word)</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="reverse-mode-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div id="word-display" class="details-card mb-6">
+                <!-- Word Display Area -->
+                <details id="word-details">
+                    <summary id="question-word">
+                        Start Test
+                        <span class="summary-indicator">▼</span>
+                    </summary>
+                    <div class="phrase-content">
+                        <div id="answer-reading" class="reading">Reading</div>
+                        <div id="answer-meaning" class="meaning">Meaning</div>
+                        <div class="mt-4">
+                            <button id="edit-word-btn" class="edit-btn">✏️ Edit This Word</button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between gap-3 mb-4">
+                <button id="prev-word-btn" class="nav-btn flex-1">
+                    ← Back
+                </button>
+                <button id="next-word-btn" class="nav-btn flex-1">
+                    Next →
+                </button>
+            </div>
+
+            <!-- Self-Report Buttons - Symbols Only -->
+            <div id="report-buttons" class="flex justify-between gap-4 mb-6">
+                <button data-result="incorrect" class="report-btn flex-1 btn-incorrect">
+                    ×
+                </button>
+                <button data-result="review" class="report-btn flex-1 btn-review">
+                    △
+                </button>
+                <button data-result="correct" class="report-btn flex-1 btn-correct">
+                    〇
+                </button>
+            </div>
+            
+            <!-- Statistics - Badge Design + Progress Bars -->
+            <div id="stats-display" class="glass-card p-6 space-y-4">
+                <!-- Unevaluated Words Progress Bar (NEW!) -->
+                <div id="unevaluated-progress-section" class="pb-4 border-b-2" style="border-color: rgba(245, 158, 11, 0.4);">
+                    <p class="progress-label">📋 Unevaluated Words (<span id="unevaluated-progress-text">0 / 0</span>)</p>
+                    <div class="progress-container">
+                        <div id="unevaluated-progress-bar" class="progress-bar progress-bar-unevaluated" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-muted mt-1 text-center">These words will be shown first before probability-based selection</p>
+                </div>
+                
+                <!-- Overall Progress Bar -->
+                <div id="overall-progress-section">
+                    <p class="progress-label">Overall Progress (<span id="overall-progress-text">0 / 0</span>)</p>
+                    <div class="progress-container">
+                        <div id="overall-progress-bar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-muted mt-2 text-center"><span id="phase-status">--</span></p>
+                </div>
+                
+                <div class="border-t-2 pt-4" style="border-color: rgba(6, 182, 212, 0.3);">
+                    <p class="text-sm font-semibold text-light mb-3 text-center">Category Statistics</p>
+                    <div class="flex justify-center gap-3 flex-wrap">
+                        <div class="stat-badge stat-badge-unevaluated">
+                            <span class="stat-badge-icon">−</span>
+                            <span id="unevaluated-count">0</span>
+                        </div>
+                        <div class="stat-badge stat-badge-correct">
+                            <span class="stat-badge-icon">〇</span>
+                            <span id="correct-count">0</span>
+                        </div>
+                        <div class="stat-badge stat-badge-review">
+                            <span class="stat-badge-icon">△</span>
+                            <span id="review-count">0</span>
+                        </div>
+                        <div class="stat-badge stat-badge-incorrect">
+                            <span class="stat-badge-icon">×</span>
+                            <span id="incorrect-count">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center pt-2">
+                    <p class="text-sm text-light">Total Words: <span id="total-words-count" class="font-bold">0</span></p>
+                </div>
+            </div>
+
+            <button id="open-settings-btn" class="w-full mt-6 text-center text-sm font-semibold py-3 transition-colors" style="color: #06b6d4;">
+                ⚙️ Probability Settings & Data Management
+            </button>
+        </div>
+
+        <!-- Message Modal (instead of alert) -->
+        <div id="custom-modal" class="modal fixed inset-0 flex items-center justify-center hidden">
+            <div class="modal-content glass-card p-8 w-11/12 md:w-auto min-w-96">
+                <h3 id="modal-title" class="text-2xl font-bold mb-4 text-light">Notice</h3>
+                <p id="modal-message" class="text-secondary mb-6 leading-relaxed"></p>
+                <div class="flex justify-end">
+                    <button id="modal-close-btn" class="btn-primary">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Confirmation Modal -->
+        <div id="confirm-modal" class="modal fixed inset-0 flex items-center justify-center hidden">
+            <div class="modal-content glass-card p-8 w-11/12 md:w-96">
+                <h3 id="confirm-title" class="text-2xl font-bold mb-4" style="color: #ef4444;">⚠️ Warning</h3>
+                <p id="confirm-message" class="text-secondary mb-6 leading-relaxed">Are you sure you want to delete all word data and progress records? This action cannot be undone.</p>
+                <div class="flex justify-end gap-3">
+                    <button id="confirm-cancel-btn" class="bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 px-6 rounded-lg transition-all">Cancel</button>
+                    <button id="confirm-ok-btn" class="btn-danger">Delete All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal fixed inset-0 flex items-center justify-center hidden">
+            <div class="modal-content glass-card p-8 w-11/12 md:w-auto min-w-96 space-y-6">
+                <h3 class="text-2xl font-bold text-light border-b-2 pb-3" style="border-color: rgba(6, 182, 212, 0.3);">⚙️ Probability Settings</h3>
+                <p class="text-sm text-muted">Set so that the total is 100%.</p>
+                
+                <div class="space-y-4">
+                    <label class="block">
+                        <span class="font-bold text-lg flex items-center gap-2" style="color: #10b981;">
+                            <span class="text-2xl">〇</span> Correct - Re-test Probability
+                        </span>
+                        <div class="flex items-center mt-2">
+                            <input type="number" id="prob-correct" min="0" max="100" class="w-24 p-3 text-lg font-bold text-right" required>
+                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: rgba(6, 182, 212, 0.3); background: var(--input-bg);">%</span>
+                        </div>
+                    </label>
+                    
+                    <label class="block">
+                        <span class="font-bold text-lg flex items-center gap-2" style="color: #fbbf24;">
+                            <span class="text-2xl">△</span> Review - Re-test Probability
+                        </span>
+                        <div class="flex items-center mt-2">
+                            <input type="number" id="prob-review" min="0" max="100" class="w-24 p-3 text-lg font-bold text-right" required>
+                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: rgba(6, 182, 212, 0.3); background: var(--input-bg);">%</span>
+                        </div>
+                    </label>
+                    
+                    <label class="block">
+                        <span class="font-bold text-lg flex items-center gap-2" style="color: #ef4444;">
+                            <span class="text-2xl">×</span> Incorrect - Re-test Probability
+                        </span>
+                        <div class="flex items-center mt-2">
+                            <input type="number" id="prob-incorrect" min="0" max="100" class="w-24 p-3 text-lg font-bold text-right" required>
+                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: rgba(6, 182, 212, 0.3); background: var(--input-bg);">%</span>
+                        </div>
+                    </label>
+                    
+                    <div class="pt-3 text-center">
+                        <p class="text-lg font-bold text-light">Total: <span id="prob-total" class="text-2xl" style="color: #06b6d4;">0%</span></p>
+                    </div>
+                </div>
+
+                <button id="settings-save-btn" class="w-full btn-primary" disabled>
+                    Save Probability Settings
+                </button>
+
+                <!-- 評価別削除セクション -->
+                <div class="pt-6 border-t-2 mt-6" style="border-color: rgba(6, 182, 212, 0.3);">
+                    <h3 class="text-xl font-bold text-light mb-4">🗑️ Data Management</h3>
+                    
+                    <!-- 評価別削除 -->
+                    <div class="mb-6 p-4 rounded-lg" style="background: var(--summary-bg);">
+                        <h4 class="text-lg font-semibold text-light mb-3">Delete by Evaluation Status</h4>
+                        <p class="text-sm text-muted mb-4">Select which evaluation categories to delete:</p>
+                        
+                        <div class="space-y-3 mb-4">
+                            <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors hover:bg-opacity-50" style="background: var(--input-bg);">
+                                <input type="checkbox" id="delete-correct-check" class="w-5 h-5 cursor-pointer">
+                                <span class="text-light font-semibold">〇 Correct (<span id="delete-correct-count">0</span> words)</span>
+                            </label>
+                            
+                            <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors hover:bg-opacity-50" style="background: var(--input-bg);">
+                                <input type="checkbox" id="delete-review-check" class="w-5 h-5 cursor-pointer">
+                                <span class="text-light font-semibold">△ Review (<span id="delete-review-count">0</span> words)</span>
+                            </label>
+                            
+                            <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors hover:bg-opacity-50" style="background: var(--input-bg);">
+                                <input type="checkbox" id="delete-incorrect-check" class="w-5 h-5 cursor-pointer">
+                                <span class="text-light font-semibold">× Incorrect (<span id="delete-incorrect-count">0</span> words)</span>
+                            </label>
+                            
+                            <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors hover:bg-opacity-50" style="background: var(--input-bg);">
+                                <input type="checkbox" id="delete-unevaluated-check" class="w-5 h-5 cursor-pointer">
+                                <span class="text-light font-semibold">− Unevaluated (<span id="delete-unevaluated-count">0</span> words)</span>
+                            </label>
+                        </div>
+                        
+                        <button id="delete-by-status-btn" class="w-full btn-danger" disabled>
+                            Delete Selected Categories
+                        </button>
+                    </div>
+                    
+                    <!-- 全削除 -->
+                    <div class="pt-4 border-t-2" style="border-color: rgba(6, 182, 212, 0.3);">
+                        <button id="reset-data-btn" class="w-full btn-danger">
+                            Delete All Word Data and Records
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end pt-4">
+                    <button id="settings-close-btn" class="bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 px-6 rounded-lg transition-all">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Word Modal -->
+        <div id="edit-modal" class="modal fixed inset-0 flex items-center justify-center hidden">
+            <div class="modal-content glass-card p-8 w-11/12 md:w-auto min-w-96 space-y-4">
+                <h3 class="text-2xl font-bold text-light border-b-2 pb-3" style="border-color: rgba(6, 182, 212, 0.3);">✏️ Edit Word</h3>
+                
+                <div class="space-y-4">
+                    <label class="block">
+                        <span class="text-light font-semibold mb-2 block">Word</span>
+                        <input type="text" id="edit-word-input" class="w-full p-3 text-lg" required>
+                    </label>
+                    
+                    <label class="block">
+                        <span class="text-light font-semibold mb-2 block">Reading (optional)</span>
+                        <input type="text" id="edit-reading-input" class="w-full p-3 text-lg">
+                    </label>
+                    
+                    <label class="block">
+                        <span class="text-light font-semibold mb-2 block">Meaning</span>
+                        <input type="text" id="edit-meaning-input" class="w-full p-3 text-lg" required>
+                    </label>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button id="edit-cancel-btn" class="bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 px-6 rounded-lg transition-all">Cancel</button>
+                    <button id="edit-save-btn" class="btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Theme Management ---
+        const LS_THEME_KEY = 'wordTest_theme';
+        let currentTheme = localStorage.getItem(LS_THEME_KEY) || 'dark';
+        
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(LS_THEME_KEY, theme);
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+        }
+        
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+        
+        // Initialize theme
+        setTheme(currentTheme);
+        
+        // --- localStorage Key Settings ---
+        const LS_WORDS_KEY = 'wordTest_allWords';
+        const LS_STATE_KEY = 'wordTest_state';
+
+        // App State
+        let state = {
+            allWords: [],          // All word data
+            wordMap: new Map(),    // Map from wordId to word object
+            testPhase: 'unevaluated',  // 'unevaluated' | 'retest' | 'finished'
+            unevaluatedWordIds: [],    // NEW: IDs of words not yet evaluated
+            unevaluatedIndex: 0,       // NEW: Current index in unevaluated list
+            wordStatuses: {},      // { wordId: 'correct' | 'review' | 'incorrect' }
+            reviewWordPool: [],    // Lottery pool for retest (array of wordIds)
+            currentWord: null,     // Currently displayed word
+            wordHistory: [],       // History of displayed words for back/next navigation
+            historyIndex: -1,      // Current position in history
+            probabilities: {
+                correct: 0.05,     // 〇 re-test probability (5%)
+                review: 0.30,      // △ re-test probability (30%)
+                incorrect: 0.65,   // × re-test probability (65%)
+            },
+            reverseMode: false,    // Reverse mode (meaning → word)
+            lastUpdated: null,
+            fileName: null
+        };
+
+        // --- DOM Element References ---
+        const $ = (id) => document.getElementById(id);
+        const setupView = $('setup-view');
+        const testView = $('test-view');
+        const loadingIndicator = $('loading-indicator');
+        const statusMessage = $('status-message');
+        const wordInput = $('word-input');
+        const saveWordsBtn = $('save-words-btn');
+        const resumeTestBtn = $('resume-test-btn');
+        const lastUpdatedTime = $('last-updated-time');
+        const resumeInfo = $('resume-info');
+
+        const questionWord = $('question-word');
+        const answerReading = $('answer-reading');
+        const answerMeaning = $('answer-meaning');
+        const wordDetails = $('word-details');
+        const reportButtons = $('report-buttons');
+        const prevWordBtn = $('prev-word-btn');
+        const nextWordBtn = $('next-word-btn');
+        const editWordBtn = $('edit-word-btn');
+        const reverseModeToggle = $('reverse-mode-toggle');
+
+        const totalWordsCount = $('total-words-count');
+        const unevaluatedCount = $('unevaluated-count');
+        const correctCount = $('correct-count');
+        const reviewCount = $('review-count');
+        const incorrectCount = $('incorrect-count');
+        const phaseStatus = $('phase-status');
+        
+        const unevaluatedProgressBar = $('unevaluated-progress-bar');
+        const unevaluatedProgressText = $('unevaluated-progress-text');
+        const unevaluatedProgressSection = $('unevaluated-progress-section');
+        const overallProgressBar = $('overall-progress-bar');
+        const overallProgressText = $('overall-progress-text');
+
+        const customModal = $('custom-modal');
+        const modalMessage = $('modal-message');
+        const modalTitle = $('modal-title');
+        const modalCloseBtn = $('modal-close-btn');
+        
+        const confirmModal = $('confirm-modal');
+        const confirmTitle = $('confirm-title');
+        const confirmMessage = $('confirm-message');
+        const confirmOkBtn = $('confirm-ok-btn');
+        const confirmCancelBtn = $('confirm-cancel-btn');
+
+        const settingsModal = $('settings-modal');
+        const openSettingsBtn = $('open-settings-btn');
+        const settingsCloseBtn = $('settings-close-btn');
+        const settingsSaveBtn = $('settings-save-btn');
+        const probCorrectInput = $('prob-correct');
+        const probReviewInput = $('prob-review');
+        const probIncorrectInput = $('prob-incorrect');
+        const probTotal = $('prob-total');
+        const resetDataBtn = $('reset-data-btn');
+
+        const deleteCorrectCheck = $('delete-correct-check');
+        const deleteReviewCheck = $('delete-review-check');
+        const deleteIncorrectCheck = $('delete-incorrect-check');
+        const deleteUnevaluatedCheck = $('delete-unevaluated-check');
+        const deleteCorrectCount = $('delete-correct-count');
+        const deleteReviewCount = $('delete-review-count');
+        const deleteIncorrectCount = $('delete-incorrect-count');
+        const deleteUnevaluatedCount = $('delete-unevaluated-count');
+        const deleteByStatusBtn = $('delete-by-status-btn');
+
+        const editModal = $('edit-modal');
+        const editWordInput = $('edit-word-input');
+        const editReadingInput = $('edit-reading-input');
+        const editMeaningInput = $('edit-meaning-input');
+        const editSaveBtn = $('edit-save-btn');
+        const editCancelBtn = $('edit-cancel-btn');
+
+        // --- Reverse Mode Toggle ---
+        reverseModeToggle.addEventListener('change', (e) => {
+            state.reverseMode = e.target.checked;
+            saveTestState();
+            if (state.currentWord) {
+                displayWord(state.currentWord);
+            }
+        });
+
+        // --- UI Helper Functions ---
+
+        // Show custom modal
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            customModal.classList.remove('hidden');
+        }
+        modalCloseBtn.onclick = () => {
+            customModal.classList.add('hidden');
+        };
+        
+        // Show confirmation modal
+        function showConfirmModal(title, message, onConfirm) {
+            confirmTitle.textContent = title;
+            confirmMessage.textContent = message;
+            confirmModal.classList.remove('hidden');
+            
+            // Remove old event listeners and add new one
+            const newOkBtn = confirmOkBtn.cloneNode(true);
+            confirmOkBtn.parentNode.replaceChild(newOkBtn, confirmOkBtn);
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                onConfirm();
+                confirmModal.classList.add('hidden');
+            };
+        }
+        confirmCancelBtn.onclick = () => {
+            confirmModal.classList.add('hidden');
+        };
+
+        // Switch views
+        function setView(viewName) {
+            setupView.classList.add('hidden');
+            testView.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+
+            if (viewName === 'setup') {
+                setupView.classList.remove('hidden');
+            } else if (viewName === 'test') {
+                testView.classList.remove('hidden');
+            } else if (viewName === 'loading') {
+                loadingIndicator.classList.remove('hidden');
+            }
+        }
+
+        // --- localStorage Related Functions ---
+
+        /**
+         * Create word ID (using UTF-8 compatible Base64 encoding)
+         */
+        function createWordId(word, reading) {
+            const str = word + (reading || '');
+            const utf8Bytes = new TextEncoder().encode(str);
+            const binaryString = String.fromCharCode(...utf8Bytes);
+            const base64 = btoa(binaryString);
+            
+            return base64.replace(/=/g, '').slice(0, 32);
+        }
+
+        /**
+         * Save all word data to localStorage
+         */
+        function saveAllWords(words) {
+            try {
+                localStorage.setItem(LS_WORDS_KEY, JSON.stringify(words));
+            } catch (e) {
+                showModal('Error', 'Failed to save word data. Browser storage may be full.');
+            }
+        }
+
+        /**
+         * Load all word data from localStorage
+         */
+        function loadAllWords() {
+            try {
+                const json = localStorage.getItem(LS_WORDS_KEY);
+                return json ? JSON.parse(json) : [];
+            } catch (e) {
+                console.error("Word data loading error:", e);
+                return [];
+            }
+        }
+
+        /**
+         * Save current test state to localStorage
+         */
+        function saveTestState() {
+            const timestamp = new Date();
+            const saveData = {
+                testPhase: state.testPhase,
+                unevaluatedWordIds: state.unevaluatedWordIds,
+                unevaluatedIndex: state.unevaluatedIndex,
+                wordStatuses: state.wordStatuses,
+                reviewWordPool: state.reviewWordPool,
+                wordHistory: state.wordHistory,
+                historyIndex: state.historyIndex,
+                probabilities: state.probabilities,
+                reverseMode: state.reverseMode,
+                lastUpdated: timestamp.toISOString(),
+                totalWordsCount: state.allWords.length,
+                fileName: `Random_Test_${timestamp.toISOString().replace(/[:.]/g, '-').slice(0, 19)}`
+            };
+
+            try {
+                localStorage.setItem(LS_STATE_KEY, JSON.stringify(saveData));
+                state.lastUpdated = saveData.lastUpdated;
+                state.fileName = saveData.fileName;
+                updateResumeButton(true);
+            } catch (e) {
+                showModal('Error', 'Failed to save test state. Browser storage may be full.');
+            }
+        }
+
+        /**
+         * Load test state from localStorage
+         */
+        function loadTestState() {
+            try {
+                const json = localStorage.getItem(LS_STATE_KEY);
+                return json ? JSON.parse(json) : null;
+            } catch (e) {
+                console.error("Test state loading error:", e);
+                return null;
+            }
+        }
+        
+        /**
+         * Delete all localStorage data and reset app
+         */
+        function resetAppData() {
+            localStorage.removeItem(LS_WORDS_KEY);
+            localStorage.removeItem(LS_STATE_KEY);
+            
+            // Initialize state
+            state.allWords = [];
+            state.wordMap = new Map();
+            state.testPhase = 'unevaluated';
+            state.unevaluatedWordIds = [];
+            state.unevaluatedIndex = 0;
+            state.wordStatuses = {};
+            state.reviewWordPool = [];
+            state.currentWord = null;
+            state.wordHistory = [];
+            state.historyIndex = -1;
+            state.reverseMode = false;
+            state.lastUpdated = null;
+            state.fileName = null;
+
+            // Return to initial screen
+            settingsModal.classList.add('hidden');
+            showModal('Reset Complete', 'All word data and progress records have been deleted. Please register new words.');
+            updateResumeButton(false);
+            setView('setup');
+            wordInput.value = '';
+            updateStatsDisplay();
+        }
+
+        /**
+         * 評価別削除処理
+         */
+        function deleteWordsByStatus() {
+            const selectedStatuses = [];
+            if (deleteCorrectCheck.checked) selectedStatuses.push('correct');
+            if (deleteReviewCheck.checked) selectedStatuses.push('review');
+            if (deleteIncorrectCheck.checked) selectedStatuses.push('incorrect');
+            if (deleteUnevaluatedCheck.checked) selectedStatuses.push('unevaluated');
+
+            if (selectedStatuses.length === 0) {
+                showModal('Error', 'Please select at least one category to delete.');
+                return;
+            }
+
+            const wordsToDelete = state.allWords.filter(word => {
+                const status = state.wordStatuses[word.id] || 'unevaluated';
+                return selectedStatuses.includes(status);
+            });
+
+            if (wordsToDelete.length === 0) {
+                showModal('Notice', 'No words match the selected categories.');
+                return;
+            }
+
+            const statusNames = {
+                correct: '〇 Correct',
+                review: '△ Review',
+                incorrect: '× Incorrect',
+                unevaluated: '− Unevaluated'
+            };
+            const selectedNames = selectedStatuses.map(s => statusNames[s]).join(', ');
+
+            showConfirmModal(
+                '⚠️ Confirm Deletion',
+                `You are about to delete ${wordsToDelete.length} word(s) from the following categories: ${selectedNames}. This action cannot be undone.`,
+                () => {
+                    // Delete words
+                    const deleteIds = new Set(wordsToDelete.map(w => w.id));
+                    state.allWords = state.allWords.filter(w => !deleteIds.has(w.id));
+                    state.wordMap = new Map(state.allWords.map(w => [w.id, w]));
+                    
+                    // Clean up statuses
+                    deleteIds.forEach(id => delete state.wordStatuses[id]);
+                    
+                    // Clean up unevaluated list
+                    state.unevaluatedWordIds = state.unevaluatedWordIds.filter(id => !deleteIds.has(id));
+                    if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
+                        state.unevaluatedIndex = Math.max(0, state.unevaluatedWordIds.length - 1);
+                    }
+                    
+                    // Clean up history
+                    state.wordHistory = state.wordHistory.filter(id => !deleteIds.has(id));
+                    if (state.historyIndex >= state.wordHistory.length) {
+                        state.historyIndex = state.wordHistory.length - 1;
+                    }
+                    
+                    // Reset if current word was deleted
+                    if (state.currentWord && deleteIds.has(state.currentWord.id)) {
+                        state.currentWord = null;
+                    }
+
+                    saveAllWords(state.allWords);
+                    
+                    if (state.allWords.length === 0) {
+                        resetAppData();
+                    } else {
+                        // Rebuild unevaluated list
+                        rebuildUnevaluatedList();
+                        saveTestState();
+                        settingsModal.classList.add('hidden');
+                        showModal('✅ Deletion Complete', `${wordsToDelete.length} word(s) have been deleted.`);
+                        
+                        startTest();
+                        updateStatsDisplay();
+                        updateDeleteCounts();
+                    }
+                }
+            );
+        }
+
+        /**
+         * 評価別削除のカウント更新
+         */
+        function updateDeleteCounts() {
+            const counts = {
+                correct: 0,
+                review: 0,
+                incorrect: 0,
+                unevaluated: 0
+            };
+
+            state.allWords.forEach(word => {
+                const status = state.wordStatuses[word.id] || 'unevaluated';
+                if (counts[status] !== undefined) {
+                    counts[status]++;
+                }
+            });
+
+            deleteCorrectCount.textContent = counts.correct;
+            deleteReviewCount.textContent = counts.review;
+            deleteIncorrectCount.textContent = counts.incorrect;
+            deleteUnevaluatedCount.textContent = counts.unevaluated;
+        }
+
+        /**
+         * 評価別削除ボタンの有効/無効切り替え
+         */
+        function updateDeleteByStatusButton() {
+            const anyChecked = deleteCorrectCheck.checked || 
+                              deleteReviewCheck.checked || 
+                              deleteIncorrectCheck.checked || 
+                              deleteUnevaluatedCheck.checked;
+            deleteByStatusBtn.disabled = !anyChecked;
+        }
+
+        [deleteCorrectCheck, deleteReviewCheck, deleteIncorrectCheck, deleteUnevaluatedCheck].forEach(checkbox => {
+            checkbox.addEventListener('change', updateDeleteByStatusButton);
+        });
+
+        deleteByStatusBtn.addEventListener('click', deleteWordsByStatus);
+        
+        // --- Word Registration Processing ---
+
+        /**
+         * NEW: Rebuild unevaluated word list
+         */
+        function rebuildUnevaluatedList() {
+            state.unevaluatedWordIds = state.allWords
+                .filter(word => !state.wordStatuses[word.id])
+                .map(word => word.id);
+            
+            // Reset index if out of bounds
+            if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
+                state.unevaluatedIndex = 0;
+            }
+            
+            // Update phase
+            if (state.unevaluatedWordIds.length === 0) {
+                const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
+                state.testPhase = allCorrect ? 'finished' : 'retest';
+            } else {
+                state.testPhase = 'unevaluated';
+            }
+        }
+
+        /**
+         * Parse words from user input and add to existing DB
+         */
+        function handleSaveWords() {
+            const rawText = wordInput.value.trim();
+            if (!rawText) {
+                showModal('Error', 'Please enter words.');
+                return;
+            }
+
+            setView('loading');
+            
+            const existingWords = loadAllWords();
+            const existingWordMap = new Map(existingWords.map(w => [w.id, w]));
+            let newWords = [...existingWords];
+            let addedCount = 0;
+            let skippedCount = 0;
+
+            const lines = rawText.split('\n').filter(line => line.trim() !== '');
+
+            for (let i = 0; i < lines.length; i++) {
+                const parts = lines[i].split('_').map(part => part.trim());
+                
+                let word, reading, meaning;
+                
+                if (parts.length === 2) {
+                    [word, meaning] = parts;
+                    reading = '';
+                } else if (parts.length === 3) {
+                    [word, reading, meaning] = parts;
+                } else {
+                    skippedCount++;
+                    continue;
+                }
+                
+                const wordId = createWordId(word, reading);
+                
+                if (existingWordMap.has(wordId)) {
+                    console.warn(`Duplicate detected: "${word}" (ID: ${wordId})`);
+                    skippedCount++;
+                    continue;
+                }
+                
+                const newWordData = {
+                    id: wordId,
+                    word,
+                    reading: reading || '',
+                    meaning,
+                    initialOrder: newWords.length, 
+                };
+                
+                newWords.push(newWordData);
+                addedCount++;
+            }
+
+            if (skippedCount > 0) {
+                showModal('Warning', `${skippedCount} word(s) were skipped. (Duplicates or format errors)`);
+            }
+            
+            if (addedCount === 0) {
+                showModal('Notice', 'No new words were added.');
+                setView('setup');
+                return;
+            }
+            
+            state.allWords = newWords;
+            state.wordMap = new Map(newWords.map(w => [w.id, w]));
+
+            saveAllWords(newWords);
+
+            // Rebuild unevaluated list
+            rebuildUnevaluatedList();
+            
+            saveTestState();
+            startTest();
+
+            wordInput.value = '';
+            showModal('Success', `Added ${addedCount} new word(s), total ${state.allWords.length} words. Unevaluated words will be shown first.`);
+        }
+
+        // --- Test Logic ---
+
+        /**
+         * Reset test state and start
+         */
+        function resetTestStateAndStart() {
+            state.testPhase = 'unevaluated';
+            state.unevaluatedIndex = 0;
+            state.wordStatuses = {};
+            state.reviewWordPool = [];
+            state.wordHistory = [];
+            state.historyIndex = -1;
+            
+            if (state.allWords.length === 0) {
+                 showModal('Error', 'Word database is empty. Please register words before starting.');
+                 setView('setup');
+                 return;
+            }
+            
+            rebuildUnevaluatedList();
+            saveTestState();
+            startTest();
+        }
+
+        /**
+         * Start/resume test
+         */
+        function startTest() {
+            if (state.allWords.length === 0) {
+                showModal('Error', 'Word database is empty. Please register words.');
+                setView('setup');
+                return;
+            }
+            
+            setView('test');
+            wordDetails.open = false;
+            
+            // Sync reverse mode toggle with state
+            reverseModeToggle.checked = state.reverseMode;
+            
+            // Rebuild lists if needed
+            rebuildUnevaluatedList();
+            
+            if (state.testPhase === 'retest' && state.reviewWordPool.length === 0) {
+                buildReviewWordPool();
+            }
+            
+            if (!state.currentWord) {
+                nextWord();
+            } else {
+                displayWord(state.currentWord);
+            }
+            updateNavigationButtons();
+        }
+
+        /**
+         * Select and display next word (MODIFIED: prioritize unevaluated)
+         */
+        function nextWord() {
+            const totalWords = state.allWords.length;
+            
+            // If there's forward history, use it
+            if (state.historyIndex < state.wordHistory.length - 1) {
+                state.historyIndex++;
+                const wordId = state.wordHistory[state.historyIndex];
+                state.currentWord = state.wordMap.get(wordId);
+                displayWord(state.currentWord);
+                updateNavigationButtons();
+                return;
+            }
+            
+            // NEW: Priority 1 - Unevaluated words
+            if (state.testPhase === 'unevaluated' && state.unevaluatedWordIds.length > 0) {
+                if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
+                    // All unevaluated words have been shown at least once
+                    rebuildUnevaluatedList();
+                    
+                    if (state.unevaluatedWordIds.length === 0) {
+                        // No more unevaluated words - move to retest phase
+                        state.testPhase = 'retest';
+                        showModal('🎉 Initial Evaluation Complete!', 'All new words have been evaluated. Moving to probability-based review.');
+                        buildReviewWordPool();
+                        nextWord();
+                        return;
+                    }
+                }
+                
+                const wordId = state.unevaluatedWordIds[state.unevaluatedIndex];
+                state.currentWord = state.wordMap.get(wordId);
+                state.unevaluatedIndex++;
+                
+            } else if (state.testPhase === 'retest') {
+                // Priority 2 - Probability-based selection from evaluated words
+                if (state.reviewWordPool.length === 0) {
+                    const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
+                    if (allCorrect) {
+                        state.testPhase = 'finished';
+                        displayFinishedScreen();
+                        saveTestState();
+                        return;
+                    }
+                    buildReviewWordPool();
+                }
+
+                const poolIndex = Math.floor(Math.random() * state.reviewWordPool.length);
+                const wordId = state.reviewWordPool[poolIndex];
+                
+                state.currentWord = state.wordMap.get(wordId);
+                
+            } else if (state.testPhase === 'finished') {
+                displayFinishedScreen();
+                return;
+            }
+
+            // Add to history
+            if (state.historyIndex < state.wordHistory.length - 1) {
+                // Remove forward history
+                state.wordHistory = state.wordHistory.slice(0, state.historyIndex + 1);
+            }
+            state.wordHistory.push(state.currentWord.id);
+            state.historyIndex = state.wordHistory.length - 1;
+
+            displayWord(state.currentWord);
+            updateStatsDisplay();
+            updateNavigationButtons();
+            saveTestState();
+        }
+        
+        /**
+         * Go to previous word
+         */
+        function previousWord() {
+            if (state.historyIndex > 0) {
+                state.historyIndex--;
+                const wordId = state.wordHistory[state.historyIndex];
+                state.currentWord = state.wordMap.get(wordId);
+                displayWord(state.currentWord);
+                updateNavigationButtons();
+            }
+        }
+        
+        /**
+         * Update navigation button states
+         */
+        function updateNavigationButtons() {
+            prevWordBtn.disabled = state.historyIndex <= 0;
+            nextWordBtn.disabled = state.historyIndex >= state.wordHistory.length - 1 && state.testPhase === 'finished';
+        }
+        
+        /**
+         * Rebuild review word pool
+         */
+        function buildReviewWordPool() {
+            const newPool = [];
+            const { correct, review, incorrect } = state.probabilities;
+            
+            state.allWords.forEach(word => {
+                const status = state.wordStatuses[word.id];
+                
+                // Skip unevaluated words
+                if (!status) return;
+                
+                let probability = 0;
+                
+                if (status === 'correct') probability = correct;
+                else if (status === 'review') probability = review;
+                else if (status === 'incorrect') probability = incorrect;
+                
+                const frequency = Math.round(probability * 1000); 
+
+                for (let i = 0; i < frequency; i++) {
+                    newPool.push(word.id);
+                }
+            });
+            
+            state.reviewWordPool = newPool;
+        }
+
+        /**
+         * Display word
+         */
+        function displayWord(word) {
+            wordDetails.open = false;
+                
+            if (state.reverseMode) {
+                // Reverse mode: Show meaning as question, reading stays as reading, word goes to meaning position
+                questionWord.textContent = word.meaning;
+                        
+                if (word.reading) {
+                    answerReading.textContent = word.reading;
+                    answerReading.style.display = 'block';
+                } else {
+                    answerReading.style.display = 'none';
+                }
+                        
+                answerMeaning.textContent = word.word;
+            } else {
+                // Normal mode: Show word as question, reading+meaning as answer
+                questionWord.textContent = word.word;
+                        
+                if (word.reading) {
+                    answerReading.textContent = word.reading;
+                    answerReading.style.display = 'block';
+                } else {
+                    answerReading.style.display = 'none';
+                }
+                        
+                answerMeaning.textContent = word.meaning;
+            }
+        }
+
+        /**
+         * Display finished screen
+         */
+        function displayFinishedScreen() {
+             wordDetails.open = false;
+             questionWord.textContent = '🥳 Test Complete! 🥳';
+             answerReading.textContent = 'Great job!';
+             answerReading.style.display = 'block';
+             answerMeaning.textContent = 'All words have been classified as "Correct". Change settings or reset to try again.';
+             reportButtons.classList.add('hidden');
+             statusMessage.innerHTML = `<p class="text-2xl font-bold mb-2">🎉 Test Complete 🎉</p><p>All words are now marked as correct.</p>`;
+        }
+
+        /**
+         * Self-report button event handler
+         */
+        reportButtons.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button || !state.currentWord) return;
+
+            const result = button.dataset.result;
+            const wordId = state.currentWord.id;
+
+            state.wordStatuses[wordId] = result;
+
+            // Rebuild unevaluated list after status update
+            rebuildUnevaluatedList();
+            
+            if (state.testPhase === 'retest') {
+                buildReviewWordPool();
+            }
+            
+            nextWord();
+        });
+
+        // Navigation button handlers
+        prevWordBtn.addEventListener('click', previousWord);
+        nextWordBtn.addEventListener('click', () => {
+            if (state.historyIndex < state.wordHistory.length - 1) {
+                nextWord();
+            }
+        });
+
+        // --- Edit Word Functionality ---
+        
+        editWordBtn.addEventListener('click', () => {
+            if (!state.currentWord) return;
+            
+            editWordInput.value = state.currentWord.word;
+            editReadingInput.value = state.currentWord.reading || '';
+            editMeaningInput.value = state.currentWord.meaning;
+            editModal.classList.remove('hidden');
+        });
+
+        editCancelBtn.addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+
+        editSaveBtn.addEventListener('click', () => {
+            const newWord = editWordInput.value.trim();
+            const newReading = editReadingInput.value.trim();
+            const newMeaning = editMeaningInput.value.trim();
+
+            if (!newWord || !newMeaning) {
+                showModal('Error', 'Word and Meaning are required.');
+                return;
+            }
+
+            const oldId = state.currentWord.id;
+            const newId = createWordId(newWord, newReading);
+
+            // Check if new ID conflicts with another word
+            if (newId !== oldId && state.wordMap.has(newId)) {
+                showModal('Error', 'A word with this combination already exists.');
+                return;
+            }
+
+            // Update word data
+            const wordIndex = state.allWords.findIndex(w => w.id === oldId);
+            if (wordIndex !== -1) {
+                // If ID changed, update status mapping
+                if (newId !== oldId) {
+                    if (state.wordStatuses[oldId]) {
+                        state.wordStatuses[newId] = state.wordStatuses[oldId];
+                        delete state.wordStatuses[oldId];
+                    }
+                    state.wordMap.delete(oldId);
+                    
+                    // Update unevaluated list
+                    const unevalIdx = state.unevaluatedWordIds.indexOf(oldId);
+                    if (unevalIdx !== -1) {
+                        state.unevaluatedWordIds[unevalIdx] = newId;
+                    }
+                }
+
+                state.allWords[wordIndex] = {
+                    id: newId,
+                    word: newWord,
+                    reading: newReading,
+                    meaning: newMeaning,
+                    initialOrder: state.allWords[wordIndex].initialOrder
+                };
+
+                state.wordMap.set(newId, state.allWords[wordIndex]);
+                state.currentWord = state.allWords[wordIndex];
+
+                // Update history if ID changed
+                if (newId !== oldId) {
+                    for (let i = 0; i < state.wordHistory.length; i++) {
+                        if (state.wordHistory[i] === oldId) {
+                            state.wordHistory[i] = newId;
+                        }
+                    }
+                }
+
+                saveAllWords(state.allWords);
+                saveTestState();
+                displayWord(state.currentWord);
+                editModal.classList.add('hidden');
+                showModal('Success', 'Word has been updated.');
+            }
+        });
+
+        // --- UI Update Functions ---
+
+        /**
+         * Update resume button state
+         */
+        function updateResumeButton(hasData) {
+            if (hasData && state.allWords.length > 0) {
+                resumeTestBtn.disabled = false;
+                const date = new Date(state.lastUpdated);
+                const dateString = date.toLocaleDateString('en-US') + ' ' + date.toLocaleTimeString('en-US');
+                lastUpdatedTime.textContent = dateString;
+                resumeInfo.textContent = `${state.allWords.length} word(s) registered.`;
+                resumeTestBtn.textContent = 'Resume/Continue Test';
+                resumeTestBtn.onclick = startTest;
+            } else {
+                resumeTestBtn.disabled = true;
+                lastUpdatedTime.textContent = '--';
+                resumeInfo.textContent = 'No saved word data available.';
+                resumeTestBtn.textContent = 'Resume Test';
+                resumeTestBtn.onclick = null;
+            }
+        }
+
+        /**
+         * Update statistics and progress bars (MODIFIED: show unevaluated progress)
+         */
+        function updateStatsDisplay() {
+            const totalWords = state.allWords.length;
+
+            const counts = { unevaluated: 0, correct: 0, review: 0, incorrect: 0 };
+            
+            state.allWords.forEach(word => {
+                const status = state.wordStatuses[word.id] || 'unevaluated';
+                if (counts[status] !== undefined) {
+                    counts[status]++;
+                }
+            });
+            
+            totalWordsCount.textContent = totalWords;
+            unevaluatedCount.textContent = counts.unevaluated;
+            correctCount.textContent = counts.correct;
+            reviewCount.textContent = counts.review;
+            incorrectCount.textContent = counts.incorrect;
+
+            // NEW: Unevaluated progress bar
+            const evaluatedCount = totalWords - counts.unevaluated;
+            const unevaluatedProgressPercent = totalWords > 0 ? (evaluatedCount / totalWords) * 100 : 0;
+            unevaluatedProgressBar.style.width = `${unevaluatedProgressPercent}%`;
+            unevaluatedProgressText.textContent = `${evaluatedCount} / ${totalWords}`;
+            
+            // Show/hide unevaluated progress section
+            if (counts.unevaluated > 0) {
+                unevaluatedProgressSection.style.display = 'block';
+            } else {
+                unevaluatedProgressSection.style.display = 'none';
+            }
+            
+            const weightedProgress = counts.correct * 1 + counts.review * 0.5 + counts.incorrect * 0;
+            const overallProgressPercent = totalWords > 0 ? (weightedProgress / totalWords) * 100 : 0;
+            overallProgressBar.style.width = `${overallProgressPercent}%`;
+            overallProgressText.textContent = `${weightedProgress.toFixed(1)} / ${totalWords}`;
+
+            if (state.testPhase === 'unevaluated') {
+                phaseStatus.textContent = '📋 Evaluating New Words (Priority)';
+                reportButtons.classList.remove('hidden');
+            } else if (state.testPhase === 'retest') {
+                phaseStatus.textContent = '🔄 Review Round (Probability-based)';
+                reportButtons.classList.remove('hidden');
+            } else if (state.testPhase === 'finished') {
+                phaseStatus.textContent = '✅ Complete!';
+            }
+        }
+
+        /**
+         * Settings modal related
+         */
+        openSettingsBtn.onclick = () => {
+            probCorrectInput.value = Math.round(state.probabilities.correct * 100);
+            probReviewInput.value = Math.round(state.probabilities.review * 100);
+            probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
+            updateProbabilityTotal();
+            updateDeleteCounts();
+            updateDeleteByStatusButton();
+            settingsModal.classList.remove('hidden');
+        };
+
+        settingsCloseBtn.onclick = () => {
+            settingsModal.classList.add('hidden');
+        };
+
+        [probCorrectInput, probReviewInput, probIncorrectInput].forEach(input => {
+            input.addEventListener('input', updateProbabilityTotal);
+        });
+
+        function updateProbabilityTotal() {
+            const c = parseInt(probCorrectInput.value) || 0;
+            const r = parseInt(probReviewInput.value) || 0;
+            const i = parseInt(probIncorrectInput.value) || 0;
+            const total = c + r + i;
+
+            probTotal.textContent = `${total}%`;
+            if (total === 100 && c >= 0 && r >= 0 && i >= 0) {
+                probTotal.style.color = '#06b6d4';
+                settingsSaveBtn.disabled = false;
+            } else {
+                probTotal.style.color = '#ef4444';
+                settingsSaveBtn.disabled = true;
+            }
+        }
+
+        settingsSaveBtn.onclick = () => {
+            const c = parseInt(probCorrectInput.value);
+            const r = parseInt(probReviewInput.value);
+            const i = parseInt(probIncorrectInput.value);
+            
+            if (c + r + i !== 100) {
+                 showModal('Error', 'Total probability must equal 100%.');
+                 return;
+            }
+
+            state.probabilities = {
+                correct: c / 100,
+                review: r / 100,
+                incorrect: i / 100,
+            };
+
+            try {
+                saveTestState();
+                showModal('✅ Success', 'Probability settings have been saved.');
+                settingsModal.classList.add('hidden');
+
+                if (state.testPhase === 'retest' && state.allWords.length > 0) {
+                    buildReviewWordPool();
+                }
+
+            } catch (error) {
+                console.error("Settings save error:", error);
+                showModal('Error', 'An error occurred while saving settings.');
+            }
+        };
+        
+        resetDataBtn.onclick = () => {
+            showConfirmModal(
+                '⚠️ Warning',
+                'Are you sure you want to delete all word data and progress records? This action cannot be undone.',
+                resetAppData
+            );
+        };
+
+        // --- Initialization ---
+
+        function initApp() {
+            setView('loading');
+
+            const loadedWords = loadAllWords();
+            if (loadedWords.length > 0) {
+                state.allWords = loadedWords;
+                state.wordMap = new Map(loadedWords.map(w => [w.id, w]));
+            }
+
+            const loadedState = loadTestState();
+            if (loadedState && state.allWords.length > 0) {
+                Object.assign(state, loadedState);
+                
+                if (state.allWords.length !== loadedState.totalWordsCount) {
+                    console.warn('Word count mismatch: Word DB changes detected.');
+                }
+                
+                // Rebuild unevaluated list to ensure consistency
+                rebuildUnevaluatedList();
+
+                updateStatsDisplay();
+                updateResumeButton(true);
+            } else {
+                rebuildUnevaluatedList();
+                updateResumeButton(false);
+            }
+
+            updateProbabilityTotal();
+            setView('setup');
+            statusMessage.textContent = '';
+        }
+
+        saveWordsBtn.addEventListener('click', handleSaveWords);
+
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>
