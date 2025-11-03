@@ -278,22 +278,15 @@
             color: white;
         }
         
-        /* Navigation - Fixed Bottom Bar */
+        /* Navigation - Inline (Not Fixed) */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            padding: 12px 16px calc(12px + var(--safe-area-bottom));
-            box-shadow: 0 -4px 20px var(--glass-shadow);
-            z-index: 100;
+            background: transparent;
+            padding: 0;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
         
         .nav-btn {
@@ -649,9 +642,9 @@
             opacity: 0.6;
         }
         
-        /* Content Padding for Bottom Nav */
+        /* Content Padding */
         .content-wrapper {
-            padding-bottom: 150px;
+            padding-bottom: calc(20px + var(--safe-area-bottom));
         }
         
         /* Scrollbar - Hidden on Mobile */
@@ -866,21 +859,21 @@
                     </div>
                 </div>
 
+                <!-- Navigation Buttons -->
+                <div id="bottom-nav" class="bottom-nav">
+                    <button id="prev-word-btn" class="nav-btn">
+                        ← Back
+                    </button>
+                    <button id="next-word-btn" class="nav-btn">
+                        Next →
+                    </button>
+                </div>
+
                 <button id="open-settings-btn" class="settings-btn">
                     ⚙️ Settings
                 </button>
             </div>
 
-        </div>
-
-        <!-- Bottom Navigation (only visible in test view) -->
-        <div id="bottom-nav" class="bottom-nav hidden">
-            <button id="prev-word-btn" class="nav-btn">
-                ← Back
-            </button>
-            <button id="next-word-btn" class="nav-btn">
-                Next →
-            </button>
         </div>
     </div>
 
@@ -1085,7 +1078,6 @@
         const resumeTestBtn = $('resume-test-btn');
         const lastUpdatedTime = $('last-updated-time');
         const resumeInfo = $('resume-info');
-        const bottomNav = $('bottom-nav');
 
         const questionDisplay = $('question-display');
         const questionWord = $('question-word');
@@ -1258,13 +1250,11 @@
             setupView.classList.add('hidden');
             testView.classList.add('hidden');
             loadingIndicator.classList.add('hidden');
-            bottomNav.classList.add('hidden');
 
             if (viewName === 'setup') {
                 setupView.classList.remove('hidden');
             } else if (viewName === 'test') {
                 testView.classList.remove('hidden');
-                bottomNav.classList.remove('hidden');
             } else if (viewName === 'loading') {
                 loadingIndicator.classList.remove('hidden');
             }
