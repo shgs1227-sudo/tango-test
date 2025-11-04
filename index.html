@@ -953,6 +953,15 @@
                 </button>
             </div>
 
+            <!-- 修正箇所1: ここにコードを挿入 -->
+            <!-- Add More Words -->
+            <div class="border-t-2 border-opacity-20 pt-6 mt-6" style="border-color: var(--text-muted);">
+                <h4 class="text-xl font-bold text-light mb-4">📝 Add Words</h4>
+                <button id="goto-register-btn" class="btn-secondary mb-4">
+                    ➕ Add More Words
+                </button>
+            </div>
+
             <!-- Delete Options -->
             <div class="border-t-2 border-opacity-20 pt-6 mt-6" style="border-color: var(--text-muted);">
                 <h4 class="text-xl font-bold text-light mb-4">🗑️ Delete Words</h4>
@@ -1931,6 +1940,16 @@
         }
 
         saveWordsBtn.addEventListener('click', handleSaveWords);
+
+        // --- 修正箇所2: ここにコードを挿入 ---
+        // --- Go to Register Button ---
+        const gotoRegisterBtn = $('goto-register-btn');
+        gotoRegisterBtn.addEventListener('click', () => {
+            settingsModal.classList.add('hidden');
+            setView('setup');
+            wordInput.focus();
+        });
+
         window.onload = initApp;
 
         // Prevent zoom on double-tap
