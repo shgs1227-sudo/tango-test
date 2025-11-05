@@ -138,42 +138,44 @@
             transition: all 0.3s ease;
         }
         
-        /* 変更点1: CSSに前回の答え表示用スタイルを追加 */
-        /* Previous Answer Card */
+        /* 変更点1: CSS - Compact Previous Answer Card */
         .previous-answer-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 18px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 6px 20px var(--glass-shadow);
+            border-radius: 12px; /* 少し小さく */
+            padding: 0.6rem 0.9rem; /* 小さく */
+            margin-bottom: 0.75rem; /* 1remより小さく */
+            box-shadow: 0 4px 15px var(--glass-shadow); /* 少し控えめに */
             animation: slideDown 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* ラベルと内容を両端に */
+            gap: 0.5rem;
         }
         .previous-answer-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem; /* 小さく */
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0; /* 削除 */
             display: block;
+            white-space: nowrap; /* 折り返さない */
         }
         .previous-answer-content {
             display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
+            align-items: baseline; /* テキストのベースラインを揃える */
+            justify-content: flex-end; /* 右寄せ */
+            gap: 0.5rem;
+            text-align: right;
+            flex-wrap: wrap; /* 内容が多すぎたら折り返す */
         }
-        .previous-word {
-            font-size: 1.3rem;
-            font-weight: 800;
+        .previous-answer-main {
+            font-size: 1.1rem; /* 少し小さく */
+            font-weight: 700;
             color: var(--text-primary);
         }
-        .previous-reading {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-        .previous-meaning {
-            font-size: 1.1rem;
+        .previous-answer-sub {
+            font-size: 0.9rem; /* 小さく */
             font-weight: 500;
             color: var(--text-secondary);
         }
@@ -849,14 +851,11 @@
                     </button>
                 </div>
                 
-                <!-- 変更点2: HTMLに前回の答え表示エリアを追加 -->
-                <!-- Previous Answer Display -->
+                <!-- 変更点2: HTML - Compact Previous Answer Display -->
                 <div id="previous-answer-display" class="previous-answer-card hidden">
-                    <span class="previous-answer-label">📝 前回の答え / Previous Answer</span>
-                    <div class="previous-answer-content">
-                        <div class="previous-word" id="previous-word-text"></div>
-                        <div class="previous-reading" id="previous-reading-text"></div>
-                        <div class="previous-meaning" id="previous-meaning-text"></div>
+                    <span class="previous-answer-label">📝 前回の答え</span>
+                    <div class="previous-answer-content" id="previous-answer-content-area">
+                        <!-- JSがここを書き換える -->
                     </div>
                 </div>
                 
@@ -1111,7 +1110,6 @@
         const LS_STATE_KEY = 'wordTest_state';
 
         // --- App State ---
-        // 変更点3-1: stateオブジェクトの修正
         let state = {
             allWords: [],
             wordMap: new Map(),
@@ -1121,7 +1119,7 @@
             wordStatuses: {},
             reviewWordPool: [],
             currentWord: null,
-            previousWord: null, // ← この行を追加
+            previousWord: null, 
             wordHistory: [],
             historyIndex: -1,
             probabilities: {
@@ -1159,11 +1157,9 @@
         const editWordBtn = $('edit-word-btn');
         const reverseModeToggle = $('reverse-mode-toggle');
         
-        // 変更点3-2: DOM要素の取得部分に追加
+        // 変更点3: JS - DOM取得の修正
         const previousAnswerDisplay = $('previous-answer-display');
-        const previousWordText = $('previous-word-text');
-        const previousReadingText = $('previous-reading-text');
-        const previousMeaningText = $('previous-meaning-text');
+        const previousAnswerContentArea = $('previous-answer-content-area'); // 変更
 
         const totalWordsCount = $('total-words-count');
         const unevaluatedCount = $('unevaluated-count');
@@ -1420,7 +1416,7 @@
             state.wordStatuses = {};
             state.reviewWordPool = [];
             state.currentWord = null;
-            state.previousWord = null;  // ← この行を追加 (変更点3-7)
+            state.previousWord = null;
             state.wordHistory = [];
             state.historyIndex = -1;
             state.reverseMode = false;
@@ -1479,7 +1475,6 @@
                         state.currentWord = null;
                     }
                     
-                    // 変更点3-8: deleteWordsByStatus関数の修正
                     if (state.previousWord && deleteIds.has(state.previousWord.id)) {
                         state.previousWord = null;
                     }
@@ -1789,7 +1784,7 @@
             state.reviewWordPool = newPool;
         }
 
-        // 変更点3-3: displayPreviousAnswer関数を追加
+        // 変更点3: JS - `displayPreviousAnswer` 関数を修正
         function displayPreviousAnswer() {
             if (!state.previousWord) {
                 previousAnswerDisplay.classList.add('hidden');
@@ -1799,33 +1794,43 @@
             const prev = state.previousWord;
             previousAnswerDisplay.classList.remove('hidden');
             
+            let contentHTML = '';
+                
             if (state.reverseMode) {
-                previousWordText.textContent = prev.meaning;
+                // リバースモード時：答えは「単語」と「読み方」
+                // HTMLエンティティにエスケープして安全に挿入
+                contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.word)}</span>`;
                 if (prev.reading) {
-                    previousReadingText.textContent = prev.reading;
-                    previousReadingText.style.display = 'block';
-                } else {
-                    previousReadingText.style.display = 'none';
+                    contentHTML += `<span class="previous-answer-sub">(${escapeHTML(prev.reading)})</span>`;
                 }
-                previousMeaningText.textContent = prev.word;
             } else {
-                previousWordText.textContent = prev.word;
-                if (prev.reading) {
-                    previousReadingText.textContent = prev.reading;
-                    previousReadingText.style.display = 'block';
-                } else {
-                    previousReadingText.style.display = 'none';
-                }
-                previousMeaningText.textContent = prev.meaning;
+                // 通常モード時：答えは「意味」
+                contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.meaning)}</span>`;
             }
+            
+            previousAnswerContentArea.innerHTML = contentHTML;
+        }
+        
+        // HTMLエスケープ用ヘルパー関数
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function(match) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[match];
+            });
         }
 
-        // 変更点3-4: displayWord関数の修正
+
+        // 変更点3: JS - `displayWord` 関数の修正 (displayPreviousAnswer() 呼び出しはそのまま)
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
             
-            displayPreviousAnswer();  // ← この行を追加
+            displayPreviousAnswer();  // ← この呼び出しは正しい
                 
             if (state.reverseMode) {
                 questionWord.textContent = word.meaning;
@@ -1853,10 +1858,10 @@
             }
         }
 
-        // 変更点3-6: displayFinishedScreen関数の修正
+        // 変更点3: JS - `displayFinishedScreen` 関数の修正 (変更なし、そのまま)
         function displayFinishedScreen() {
             state.answerVisible = false;
-            previousAnswerDisplay.classList.add('hidden');  // ← この行を追加
+            previousAnswerDisplay.classList.add('hidden');
             questionWord.textContent = '🥳 Complete!';
             answerSection.classList.remove('hidden');
             answerReading.textContent = 'Great job!';
@@ -1865,7 +1870,7 @@
             reportButtons.style.display = 'none';
         }
 
-        // 変更点3-5: reportButtonsイベントリスナーの修正
+        // 変更点3: JS - `reportButtons` イベントリスナーの修正 (変更なし、そのまま)
         reportButtons.addEventListener('click', (e) => {
             const button = e.target.closest('button');
             if (!button || !state.currentWord) return;
@@ -1874,7 +1879,7 @@
             state.wordStatuses[state.currentWord.id] = result;
             
             // Save current word as previous word before moving to next
-            state.previousWord = state.currentWord;  // ← この行を追加
+            state.previousWord = state.currentWord;
 
             rebuildUnevaluatedList();
             
