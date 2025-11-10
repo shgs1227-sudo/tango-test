@@ -138,44 +138,44 @@
             transition: all 0.3s ease;
         }
         
-        /* 変更点1: CSS - Compact Previous Answer Card */
+        /* Compact Previous Answer Card */
         .previous-answer-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 12px; /* 少し小さく */
-            padding: 0.6rem 0.9rem; /* 小さく */
-            margin-bottom: 0.75rem; /* 1remより小さく */
-            box-shadow: 0 4px 15px var(--glass-shadow); /* 少し控えめに */
+            border-radius: 12px;
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 15px var(--glass-shadow);
             animation: slideDown 0.4s ease;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* ラベルと内容を両端に */
+            justify-content: space-between;
             gap: 0.5rem;
         }
         .previous-answer-label {
-            font-size: 0.75rem; /* 小さく */
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 0; /* 削除 */
+            margin-bottom: 0;
             display: block;
-            white-space: nowrap; /* 折り返さない */
+            white-space: nowrap;
         }
         .previous-answer-content {
             display: flex;
-            align-items: baseline; /* テキストのベースラインを揃える */
-            justify-content: flex-end; /* 右寄せ */
+            align-items: baseline;
+            justify-content: flex-end;
             gap: 0.5rem;
             text-align: right;
-            flex-wrap: wrap; /* 内容が多すぎたら折り返す */
+            flex-wrap: wrap;
         }
         .previous-answer-main {
-            font-size: 1.1rem; /* 少し小さく */
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-primary);
         }
         .previous-answer-sub {
-            font-size: 0.9rem; /* 小さく */
+            font-size: 0.9rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
@@ -752,22 +752,22 @@
             transform: scale(0.96);
         }
         
-        /* Reverse Mode Toggle Card */
-        .reverse-toggle-card {
-            background: var(--glass-bg);
+        /* Settings Item Card */
+        .settings-item-card {
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 18px;
-            padding: 1rem 1.3rem;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 15px var(--glass-shadow);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
-            box-shadow: 0 6px 20px var(--glass-shadow);
         }
         
-        .reverse-label {
-            font-size: 1.05rem;
+        .settings-item-label {
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -832,26 +832,7 @@
             <!-- Test View -->
             <div id="test-view" class="hidden view-transition">
                 
-                <!-- Reverse Mode Toggle -->
-                <div class="reverse-toggle-card">
-                    <span class="reverse-label">🔄 Reverse Mode</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="reverse-mode-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <!-- Navigation Buttons -->
-                <div id="bottom-nav" class="bottom-nav">
-                    <button id="prev-word-btn" class="nav-btn">
-                        ← Back
-                    </button>
-                    <button id="next-word-btn" class="nav-btn">
-                        Next →
-                    </button>
-                </div>
-                
-                <!-- 変更点2: HTML - Compact Previous Answer Display -->
+                <!-- Previous Answer Display -->
                 <div id="previous-answer-display" class="previous-answer-card hidden">
                     <span class="previous-answer-label">📝 Answer</span>
                     <div class="previous-answer-content" id="previous-answer-content-area">
@@ -883,6 +864,16 @@
                     <button data-result="correct" class="report-btn btn-correct">〇</button>
                 </div>
                 
+                <!-- Navigation Buttons (Moved Below Report Buttons) -->
+                <div id="bottom-nav" class="bottom-nav">
+                    <button id="prev-word-btn" class="nav-btn">
+                        ← Back
+                    </button>
+                    <button id="next-word-btn" class="nav-btn">
+                        Next →
+                    </button>
+                </div>
+                
                 <!-- Statistics -->
                 <div id="stats-display" class="glass-card p-5 space-y-4">
                     <!-- Unevaluated Progress -->
@@ -893,13 +884,12 @@
                         </div>
                     </div>
                     
-                    <!-- Overall Progress -->
+                    <!-- Overall Progress (Review mode text removed) -->
                     <div>
                         <p class="text-sm font-semibold text-light mb-2">📊 Progress (<span id="overall-progress-text">0 / 0</span>)</p>
                         <div class="progress-container">
                             <div id="overall-progress-bar" class="progress-bar" style="width: 0%"></div>
                         </div>
-                        <p class="text-xs text-muted mt-2 text-center"><span id="phase-status">--</span></p>
                     </div>
                     
                     <!-- Category Stats -->
@@ -962,6 +952,17 @@
         <div class="modal-content w-full">
             <div class="modal-handle"></div>
             <h3 class="text-2xl font-bold text-light mb-4">⚙️ Settings</h3>
+            
+            <!-- Reverse Mode Toggle (Moved into Settings) -->
+            <div class="mb-6">
+                <div class="settings-item-card">
+                    <span class="settings-item-label">🔄 Reverse Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="reverse-mode-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
             
             <!-- Probability Settings -->
             <div class="mb-6">
@@ -1157,16 +1158,14 @@
         const editWordBtn = $('edit-word-btn');
         const reverseModeToggle = $('reverse-mode-toggle');
         
-        // 変更点3: JS - DOM取得の修正
         const previousAnswerDisplay = $('previous-answer-display');
-        const previousAnswerContentArea = $('previous-answer-content-area'); // 変更
+        const previousAnswerContentArea = $('previous-answer-content-area');
 
         const totalWordsCount = $('total-words-count');
         const unevaluatedCount = $('unevaluated-count');
         const correctCount = $('correct-count');
         const reviewCount = $('review-count');
         const incorrectCount = $('incorrect-count');
-        const phaseStatus = $('phase-status');
         
         const unevaluatedProgressBar = $('unevaluated-progress-bar');
         const unevaluatedProgressText = $('unevaluated-progress-text');
@@ -1263,10 +1262,8 @@
             
             if (diffY < 50 && state.answerVisible) {
                 if (diffX > 100) {
-                    // Check if prev button is enabled before swiping
                     if (!prevWordBtn.disabled) previousWord();
                 } else if (diffX < -100) {
-                    // Check if next button is enabled before swiping
                     if (!nextWordBtn.disabled) nextWord();
                 }
             }
@@ -1290,7 +1287,6 @@
             if (state.currentWord) {
                 displayWord(state.currentWord);
             }
-            // Also update previous answer display if it exists
             displayPreviousAnswer();
         });
 
@@ -1312,7 +1308,6 @@
             
             const newOkBtn = confirmOkBtn.cloneNode(true);
             confirmOkBtn.parentNode.replaceChild(newOkBtn, confirmOkBtn);
-            // Re-select the button after cloning
             $('confirm-ok-btn').onclick = () => {
                 onConfirm();
                 confirmModal.classList.add('hidden');
@@ -1339,15 +1334,13 @@
 
         // --- localStorage Functions ---
         function createWordId(word, reading) {
-            // Simple hash function (for demonstration; consider a robust one if needed)
             const str = word + (reading || '');
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
                 const char = str.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32bit integer
+                hash = hash & hash;
             }
-            // Use a prefix to avoid collisions with other keys
             return 'word_id_' + Math.abs(hash).toString(16);
         }
 
@@ -1430,7 +1423,6 @@
             setView('setup');
             wordInput.value = '';
             updateStatsDisplay();
-            // Reset previous answer display
             if (previousAnswerDisplay) {
                 previousAnswerDisplay.classList.add('hidden');
             }
@@ -1488,7 +1480,7 @@
                         saveTestState();
                         settingsModal.classList.add('hidden');
                         showModal('✅ Done', `${wordsToDelete.length} word(s) deleted.`);
-                        startTest(); // Restart test to reflect changes
+                        startTest();
                         updateStatsDisplay();
                         updateDeleteCounts();
                     }
@@ -1529,7 +1521,6 @@
                 .filter(word => !state.wordStatuses[word.id])
                 .map(word => word.id);
             
-            // Sort by initial order to keep them consistent
             state.unevaluatedWordIds.sort((a, b) => {
                 const wordA = state.wordMap.get(a);
                 const wordB = state.wordMap.get(b);
@@ -1557,7 +1548,6 @@
 
             setView('loading');
             
-            // Use existing state.allWords if already loaded
             let existingWords = state.allWords;
             let existingWordMap = state.wordMap;
             
@@ -1598,7 +1588,7 @@
                 };
                 
                 newWords.push(newWordEntry);
-                existingWordMap.set(wordId, newWordEntry); // Add to map immediately
+                existingWordMap.set(wordId, newWordEntry);
                 addedCount++;
             }
 
@@ -1650,7 +1640,7 @@
                 displayWord(state.currentWord);
             }
             updateNavigationButtons();
-            updateStatsDisplay(); // Ensure stats are updated on start
+            updateStatsDisplay();
         }
 
         function nextWord() {
@@ -1658,11 +1648,10 @@
                 state.historyIndex++;
                 const wordId = state.wordHistory[state.historyIndex];
                 state.currentWord = state.wordMap.get(wordId);
-                // Handle case where word was deleted but still in history
                 if (!state.currentWord) {
                     state.wordHistory.splice(state.historyIndex, 1);
                     state.historyIndex--;
-                    nextWord(); // Try again
+                    nextWord();
                     return;
                 }
                 displayWord(state.currentWord);
@@ -1697,9 +1686,8 @@
                         return;
                     }
                     buildReviewWordPool();
-                    // Check again in case pool is still empty (e.g., only 'correct' words with 0% prob)
                     if (state.reviewWordPool.length === 0) {
-                        displayFinishedScreen(); // Or a message "No words to review"
+                        displayFinishedScreen();
                         return;
                     }
                 }
@@ -1713,18 +1701,14 @@
                 return;
             }
             
-            // Ensure currentWord is valid before proceeding
             if (!state.currentWord) {
-                 // This can happen if all words were deleted, etc.
                 if (state.allWords.length > 0) {
-                    // Try to recover by picking first word
                     state.currentWord = state.allWords[0];
                 } else {
-                    resetAppData(); // No words left, reset
+                    resetAppData();
                     return;
                 }
             }
-
 
             if (state.historyIndex < state.wordHistory.length - 1) {
                 state.wordHistory = state.wordHistory.slice(0, state.historyIndex + 1);
@@ -1743,10 +1727,8 @@
                 state.historyIndex--;
                 const wordId = state.wordHistory[state.historyIndex];
                 state.currentWord = state.wordMap.get(wordId);
-                 // Handle case where word was deleted
                 if (!state.currentWord) {
                     state.wordHistory.splice(state.historyIndex, 1);
-                    // historyIndex is now effectively one less, so call previousWord again
                     previousWord();
                     return;
                 }
@@ -1774,7 +1756,6 @@
                 else if (status === 'review') probability = review;
                 else if (status === 'incorrect') probability = incorrect;
                 
-                // Use a base minimum frequency (e.g., 1) and scale up, 1000 is high
                 const frequency = Math.max(1, Math.round(probability * 100));
                 for (let i = 0; i < frequency; i++) {
                     newPool.push(word.id);
@@ -1784,7 +1765,6 @@
             state.reviewWordPool = newPool;
         }
 
-        // 変更点3: JS - `displayPreviousAnswer` 関数を修正
         function displayPreviousAnswer() {
             if (!state.previousWord) {
                 previousAnswerDisplay.classList.add('hidden');
@@ -1797,21 +1777,17 @@
             let contentHTML = '';
                 
             if (state.reverseMode) {
-                // リバースモード時：答えは「単語」と「読み方」
-                // HTMLエンティティにエスケープして安全に挿入
                 contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.word)}</span>`;
                 if (prev.reading) {
                     contentHTML += `<span class="previous-answer-sub">(${escapeHTML(prev.reading)})</span>`;
                 }
             } else {
-                // 通常モード時：答えは「意味」
                 contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.meaning)}</span>`;
             }
             
             previousAnswerContentArea.innerHTML = contentHTML;
         }
         
-        // HTMLエスケープ用ヘルパー関数
         function escapeHTML(str) {
             return str.replace(/[&<>"']/g, function(match) {
                 return {
@@ -1824,13 +1800,11 @@
             });
         }
 
-
-        // 変更点3: JS - `displayWord` 関数の修正 (displayPreviousAnswer() 呼び出しはそのまま)
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
             
-            displayPreviousAnswer();  // ← この呼び出しは正しい
+            displayPreviousAnswer();
                 
             if (state.reverseMode) {
                 questionWord.textContent = word.meaning;
@@ -1852,13 +1826,11 @@
                 answerMeaning.textContent = word.meaning;
             }
             
-            // Ensure report buttons are visible if test is not finished
             if (state.testPhase !== 'finished') {
                 reportButtons.style.display = 'grid';
             }
         }
 
-        // 変更点3: JS - `displayFinishedScreen` 関数の修正 (変更なし、そのまま)
         function displayFinishedScreen() {
             state.answerVisible = false;
             previousAnswerDisplay.classList.add('hidden');
@@ -1870,7 +1842,6 @@
             reportButtons.style.display = 'none';
         }
 
-        // 変更点3: JS - `reportButtons` イベントリスナーの修正 (変更なし、そのまま)
         reportButtons.addEventListener('click', (e) => {
             const button = e.target.closest('button');
             if (!button || !state.currentWord) return;
@@ -1878,7 +1849,6 @@
             const result = button.dataset.result;
             state.wordStatuses[state.currentWord.id] = result;
             
-            // Save current word as previous word before moving to next
             state.previousWord = state.currentWord;
 
             rebuildUnevaluatedList();
@@ -1891,7 +1861,7 @@
         });
 
         prevWordBtn.addEventListener('click', previousWord);
-        nextWordBtn.addEventListener('click', nextWord); // Allow nextWord to handle history logic
+        nextWordBtn.addEventListener('click', nextWord);
 
         // --- Edit Word ---
         editWordBtn.addEventListener('click', () => {
@@ -1964,7 +1934,6 @@
                 editModal.classList.add('hidden');
                 showModal('Success', 'Word updated!');
                 
-                // Update previous word display if it was the one edited
                 if (state.previousWord && state.previousWord.id === oldId) {
                     state.previousWord = state.currentWord;
                     displayPreviousAnswer();
@@ -2020,13 +1989,11 @@
             overallProgressText.textContent = `${weightedProgress.toFixed(1)} / ${totalWords}`;
 
             if (state.testPhase === 'unevaluated') {
-                phaseStatus.textContent = '📋 Evaluating new words';
                 reportButtons.style.display = 'grid';
             } else if (state.testPhase === 'retest') {
-                phaseStatus.textContent = '🔄 Review mode';
                 reportButtons.style.display = 'grid';
             } else if (state.testPhase === 'finished') {
-                phaseStatus.textContent = '✅ Complete!';
+                // No phase status display needed
             }
         }
 
@@ -2038,6 +2005,7 @@
             updateProbabilityTotal();
             updateDeleteCounts();
             updateDeleteByStatusButton();
+            reverseModeToggle.checked = state.reverseMode;
             settingsModal.classList.remove('hidden');
         };
 
@@ -2098,7 +2066,6 @@
             );
         };
 
-        // --- Go to Register Button ---
         gotoRegisterBtn.addEventListener('click', () => {
             settingsModal.classList.add('hidden');
             setView('setup');
@@ -2117,12 +2084,10 @@
 
             const loadedState = loadTestState();
             if (loadedState && state.allWords.length > 0) {
-                // Check if the saved state corresponds to the current word list
                 if (loadedState.totalWordsCount === state.allWords.length) {
                     Object.assign(state, loadedState);
                 } else {
-                    // Word list changed, reset state but keep words
-                    state.lastUpdated = loadedState.lastUpdated; // Keep last updated time for reference
+                    state.lastUpdated = loadedState.lastUpdated;
                 }
                 
                 rebuildUnevaluatedList();
