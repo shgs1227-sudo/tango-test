@@ -98,11 +98,10 @@
             padding-bottom: var(--safe-area-bottom);
         }
         
-        /* Theme Toggle - Mobile Optimized */
-        .theme-toggle {
+        /* Fixed Buttons - Theme Toggle (Right) and Settings (Left) */
+        .fixed-btn {
             position: fixed;
             top: calc(16px + var(--safe-area-top));
-            right: 16px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -121,8 +120,16 @@
             user-select: none;
         }
         
-        .theme-toggle:active {
+        .fixed-btn:active {
             transform: scale(0.92);
+        }
+        
+        .theme-toggle {
+            right: 16px;
+        }
+        
+        .settings-toggle {
+            left: 16px;
         }
         
         /* Glass Card - Mobile Optimized */
@@ -226,6 +233,42 @@
             margin-top: 1rem;
             text-align: center;
             opacity: 0.7;
+        }
+        
+        /* Word Info Badge - NEW */
+        .word-info-badge {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .info-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.7rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        
+        .info-chip-unevaluated {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+        
+        .info-chip-correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .info-chip-review {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+        
+        .info-chip-incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
         
         /* Answer Display */
@@ -730,28 +773,6 @@
             }
         }
         
-        /* Settings Button */
-        .settings-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: white;
-            font-weight: 700;
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-            border: none;
-            cursor: pointer;
-            font-size: 1.05rem;
-            width: 100%;
-            margin-top: 1.5rem;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .settings-btn:active {
-            transform: scale(0.96);
-        }
-        
         /* Settings Item Card */
         .settings-item-card {
             background: var(--card-bg);
@@ -779,8 +800,12 @@
     </style>
 </head>
 <body>
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+    <!-- Fixed Buttons -->
+    <button id="settings-toggle" class="fixed-btn settings-toggle" aria-label="Settings">
+        ⚙️
+    </button>
+    
+    <button id="theme-toggle" class="fixed-btn theme-toggle" aria-label="Toggle Theme">
         🌙
     </button>
 
@@ -846,6 +871,15 @@
                         <div>
                             <div id="question-word" class="question-text">Tap to Start</div>
                             <div class="tap-hint">👆 Tap to reveal answer</div>
+                            <!-- Word Info: Display Count & Status -->
+                            <div id="word-info-badges" class="word-info-badge hidden">
+                                <span id="display-count-badge" class="info-chip info-chip-unevaluated">
+                                    👁️ 0
+                                </span>
+                                <span id="status-badge" class="info-chip info-chip-unevaluated">
+                                    − New
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div id="answer-section" class="hidden">
@@ -915,10 +949,6 @@
                         <p class="text-sm text-light text-center mt-3">Total: <span id="total-words-count" class="font-bold">0</span></p>
                     </div>
                 </div>
-
-                <button id="open-settings-btn" class="settings-btn">
-                    ⚙️ Settings
-                </button>
             </div>
 
         </div>
@@ -1118,6 +1148,7 @@
             unevaluatedWordIds: [],
             unevaluatedIndex: 0,
             wordStatuses: {},
+            wordDisplayCounts: {}, // NEW: Track display count per word
             reviewWordPool: [],
             currentWord: null,
             previousWord: null, 
@@ -1160,6 +1191,11 @@
         
         const previousAnswerDisplay = $('previous-answer-display');
         const previousAnswerContentArea = $('previous-answer-content-area');
+        
+        // NEW: Word info badges
+        const wordInfoBadges = $('word-info-badges');
+        const displayCountBadge = $('display-count-badge');
+        const statusBadge = $('status-badge');
 
         const totalWordsCount = $('total-words-count');
         const unevaluatedCount = $('unevaluated-count');
@@ -1188,7 +1224,7 @@
         const confirmCancelBtn = $('confirm-cancel-btn');
 
         const settingsModal = $('settings-modal');
-        const openSettingsBtn = $('open-settings-btn');
+        const settingsToggle = $('settings-toggle');
         const settingsCloseBtn = $('settings-close-btn');
         const settingsSaveBtn = $('settings-save-btn');
         const probCorrectInput = $('prob-correct');
@@ -1368,6 +1404,7 @@
                 unevaluatedWordIds: state.unevaluatedWordIds,
                 unevaluatedIndex: state.unevaluatedIndex,
                 wordStatuses: state.wordStatuses,
+                wordDisplayCounts: state.wordDisplayCounts, // NEW: Save display counts
                 reviewWordPool: state.reviewWordPool,
                 wordHistory: state.wordHistory,
                 historyIndex: state.historyIndex,
@@ -1407,6 +1444,7 @@
             state.unevaluatedWordIds = [];
             state.unevaluatedIndex = 0;
             state.wordStatuses = {};
+            state.wordDisplayCounts = {}; // NEW: Reset display counts
             state.reviewWordPool = [];
             state.currentWord = null;
             state.previousWord = null;
@@ -1458,7 +1496,10 @@
                     state.allWords = state.allWords.filter(w => !deleteIds.has(w.id));
                     state.wordMap = new Map(state.allWords.map(w => [w.id, w]));
                     
-                    deleteIds.forEach(id => delete state.wordStatuses[id]);
+                    deleteIds.forEach(id => {
+                        delete state.wordStatuses[id];
+                        delete state.wordDisplayCounts[id]; // NEW: Also delete display count
+                    });
                     
                     state.unevaluatedWordIds = state.unevaluatedWordIds.filter(id => !deleteIds.has(id));
                     state.wordHistory = state.wordHistory.filter(id => !deleteIds.has(id));
@@ -1800,11 +1841,59 @@
             });
         }
 
+        // NEW: Update word info badges (display count & status)
+        function updateWordInfoBadges(word) {
+            if (!word) {
+                wordInfoBadges.classList.add('hidden');
+                return;
+            }
+            
+            // Increment display count
+            if (!state.wordDisplayCounts[word.id]) {
+                state.wordDisplayCounts[word.id] = 0;
+            }
+            state.wordDisplayCounts[word.id]++;
+            
+            const displayCount = state.wordDisplayCounts[word.id];
+            const status = state.wordStatuses[word.id] || 'unevaluated';
+            
+            // Update display count badge
+            displayCountBadge.textContent = `👁️ ${displayCount}`;
+            
+            // Update status badge
+            let statusText = '';
+            let statusClass = 'info-chip-unevaluated';
+            
+            switch(status) {
+                case 'correct':
+                    statusText = '〇 Correct';
+                    statusClass = 'info-chip-correct';
+                    break;
+                case 'review':
+                    statusText = '△ Review';
+                    statusClass = 'info-chip-review';
+                    break;
+                case 'incorrect':
+                    statusText = '× Incorrect';
+                    statusClass = 'info-chip-incorrect';
+                    break;
+                default:
+                    statusText = '− New';
+                    statusClass = 'info-chip-unevaluated';
+            }
+            
+            statusBadge.textContent = statusText;
+            statusBadge.className = 'info-chip ' + statusClass;
+            
+            wordInfoBadges.classList.remove('hidden');
+        }
+
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
             
             displayPreviousAnswer();
+            updateWordInfoBadges(word); // NEW: Update info badges
                 
             if (state.reverseMode) {
                 questionWord.textContent = word.meaning;
@@ -1834,6 +1923,7 @@
         function displayFinishedScreen() {
             state.answerVisible = false;
             previousAnswerDisplay.classList.add('hidden');
+            wordInfoBadges.classList.add('hidden'); // NEW: Hide info badges on finish
             questionWord.textContent = '🥳 Complete!';
             answerSection.classList.remove('hidden');
             answerReading.textContent = 'Great job!';
@@ -1900,6 +1990,11 @@
                     if (state.wordStatuses[oldId]) {
                         state.wordStatuses[newId] = state.wordStatuses[oldId];
                         delete state.wordStatuses[oldId];
+                    }
+                    // NEW: Transfer display count
+                    if (state.wordDisplayCounts[oldId]) {
+                        state.wordDisplayCounts[newId] = state.wordDisplayCounts[oldId];
+                        delete state.wordDisplayCounts[oldId];
                     }
                     state.wordMap.delete(oldId);
                     
@@ -1998,7 +2093,7 @@
         }
 
         // --- Settings ---
-        openSettingsBtn.onclick = () => {
+        settingsToggle.onclick = () => {
             probCorrectInput.value = Math.round(state.probabilities.correct * 100);
             probReviewInput.value = Math.round(state.probabilities.review * 100);
             probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
@@ -2086,6 +2181,10 @@
             if (loadedState && state.allWords.length > 0) {
                 if (loadedState.totalWordsCount === state.allWords.length) {
                     Object.assign(state, loadedState);
+                    // NEW: Ensure wordDisplayCounts exists
+                    if (!state.wordDisplayCounts) {
+                        state.wordDisplayCounts = {};
+                    }
                 } else {
                     state.lastUpdated = loadedState.lastUpdated;
                 }
