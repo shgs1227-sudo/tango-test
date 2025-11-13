@@ -1685,6 +1685,7 @@
         }
 
         function nextWord() {
+            // Moving forward in history - don't increment display count
             if (state.historyIndex < state.wordHistory.length - 1) {
                 state.historyIndex++;
                 const wordId = state.wordHistory[state.historyIndex];
@@ -1699,6 +1700,8 @@
                 updateNavigationButtons();
                 return;
             }
+            
+            // NEW WORD - increment display count
             
             if (state.testPhase === 'unevaluated' && state.unevaluatedWordIds.length > 0) {
                 if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
@@ -1757,6 +1760,9 @@
             state.wordHistory.push(state.currentWord.id);
             state.historyIndex = state.wordHistory.length - 1;
 
+            // Increment display count for new word
+            incrementDisplayCount(state.currentWord);
+            
             displayWord(state.currentWord);
             updateStatsDisplay();
             updateNavigationButtons();
@@ -1841,20 +1847,24 @@
             });
         }
 
-        // NEW: Update word info badges (display count & status)
+        // NEW: Increment display count for a word (only when newly displayed)
+        function incrementDisplayCount(word) {
+            if (!word) return;
+            if (!state.wordDisplayCounts[word.id]) {
+                state.wordDisplayCounts[word.id] = 0;
+            }
+            state.wordDisplayCounts[word.id]++;
+        }
+
+        // NEW: Update word info badges (display count & status) - Display only, no counting
         function updateWordInfoBadges(word) {
             if (!word) {
                 wordInfoBadges.classList.add('hidden');
                 return;
             }
             
-            // Increment display count
-            if (!state.wordDisplayCounts[word.id]) {
-                state.wordDisplayCounts[word.id] = 0;
-            }
-            state.wordDisplayCounts[word.id]++;
-            
-            const displayCount = state.wordDisplayCounts[word.id];
+            // Display count (no increment here)
+            const displayCount = state.wordDisplayCounts[word.id] || 0;
             const status = state.wordStatuses[word.id] || 'unevaluated';
             
             // Update display count badge
