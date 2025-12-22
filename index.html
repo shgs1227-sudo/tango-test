@@ -717,7 +717,8 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1001;
             overflow-y: auto;
-            touch-action: none;
+            /* touch-action: none; REMOVED to allow scrolling on mobile */
+            overscroll-behavior-y: contain; /* Added to prevent body scrolling */
         }
 
         /* 確認モーダルはSettingsより上に表示 */
@@ -755,6 +756,7 @@
             gap: 6px;
             border-radius: 24px 24px 0 0;
             transition: background 0.2s;
+            touch-action: none; /* Keep touch-action none ONLY on drag handle */
         }
 
         .modal-drag-area:active {
