@@ -2,1145 +2,1745 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>📚 Vocabulary Test - Mobile</title>
-    <!-- Tailwind CSS CDN -->
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Tango</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        surface: {
+                            50: '#fafafa',
+                            100: '#f4f4f5',
+                            200: '#e4e4e7',
+                            800: '#18181b',
+                            850: '#121215',
+                            900: '#0a0a0f',
+                            950: '#050507',
+                        },
+                        accent: {
+                            cyan: '#22d3ee',
+                            emerald: '#34d399',
+                            amber: '#fbbf24',
+                            rose: '#fb7185',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* Mobile-First Custom Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
-        
+
         :root {
-            /* Dark Theme Colors */
-            --bg-gradient-start: #1e3a8a;
-            --bg-gradient-end: #1e293b;
-            --glass-bg: rgba(30, 58, 138, 0.7);
-            --glass-border: rgba(100, 150, 255, 0.15);
-            --glass-shadow: rgba(0, 0, 0, 0.4);
-            --text-primary: #ffffff;
-            --text-secondary: #e0f2fe;
-            --text-muted: #cbd5e1;
-            --input-bg: rgba(30, 41, 59, 0.8);
-            --input-border: rgba(6, 182, 212, 0.4);
-            --input-focus-bg: rgba(30, 41, 59, 0.95);
-            --input-text: #ffffff;
-            --card-bg: rgba(59, 130, 246, 0.15);
-            --card-hover: rgba(59, 130, 246, 0.25);
-            --safe-area-top: env(safe-area-inset-top);
-            --safe-area-bottom: env(safe-area-inset-bottom);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --app-bg: #0a0a0f;
+            --card-bg: rgba(24, 24, 27, 0.8);
+            --card-border: rgba(63, 63, 70, 0.4);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-glow: rgba(34, 211, 238, 0.15);
         }
-        
+
         [data-theme="light"] {
-            /* Light Theme Colors */
-            --bg-gradient-start: #dbeafe;
-            --bg-gradient-end: #f0f9ff;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(59, 130, 246, 0.25);
-            --glass-shadow: rgba(0, 0, 0, 0.15);
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.95);
-            --input-border: rgba(59, 130, 246, 0.4);
-            --input-focus-bg: rgba(255, 255, 255, 1);
-            --input-text: #1e293b;
-            --card-bg: rgba(59, 130, 246, 0.1);
-            --card-hover: rgba(59, 130, 246, 0.18);
+            --app-bg: #fafafa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(228, 228, 231, 0.8);
+            --text-primary: #18181b;
+            --text-secondary: #3f3f46;
+            --text-muted: #71717a;
+            --accent-glow: rgba(34, 211, 238, 0.1);
         }
-        
+
         html {
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
+            overscroll-behavior: none;
         }
-        
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            position: relative;
-            overflow-x: hidden;
-            transition: background 0.3s ease;
-            overscroll-behavior-y: contain;
-        }
-        
-        body::before {
-            content: '';
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--app-bg);
+            height: 100dvh;
+            overflow: hidden;
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2), transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.2), transparent 50%);
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
             pointer-events: none;
             z-index: 0;
+            opacity: 0.6;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(34, 211, 238, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(52, 211, 153, 0.06), transparent);
         }
-        
-        .app-container {
+
+        [data-theme="light"] .ambient-bg {
+            opacity: 0.4;
+        }
+
+        /* App Container */
+        .app-shell {
             position: relative;
             z-index: 1;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
-            padding-top: var(--safe-area-top);
-            padding-bottom: var(--safe-area-bottom);
+            padding: calc(12px + var(--safe-top)) 16px calc(12px + var(--safe-bottom));
+            max-width: 480px;
+            margin: 0 auto;
         }
-        
-        /* Fixed Buttons - Theme Toggle (Right) and Settings (Left) */
-        .fixed-btn {
-            position: fixed;
-            top: calc(16px + var(--safe-area-top));
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 50%;
-            width: 52px;
-            height: 52px;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 6px 20px var(--glass-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 9999;
-            font-size: 24px;
-            user-select: none;
-        }
-        
-        .fixed-btn:active {
-            transform: scale(0.92);
-        }
-        
-        .theme-toggle {
-            right: 16px;
-        }
-        
-        .settings-toggle {
-            left: 16px;
-        }
-        
-        /* Glass Card - Mobile Optimized */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 
-                0 10px 35px 0 var(--glass-shadow),
-                inset 0 0 0 1px var(--glass-border);
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-        
-        /* Compact Previous Answer Card */
-        .previous-answer-card {
+
+        /* Glass Card */
+        .glass {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 12px;
-            padding: 0.6rem 0.9rem;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 4px 15px var(--glass-shadow);
-            animation: slideDown 0.4s ease;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .header-btn:active {
+            transform: scale(0.92);
+            opacity: 0.8;
+        }
+
+        .app-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #22d3ee 0%, #34d399 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            gap: 12px;
+        }
+
+        /* Previous Answer Bar */
+        .prev-answer-bar {
+            flex-shrink: 0;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 0.5rem;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
         }
-        .previous-answer-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+
+        .prev-answer-bar.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .prev-label {
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-bottom: 0;
-            display: block;
-            white-space: nowrap;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .previous-answer-content {
-            display: flex;
-            align-items: baseline;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            text-align: right;
-            flex-wrap: wrap;
-        }
-        .previous-answer-main {
-            font-size: 1.1rem;
+
+        .prev-content {
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-primary);
+            text-align: right;
         }
-        .previous-answer-sub {
-            font-size: 0.9rem;
+
+        .prev-sub {
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--text-secondary);
+            margin-left: 6px;
         }
-        
-        /* Word Card - Mobile Optimized with Swipe */
+
+        /* Word Card */
         .word-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 12px 40px 0 var(--glass-shadow);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative;
             overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            touch-action: pan-y;
-            user-select: none;
+            transition: transform 0.15s ease;
         }
-        
+
         .word-card.swiping {
             transition: none;
         }
-        
-        /* Question Display - Optimized Size */
-        .question-display {
-            min-height: 160px;
+
+        .word-card.correct-flash {
+            animation: flashCorrect 0.4s ease;
+        }
+
+        .word-card.review-flash {
+            animation: flashReview 0.4s ease;
+        }
+
+        .word-card.incorrect-flash {
+            animation: flashIncorrect 0.4s ease;
+        }
+
+        @keyframes flashCorrect {
+            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
+            50% { box-shadow: inset 0 0 0 4px rgba(52, 211, 153, 0.5); }
+        }
+
+        @keyframes flashReview {
+            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
+            50% { box-shadow: inset 0 0 0 4px rgba(251, 191, 36, 0.5); }
+        }
+
+        @keyframes flashIncorrect {
+            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
+            50% { box-shadow: inset 0 0 0 4px rgba(251, 113, 133, 0.5); }
+        }
+
+        /* Question Section */
+        .question-section {
+            flex: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem 1.2rem;
-            background: var(--card-bg);
+            padding: 24px 20px;
             cursor: pointer;
             user-select: none;
-            -webkit-user-select: none;
+            min-height: 0;
         }
-        
+
         .question-text {
-            font-size: 1.8rem;
-            font-weight: 900;
+            font-size: clamp(1.5rem, 8vw, 2.5rem);
+            font-weight: 800;
             color: var(--text-primary);
             text-align: center;
             line-height: 1.3;
-            word-wrap: break-word;
+            word-break: break-word;
             max-width: 100%;
         }
-        
+
         .tap-hint {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 1rem;
-            text-align: center;
-            opacity: 0.7;
-        }
-        
-        /* Word Info Badge - NEW */
-        .word-info-badge {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 0.75rem;
-            flex-wrap: wrap;
-        }
-        
-        .info-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.7rem;
-            border-radius: 10px;
             font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tap-hint-icon {
+            animation: tapPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes tapPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* Word Info Chips */
+        .word-chips {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
             font-weight: 700;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        
-        .info-chip-unevaluated {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+
+        .chip-neutral {
+            background: rgba(113, 113, 122, 0.2);
+            color: #a1a1aa;
         }
-        
-        .info-chip-correct {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+        .chip-correct {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
         }
-        
-        .info-chip-review {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+
+        .chip-review {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
         }
-        
-        .info-chip-incorrect {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+        .chip-incorrect {
+            background: rgba(251, 113, 133, 0.15);
+            color: #fb7185;
         }
-        
-        /* Answer Display */
-        .answer-content {
-            padding: 1.5rem 1.2rem;
+
+        /* Answer Section */
+        .answer-section {
+            background: linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.03) 100%);
+            border-top: 1px solid var(--card-border);
+            padding: 20px;
             text-align: center;
-            animation: slideDown 0.4s ease;
+            animation: slideUp 0.3s ease;
         }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .answer-reading {
-            font-size: 1.3rem;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-        
-        .answer-meaning {
-            font-size: 1.6rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--text-secondary);
-            line-height: 1.6;
-            font-weight: 500;
+            margin-bottom: 8px;
         }
-        
-        /* Report Buttons - Optimized Size */
-        .report-buttons {
+
+        .answer-meaning {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .edit-btn {
+            margin-top: 12px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn:active {
+            transform: scale(0.95);
+            background: rgba(139, 92, 246, 0.25);
+        }
+
+        /* Report Buttons */
+        .report-btns {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin: 14px 0;
+            flex-shrink: 0;
         }
-        
+
         .report-btn {
-            position: relative;
+            height: 64px;
+            border-radius: 16px;
             border: none;
-            border-radius: 18px;
-            font-size: 2.8rem;
-            font-weight: 900;
-            padding: 1.2rem 0;
-            transition: transform 0.2s ease;
+            font-size: 2rem;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.15s ease;
+            position: relative;
             overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
         }
-        
+
         .report-btn:active {
-            transform: scale(0.93);
+            transform: scale(0.94);
         }
-        
-        .report-btn::before {
+
+        .report-btn::after {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+            pointer-events: none;
         }
-        
-        .report-btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-        
+
         .btn-incorrect {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
             color: white;
+            box-shadow: 0 4px 20px rgba(251, 113, 133, 0.3);
         }
-        
+
         .btn-review {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
             color: white;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
         }
-        
+
         .btn-correct {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
             color: white;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
         }
-        
-        /* Navigation - Inline (Not Fixed) */
-        .bottom-nav {
-            background: transparent;
-            padding: 0;
+
+        /* Navigation */
+        .nav-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 14px;
-            margin-bottom: 14px;
+            flex-shrink: 0;
+            margin-top: 10px;
         }
-        
+
         .nav-btn {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            color: white;
-            font-weight: 700;
-            padding: 1rem;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .nav-btn:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-        
-        .nav-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        
-        /* Action Buttons - Large and Touchable */
-        .btn-primary {
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-            color: white;
-            font-weight: 700;
-            padding: 1.2rem 2rem;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.45);
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            width: 100%;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .btn-primary:active:not(:disabled) {
-            transform: scale(0.96);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            font-weight: 700;
-            padding: 1.2rem 2rem;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.45);
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            width: 100%;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .btn-secondary:active:not(:disabled) {
-            transform: scale(0.96);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            font-weight: 700;
-            padding: 1.2rem 2rem;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 6px 24px rgba(239, 68, 68, 0.45);
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            width: 100%;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .btn-danger:active {
-            transform: scale(0.96);
-        }
-        
-        /* Edit Button - Floating */
-        .edit-btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            font-weight: 700;
-            padding: 0.9rem 1.8rem;
+            height: 48px;
             border-radius: 14px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.45);
-            border: none;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
-            margin-top: 1rem;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .edit-btn:active {
-            transform: scale(0.95);
-        }
-        
-        /* Statistics Badges - Compact 4-column */
-        .stat-badge {
-            display: inline-flex;
+            transition: all 0.15s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.55rem 0.7rem;
-            border-radius: 12px;
+            gap: 6px;
+        }
+
+        .nav-btn:active:not(:disabled) {
+            transform: scale(0.96);
+            opacity: 0.8;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+
+        .progress-row {
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .progress-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-value {
+            font-size: 0.75rem;
             font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-            transition: transform 0.2s ease;
-            user-select: none;
-            -webkit-user-select: none;
-            min-width: 0;
+            color: var(--text-secondary);
         }
-        
-        .stat-badge:active {
-            transform: scale(0.95);
-        }
-        
-        .stat-badge-correct {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-        
-        .stat-badge-review {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-        }
-        
-        .stat-badge-incorrect {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-        
-        .stat-badge-unevaluated {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            color: white;
-        }
-        
-        .stat-badge-icon {
-            font-size: 1.3rem;
-            margin-right: 0.4rem;
-        }
-        
-        /* Progress Bar - Thicker */
-        .progress-container {
-            width: 100%;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 14px;
+
+        .progress-track {
+            height: 6px;
+            background: rgba(113, 113, 122, 0.2);
+            border-radius: 3px;
             overflow: hidden;
-            height: 14px;
-            position: relative;
         }
-        
-        [data-theme="light"] .progress-container {
-            background: rgba(203, 213, 225, 0.6);
-        }
-        
-        .progress-bar {
+
+        .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #06b6d4 0%, #0ea5e9 100%);
-            border-radius: 14px;
+            border-radius: 3px;
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 18px rgba(6, 182, 212, 0.7);
         }
-        
-        .progress-bar-unevaluated {
-            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 0 18px rgba(245, 158, 11, 0.7);
+
+        .progress-fill-orange {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
         }
-        
-        /* Modal - Slide Up from Bottom */
-        .modal {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 9998;
-            animation: fadeIn 0.3s ease;
+
+        .progress-fill-cyan {
+            background: linear-gradient(90deg, #22d3ee, #06b6d4);
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .stats-chips {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
         }
-        
-        .modal-content {
+
+        .stat-chip {
+            flex: 1;
+            padding: 8px 4px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .stat-chip-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: #a1a1aa;
+        }
+
+        .stat-chip-correct {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+        }
+
+        .stat-chip-review {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .stat-chip-incorrect {
+            background: rgba(251, 113, 133, 0.15);
+            color: #fb7185;
+        }
+
+        /* Setup View */
+        .setup-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .setup-card {
+            padding: 20px;
+        }
+
+        .setup-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setup-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            background: rgba(24, 24, 27, 0.5);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="light"] textarea {
+            background: rgba(244, 244, 245, 0.8);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #22d3ee;
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+        }
+
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+            margin-top: 12px;
+        }
+
+        .primary-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+        }
+
+        .secondary-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .secondary-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .resume-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-sheet {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            max-height: 85vh;
-            overflow-y: auto;
-            background: var(--glass-bg);
+            max-height: 85dvh;
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
             border-radius: 24px 24px 0 0;
-            padding: 1.5rem 1.5rem calc(1.5rem + var(--safe-area-bottom));
-            box-shadow: 0 -8px 40px var(--glass-shadow);
-            animation: slideUpModal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            padding-bottom: calc(20px + var(--safe-bottom));
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            overflow-y: auto;
+            touch-action: none;
         }
-        
-        @keyframes slideUpModal {
-            from {
-                opacity: 0;
-                transform: translateY(100%);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        /* 確認モーダルはSettingsより上に表示 */
+        #confirm-modal-overlay,
+        #message-modal-overlay {
+            z-index: 2000;
         }
-        
+        #confirm-modal,
+        #message-modal {
+            z-index: 2001;
+        }
+
+        .modal-overlay.active + .modal-sheet,
+        .modal-sheet.active {
+            transform: translateY(0);
+        }
+
         .modal-handle {
-            width: 40px;
+            width: 36px;
             height: 4px;
             background: var(--text-muted);
             border-radius: 2px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto;
             opacity: 0.5;
+            transition: opacity 0.2s, width 0.2s, background 0.2s;
         }
-        
-        /* Input Forms - Mobile Optimized */
-        textarea, input[type="text"], input[type="number"] {
-            background: var(--input-bg);
-            border: 2px solid var(--input-border);
-            border-radius: 16px;
-            padding: 1.2rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            color: var(--input-text);
-            font-size: 16px; /* Prevents zoom on iOS */
-            width: 100%;
+
+        .modal-drag-area {
+            padding: 16px 0 12px;
+            margin: -20px -20px 8px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-radius: 24px 24px 0 0;
+            transition: background 0.2s;
         }
-        
-        input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
+
+        .modal-drag-area:active {
+            cursor: grabbing;
+            background: rgba(255, 255, 255, 0.03);
         }
-        
-        textarea::placeholder, input::placeholder {
+
+        .modal-drag-area:active .modal-handle {
+            opacity: 0.8;
+            width: 48px;
+            background: var(--text-secondary);
+        }
+
+        .drag-hint {
+            font-size: 0.65rem;
             color: var(--text-muted);
+            opacity: 0.6;
+            letter-spacing: 0.03em;
         }
-        
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #06b6d4;
-            background: var(--input-focus-bg);
-            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.25);
+
+        .modal-sheet.dragging {
+            transition: none;
         }
-        
-        /* Toggle Switch - Larger */
-        .toggle-switch {
+
+        .modal-sheet.dragging {
+            transition: none;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-message {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            height: 50px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.97);
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+            color: white;
+        }
+
+        .modal-btn-danger {
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+            color: white;
+        }
+
+        .modal-btn-ghost {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            margin-top: 10px;
+        }
+
+        /* Settings Modal */
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: rgba(63, 63, 70, 0.15);
+            border-radius: 14px;
+            margin-bottom: 8px;
+        }
+
+        [data-theme="light"] .settings-item {
+            background: rgba(228, 228, 231, 0.5);
+        }
+
+        .settings-item-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Toggle Switch */
+        .toggle {
             position: relative;
-            display: inline-block;
-            width: 68px;
-            height: 38px;
+            width: 52px;
+            height: 30px;
         }
-        
-        .toggle-switch input {
+
+        .toggle input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
-        .toggle-slider {
+
+        .toggle-track {
             position: absolute;
+            inset: 0;
+            background: rgba(113, 113, 122, 0.3);
+            border-radius: 15px;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            transition: .4s;
-            border-radius: 38px;
+            transition: background 0.3s ease;
         }
-        
-        .toggle-slider:before {
+
+        .toggle-thumb {
             position: absolute;
-            content: "";
-            height: 30px;
-            width: 30px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
             border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        
-        input:checked + .toggle-slider {
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+
+        .toggle input:checked + .toggle-track {
+            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
         }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(30px);
+
+        .toggle input:checked + .toggle-track .toggle-thumb {
+            transform: translateX(22px);
         }
-        
-        /* Loading Animation */
+
+        /* Probability Inputs */
+        .prob-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .prob-item {
+            text-align: center;
+        }
+
+        .prob-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .prob-input {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(24, 24, 27, 0.5);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        [data-theme="light"] .prob-input {
+            background: rgba(244, 244, 245, 0.8);
+        }
+
+        .prob-input:focus {
+            outline: none;
+            border-color: #22d3ee;
+        }
+
+        .prob-total {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .prob-total-valid {
+            color: #34d399;
+        }
+
+        .prob-total-invalid {
+            color: #fb7185;
+        }
+
+        /* Delete Options */
+        .delete-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(63, 63, 70, 0.15);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        [data-theme="light"] .delete-option {
+            background: rgba(228, 228, 231, 0.5);
+        }
+
+        .delete-checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--card-border);
+            background: transparent;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.2s ease;
+        }
+
+        .delete-checkbox:checked {
+            background: #fb7185;
+            border-color: #fb7185;
+        }
+
+        .delete-option-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .danger-btn {
+            width: 100%;
+            height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-top: 8px;
+        }
+
+        .danger-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .danger-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Edit Modal */
+        .edit-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(24, 24, 27, 0.5);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        [data-theme="light"] .edit-input {
+            background: rgba(244, 244, 245, 0.8);
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #22d3ee;
+        }
+
+        .edit-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* TTS Button */
+        .tts-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(34, 211, 238, 0.15);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            color: #22d3ee;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tts-btn:active {
+            transform: scale(0.9);
+            background: rgba(34, 211, 238, 0.25);
+        }
+
+        .tts-btn.speaking {
+            animation: speakingPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes speakingPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(34, 211, 238, 0); }
+        }
+
+        /* Export/Import Buttons */
+        .export-import-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .export-btn, .import-btn {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .export-btn {
+            background: rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .import-btn {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .export-btn:active, .import-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* TTS Speed Slider */
+        .tts-speed-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tts-speed-slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(113, 113, 122, 0.3);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .tts-speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tts-speed-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Word List Modal */
+        #wordlist-modal {
+            max-height: 95dvh;
+            height: 95dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wordlist-header {
+            flex-shrink: 0;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(24, 24, 27, 0.5);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        [data-theme="light"] .search-input {
+            background: rgba(244, 244, 245, 0.8);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #22d3ee;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .filter-chip {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip.active {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.5);
+            color: #22d3ee;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
+        }
+
+        .wordlist-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .wordlist-container {
+            flex: 1;
+            overflow-y: auto;
+            margin: 0 -20px;
+            padding: 0 20px;
+        }
+
+        .word-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: rgba(63, 63, 70, 0.15);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="light"] .word-item {
+            background: rgba(228, 228, 231, 0.5);
+        }
+
+        .word-item:active {
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+
+        .word-item-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .word-item-word {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .word-item-detail {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .word-item-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .word-item-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .word-item-status {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .status-unevaluated { background: rgba(113, 113, 122, 0.2); color: #a1a1aa; }
+        .status-correct { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+        .status-review { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .status-incorrect { background: rgba(251, 113, 133, 0.2); color: #fb7185; }
+
+        .wordlist-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .wordlist-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .file-input-hidden {
+            display: none;
+        }
+
+        /* Loading */
+        .loading-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+
         .loading-dot {
-            animation: bounce 0.6s infinite alternate;
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+            animation: loadingBounce 0.6s infinite alternate;
         }
-        
+
         .loading-dot:nth-child(2) { animation-delay: 0.2s; }
         .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes bounce {
+
+        @keyframes loadingBounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-14px); }
+            to { transform: translateY(-10px); }
         }
-        
-        /* Title */
-        .app-title {
-            color: var(--text-primary);
-            text-shadow: 0 0 24px rgba(56, 189, 248, 0.6);
-            font-weight: 900;
-            letter-spacing: 0.5px;
+
+        .loading-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
         }
-        
-        /* Swipe Indicator */
+
+        /* Swipe Indicators */
         .swipe-indicator {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 3rem;
+            font-size: 2rem;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .swipe-indicator.left {
-            left: 20px;
-        }
-        
-        .swipe-indicator.right {
-            right: 20px;
-        }
-        
-        .swipe-indicator.visible {
-            opacity: 0.6;
-        }
-        
-        /* Content Padding */
-        .content-wrapper {
-            padding-bottom: calc(16px + var(--safe-area-bottom));
-        }
-        
-        /* Scrollbar - Hidden on Mobile */
-        ::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-        }
-        
-        /* Text Color Adjustments */
-        .text-light {
-            color: var(--text-primary);
-        }
-        
-        .text-muted {
+            transition: opacity 0.2s ease;
+            z-index: 100;
             color: var(--text-muted);
         }
-        
-        label {
-            color: var(--text-primary);
+
+        .swipe-indicator.left { left: 8px; }
+        .swipe-indicator.right { right: 8px; }
+        .swipe-indicator.visible { opacity: 0.5; }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+
+        /* View Transitions */
+        .view-enter {
+            animation: viewEnter 0.4s ease;
         }
-        
-        .text-secondary {
-            color: var(--text-secondary);
-        }
-        
-        /* View Transition */
-        .view-transition {
-            animation: viewFadeIn 0.5s ease;
-        }
-        
-        @keyframes viewFadeIn {
+
+        @keyframes viewEnter {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(16px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
-        /* Settings Item Card */
-        .settings-item-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 4px 15px var(--glass-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .settings-item-label {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        /* Utility */
-        .hidden {
-            display: none !important;
-        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 0; height: 0; }
     </style>
 </head>
 <body>
-    <!-- Fixed Buttons -->
-    <button id="settings-toggle" class="fixed-btn settings-toggle" aria-label="Settings">
-        ⚙️
-    </button>
-    
-    <button id="theme-toggle" class="fixed-btn theme-toggle" aria-label="Toggle Theme">
-        🌙
-    </button>
+    <div class="ambient-bg"></div>
 
     <!-- Swipe Indicators -->
-    <div id="swipe-left" class="swipe-indicator left">←</div>
-    <div id="swipe-right" class="swipe-indicator right">→</div>
+    <div id="swipe-left" class="swipe-indicator left">‹</div>
+    <div id="swipe-right" class="swipe-indicator right">›</div>
 
-    <!-- Main Container -->
-    <div class="app-container">
-        <div class="px-4 py-5 content-wrapper">
+    <div class="app-shell">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="settings-toggle" class="header-btn" aria-label="Settings">⚙️</button>
+            </div>
+            <div class="app-logo">
+                <div class="logo-icon">📚</div>
+                <span>Tango</span>
+            </div>
+            <div class="header-right">
+                <button id="wordlist-toggle" class="header-btn" aria-label="Word List">📋</button>
+                <button id="theme-toggle" class="header-btn" aria-label="Toggle Theme">🌙</button>
+            </div>
+        </header>
 
-            <h1 class="text-3xl font-black text-center mb-4 app-title">📚 Vocabulary Test</h1>
-            
-            <!-- Status Message -->
-            <div id="status-message" class="text-center mb-4 font-semibold text-light">
-                <!-- JavaScript will insert content here -->
+        <!-- Loading View -->
+        <div id="loading-view" class="loading-view hidden">
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+            <p class="loading-text">Loading...</p>
+        </div>
+
+        <!-- Setup View -->
+        <div id="setup-view" class="setup-view view-enter">
+            <div class="setup-card glass">
+                <h2 class="setup-title">📝 Register Words</h2>
+                <p class="setup-desc">Format: word_reading_meaning or word_meaning</p>
+                <textarea id="word-input" placeholder="りんご_apple&#10;놀다_ノルダ_遊ぶ&#10;book_本"></textarea>
+                <button id="save-words-btn" class="primary-btn">Add to Database</button>
             </div>
 
-            <!-- Loading Indicator -->
-            <div id="loading-indicator" class="hidden text-center py-12 view-transition">
-                <div class="flex justify-center space-x-3 mb-4">
-                    <div class="w-4 h-4 rounded-full loading-dot"></div>
-                    <div class="w-4 h-4 rounded-full loading-dot"></div>
-                    <div class="w-4 h-4 rounded-full loading-dot"></div>
-                </div>
-                <p class="font-medium text-light">Loading...</p>
+            <div class="setup-card glass">
+                <h2 class="setup-title">🔄 Resume Test</h2>
+                <p id="resume-info" class="resume-info">No saved data</p>
+                <button id="resume-test-btn" class="secondary-btn" disabled>
+                    Resume (<span id="last-updated-time">--</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- Test View -->
+        <div id="test-view" class="main-content hidden view-enter">
+            <!-- Previous Answer -->
+            <div id="prev-answer-bar" class="prev-answer-bar glass">
+                <span class="prev-label">Prev Answer</span>
+                <div id="prev-answer-content" class="prev-content"></div>
             </div>
 
-            <!-- Setup View -->
-            <div id="setup-view" class="view-transition">
-                <div class="glass-card p-6 mb-6">
-                    <h2 class="text-xl font-bold text-light mb-3">📝 Register Words</h2>
-                    <p class="text-sm text-muted mb-4">Format: "word_reading_meaning" or "word_meaning"</p>
-                    <textarea id="word-input" class="w-full h-48 text-sm mb-4" placeholder="Example:&#10;Words_Meaning&#10;Words_HowToRead_Meaning&#10;りんご_apple&#10;놀다_ノルダ_あそぶ"></textarea>
-                    <button id="save-words-btn" class="btn-primary">
-                        Add to Database
-                    </button>
-                </div>
-
-                <div class="glass-card p-6">
-                    <h2 class="text-xl font-bold text-light mb-3">🔄 Resume Test</h2>
-                    <p id="resume-info" class="text-sm text-muted mb-3">No saved data</p>
-                    <button id="resume-test-btn" class="btn-secondary" disabled>
-                        Resume (<span id="last-updated-time">--</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Test View -->
-            <div id="test-view" class="hidden view-transition">
-                
-                <!-- Previous Answer Display -->
-                <div id="previous-answer-display" class="previous-answer-card hidden">
-                    <span class="previous-answer-label">📝 Answer</span>
-                    <div class="previous-answer-content" id="previous-answer-content-area">
-                        <!-- JSがここを書き換える -->
+            <!-- Word Card -->
+            <div id="word-card" class="word-card glass">
+                <div id="question-section" class="question-section">
+                    <p id="question-text" class="question-text">Tap to Start</p>
+                    <div class="tap-hint">
+                        <span class="tap-hint-icon">👆</span>
+                        <span>Tap to reveal</span>
                     </div>
+                    <div id="word-chips" class="word-chips hidden">
+                        <span id="display-count-chip" class="chip chip-neutral">👁️ 0</span>
+                        <span id="status-chip" class="chip chip-neutral">− New</span>
+                    </div>
+                    <button id="tts-question-btn" class="tts-btn" aria-label="Read aloud">🔊</button>
                 </div>
-                
-                <!-- Word Display Card -->
-                <div id="word-display" class="word-card mb-4">
-                    <div id="question-display" class="question-display">
-                        <div>
-                            <div id="question-word" class="question-text">Tap to Start</div>
-                            <div class="tap-hint">👆 Tap to reveal answer</div>
-                            <!-- Word Info: Display Count & Status -->
-                            <div id="word-info-badges" class="word-info-badge hidden">
-                                <span id="display-count-badge" class="info-chip info-chip-unevaluated">
-                                    👁️ 0
-                                </span>
-                                <span id="status-badge" class="info-chip info-chip-unevaluated">
-                                    − New
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="answer-section" class="hidden">
-                        <div class="answer-content">
-                            <div id="answer-reading" class="answer-reading">Reading</div>
-                            <div id="answer-meaning" class="answer-meaning">Meaning</div>
-                            <button id="edit-word-btn" class="edit-btn">✏️ Edit</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Report Buttons -->
-                <div id="report-buttons" class="report-buttons">
-                    <button data-result="incorrect" class="report-btn btn-incorrect">×</button>
-                    <button data-result="review" class="report-btn btn-review">△</button>
-                    <button data-result="correct" class="report-btn btn-correct">〇</button>
-                </div>
-                
-                <!-- Navigation Buttons (Moved Below Report Buttons) -->
-                <div id="bottom-nav" class="bottom-nav">
-                    <button id="prev-word-btn" class="nav-btn">
-                        ← Back
-                    </button>
-                    <button id="next-word-btn" class="nav-btn">
-                        Next →
-                    </button>
-                </div>
-                
-                <!-- Statistics -->
-                <div id="stats-display" class="glass-card p-5 space-y-4">
-                    <!-- Unevaluated Progress -->
-                    <div id="unevaluated-progress-section">
-                        <p class="text-sm font-semibold text-light mb-2">📋 New Words (<span id="unevaluated-progress-text">0 / 0</span>)</p>
-                        <div class="progress-container">
-                            <div id="unevaluated-progress-bar" class="progress-bar progress-bar-unevaluated" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Overall Progress (Review mode text removed) -->
-                    <div>
-                        <p class="text-sm font-semibold text-light mb-2">📊 Progress (<span id="overall-progress-text">0 / 0</span>)</p>
-                        <div class="progress-container">
-                            <div id="overall-progress-bar" class="progress-bar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Category Stats -->
-                    <div class="pt-4 border-t-2 border-opacity-20" style="border-color: var(--text-muted);">
-                        <div class="grid grid-cols-4 gap-2">
-                            <div class="stat-badge stat-badge-unevaluated">
-                                <span class="stat-badge-icon">−</span>
-                                <span id="unevaluated-count">0</span>
-                            </div>
-                            <div class="stat-badge stat-badge-correct">
-                                <span class="stat-badge-icon">〇</span>
-                                <span id="correct-count">0</span>
-                            </div>
-                            <div class="stat-badge stat-badge-review">
-                                <span class="stat-badge-icon">△</span>
-                                <span id="review-count">0</span>
-                            </div>
-                            <div class="stat-badge stat-badge-incorrect">
-                                <span class="stat-badge-icon">×</span>
-                                <span id="incorrect-count">0</span>
-                            </div>
-                        </div>
-                        <p class="text-sm text-light text-center mt-3">Total: <span id="total-words-count" class="font-bold">0</span></p>
-                    </div>
+                <div id="answer-section" class="answer-section hidden">
+                    <p id="answer-reading" class="answer-reading"></p>
+                    <p id="answer-meaning" class="answer-meaning"></p>
+                    <button id="edit-word-btn" class="edit-btn">✏️ Edit</button>
+                    <button id="tts-answer-btn" class="tts-btn" aria-label="Read aloud">🔊</button>
                 </div>
             </div>
 
+            <!-- Report Buttons -->
+            <div id="report-btns" class="report-btns">
+                <button data-result="incorrect" class="report-btn btn-incorrect">✕</button>
+                <button data-result="review" class="report-btn btn-review">△</button>
+                <button data-result="correct" class="report-btn btn-correct">○</button>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav-row">
+                <button id="prev-word-btn" class="nav-btn" disabled>← Back</button>
+                <button id="next-word-btn" class="nav-btn">Next →</button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div id="stats-bar" class="stats-bar glass">
+                <div id="unevaluated-progress" class="progress-row">
+                    <div class="progress-label">
+                        <span class="progress-title">📋 New Words</span>
+                        <span id="unevaluated-progress-text" class="progress-value">0 / 0</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="unevaluated-progress-bar" class="progress-fill progress-fill-orange" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span class="progress-title">📊 Progress</span>
+                        <span id="overall-progress-text" class="progress-value">0 / 0</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="overall-progress-bar" class="progress-fill progress-fill-cyan" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="stats-chips">
+                    <div class="stat-chip stat-chip-neutral"><span id="unevaluated-count">0</span></div>
+                    <div class="stat-chip stat-chip-correct"><span id="correct-count">0</span></div>
+                    <div class="stat-chip stat-chip-review"><span id="review-count">0</span></div>
+                    <div class="stat-chip stat-chip-incorrect"><span id="incorrect-count">0</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Message Modal -->
-    <div id="custom-modal" class="modal fixed inset-0 flex items-end hidden">
-        <div class="modal-content w-full">
+    <div id="message-modal-overlay" class="modal-overlay"></div>
+    <div id="message-modal" class="modal-sheet">
+        <div class="modal-drag-area" data-modal="message">
             <div class="modal-handle"></div>
-            <h3 id="modal-title" class="text-2xl font-bold mb-4 text-light">Notice</h3>
-            <p id="modal-message" class="text-secondary mb-6 leading-relaxed text-base"></p>
-            <button id="modal-close-btn" class="btn-primary">Close</button>
         </div>
+        <h3 id="message-modal-title" class="modal-title">Notice</h3>
+        <p id="message-modal-text" class="modal-message"></p>
+        <button id="message-modal-close" class="modal-btn modal-btn-primary">OK</button>
     </div>
-    
-    <!-- Confirmation Modal -->
-    <div id="confirm-modal" class="modal fixed inset-0 flex items-end hidden">
-        <div class="modal-content w-full">
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal-overlay" class="modal-overlay"></div>
+    <div id="confirm-modal" class="modal-sheet">
+        <div class="modal-drag-area" data-modal="confirm">
             <div class="modal-handle"></div>
-            <h3 id="confirm-title" class="text-2xl font-bold mb-4" style="color: #ef4444;">⚠️ Warning</h3>
-            <p id="confirm-message" class="text-secondary mb-6 leading-relaxed text-base">Confirm action?</p>
-            <div class="space-y-3">
-                <button id="confirm-ok-btn" class="btn-danger">Confirm</button>
-                <button id="confirm-cancel-btn" class="nav-btn w-full">Cancel</button>
-            </div>
         </div>
+        <h3 id="confirm-modal-title" class="modal-title">⚠️ Confirm</h3>
+        <p id="confirm-modal-text" class="modal-message"></p>
+        <button id="confirm-modal-ok" class="modal-btn modal-btn-danger">Confirm</button>
+        <button id="confirm-modal-cancel" class="modal-btn modal-btn-ghost">Cancel</button>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="modal fixed inset-0 flex items-end hidden">
-        <div class="modal-content w-full">
+    <div id="settings-modal-overlay" class="modal-overlay"></div>
+    <div id="settings-modal" class="modal-sheet">
+        <div class="modal-drag-area" data-modal="settings">
             <div class="modal-handle"></div>
-            <h3 class="text-2xl font-bold text-light mb-4">⚙️ Settings</h3>
-            
-            <!-- Reverse Mode Toggle (Moved into Settings) -->
-            <div class="mb-6">
-                <div class="settings-item-card">
-                    <span class="settings-item-label">🔄 Reverse Mode</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="reverse-mode-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <!-- Probability Settings -->
-            <div class="mb-6">
-                <p class="text-sm text-muted mb-4">Retest probability (total = 100%)</p>
-                
-                <div class="space-y-4">
-                    <label class="block">
-                        <span class="font-bold text-base flex items-center gap-2" style="color: #10b981;">
-                            <span class="text-2xl">〇</span> Correct
-                        </span>
-                        <div class="flex items-center mt-2">
-                            <input type="number" id="prob-correct" min="0" max="100" class="flex-1 p-3 text-lg font-bold text-right">
-                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: var(--input-border); background: var(--input-bg);">%</span>
-                        </div>
-                    </label>
-                    
-                    <label class="block">
-                        <span class="font-bold text-base flex items-center gap-2" style="color: #fbbf24;">
-                            <span class="text-2xl">△</span> Review
-                        </span>
-                        <div class="flex items-center mt-2">
-                            <input type="number" id="prob-review" min="0" max="100" class="flex-1 p-3 text-lg font-bold text-right">
-                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: var(--input-border); background: var(--input-bg);">%</span>
-                        </div>
-                    </label>
-                    
-                    <label class="block">
-                        <span class="font-bold text-base flex items-center gap-2" style="color: #ef4444;">
-                            <span class="text-2xl">×</span> Incorrect
-                        </span>
-                        <div class="flex items-center mt-2">
-                            <input type="number" id="prob-incorrect" min="0" max="100" class="flex-1 p-3 text-lg font-bold text-right">
-                            <span class="p-3 border-2 border-l-0 rounded-r-lg font-bold text-light" style="border-color: var(--input-border); background: var(--input-bg);">%</span>
-                        </div>
-                    </label>
-                    
-                    <div class="text-center pt-2">
-                        <p class="text-lg font-bold text-light">Total: <span id="prob-total" class="text-2xl" style="color: #06b6d4;">0%</span></p>
-                    </div>
-                </div>
-
-                <button id="settings-save-btn" class="btn-primary mt-4" disabled>
-                    Save Settings
-                </button>
-            </div>
-
-            <!-- Add More Words -->
-            <div class="border-t-2 border-opacity-20 pt-6 mt-6" style="border-color: var(--text-muted);">
-                <h4 class="text-xl font-bold text-light mb-4">📝 Add Words</h4>
-                <button id="goto-register-btn" class="btn-secondary mb-4">
-                    ➕ Add More Words
-                </button>
-            </div>
-
-            <!-- Delete Options -->
-            <div class="border-t-2 border-opacity-20 pt-6 mt-6" style="border-color: var(--text-muted);">
-                <h4 class="text-xl font-bold text-light mb-4">🗑️ Delete Words</h4>
-                
-                <div class="space-y-3 mb-4">
-                    <label class="flex items-center gap-3 p-3 rounded-lg" style="background: var(--card-bg);">
-                        <input type="checkbox" id="delete-correct-check">
-                        <span class="text-light font-semibold">〇 Correct (<span id="delete-correct-count">0</span>)</span>
-                    </label>
-                    
-                    <label class="flex items-center gap-3 p-3 rounded-lg" style="background: var(--card-bg);">
-                        <input type="checkbox" id="delete-review-check">
-                        <span class="text-light font-semibold">△ Review (<span id="delete-review-count">0</span>)</span>
-                    </label>
-                    
-                    <label class="flex items-center gap-3 p-3 rounded-lg" style="background: var(--card-bg);">
-                        <input type="checkbox" id="delete-incorrect-check">
-                        <span class="text-light font-semibold">× Incorrect (<span id="delete-incorrect-count">0</span>)</span>
-                    </label>
-                    
-                    <label class="flex items-center gap-3 p-3 rounded-lg" style="background: var(--card-bg);">
-                        <input type="checkbox" id="delete-unevaluated-check">
-                        <span class="text-light font-semibold">− Unevaluated (<span id="delete-unevaluated-count">0</span>)</span>
-                    </label>
-                </div>
-                
-                <button id="delete-by-status-btn" class="btn-danger mb-4" disabled>
-                    Delete Selected
-                </button>
-                
-                <button id="reset-data-btn" class="btn-danger">
-                    Delete All Data
-                </button>
-            </div>
-            
-            <button id="settings-close-btn" class="nav-btn w-full mt-6">Close</button>
+            <span class="drag-hint">Swipe down to close</span>
         </div>
+        <h3 class="modal-title">⚙️ Settings</h3>
+
+        <div class="settings-section">
+            <p class="settings-section-title">Display</p>
+            <div class="settings-item">
+                <span class="settings-item-label">🔄 Reverse Mode</span>
+                <label class="toggle">
+                    <input type="checkbox" id="reverse-mode-toggle">
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">🔊 Text-to-Speech</p>
+            <div class="settings-item">
+                <span class="settings-item-label">Auto Read</span>
+                <label class="toggle">
+                    <input type="checkbox" id="tts-auto-toggle">
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                </label>
+            </div>
+            <div class="settings-item" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                <span class="settings-item-label">Speed</span>
+                <div class="tts-speed-container">
+                    <input type="range" id="tts-speed-slider" class="tts-speed-slider" min="0.5" max="2" step="0.1" value="1">
+                    <span id="tts-speed-value" class="tts-speed-value">1.0x</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">Review Probability</p>
+            <div class="prob-grid">
+                <div class="prob-item">
+                    <p class="prob-label" style="color: #34d399;">○ Correct</p>
+                    <input type="number" id="prob-correct" class="prob-input" min="0" max="100" value="5">
+                </div>
+                <div class="prob-item">
+                    <p class="prob-label" style="color: #fbbf24;">△ Review</p>
+                    <input type="number" id="prob-review" class="prob-input" min="0" max="100" value="30">
+                </div>
+                <div class="prob-item">
+                    <p class="prob-label" style="color: #fb7185;">✕ Incorrect</p>
+                    <input type="number" id="prob-incorrect" class="prob-input" min="0" max="100" value="65">
+                </div>
+            </div>
+            <p id="prob-total" class="prob-total prob-total-valid">Total: 100%</p>
+            <button id="settings-save-btn" class="primary-btn" style="margin-top: 12px;">Save Settings</button>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">Words</p>
+            <button id="goto-register-btn" class="secondary-btn">➕ Add More Words</button>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">📦 Data Management</p>
+            <div class="export-import-grid">
+                <button id="export-json-btn" class="export-btn">📤 JSON</button>
+                <button id="export-csv-btn" class="export-btn">📤 CSV</button>
+            </div>
+            <button id="import-btn" class="import-btn" style="width: 100%;">📥 Import File</button>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">Delete by Status</p>
+            <label class="delete-option">
+                <input type="checkbox" id="delete-correct-check" class="delete-checkbox">
+                <span class="delete-option-label">○ Correct (<span id="delete-correct-count">0</span>)</span>
+            </label>
+            <label class="delete-option">
+                <input type="checkbox" id="delete-review-check" class="delete-checkbox">
+                <span class="delete-option-label">△ Review (<span id="delete-review-count">0</span>)</span>
+            </label>
+            <label class="delete-option">
+                <input type="checkbox" id="delete-incorrect-check" class="delete-checkbox">
+                <span class="delete-option-label">✕ Incorrect (<span id="delete-incorrect-count">0</span>)</span>
+            </label>
+            <label class="delete-option">
+                <input type="checkbox" id="delete-unevaluated-check" class="delete-checkbox">
+                <span class="delete-option-label">− Unevaluated (<span id="delete-unevaluated-count">0</span>)</span>
+            </label>
+            <button id="delete-by-status-btn" class="danger-btn" disabled>Delete Selected</button>
+        </div>
+
+        <div class="settings-section">
+            <p class="settings-section-title">Danger Zone</p>
+            <button id="reset-data-btn" class="danger-btn">🗑️ Delete All Data</button>
+        </div>
+
+        <button id="settings-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 12px;">Close</button>
     </div>
 
-    <!-- Edit Word Modal -->
-    <div id="edit-modal" class="modal fixed inset-0 flex items-end hidden">
-        <div class="modal-content w-full">
+    <!-- Edit Modal -->
+    <div id="edit-modal-overlay" class="modal-overlay"></div>
+    <div id="edit-modal" class="modal-sheet">
+        <div class="modal-drag-area" data-modal="edit">
             <div class="modal-handle"></div>
-            <h3 class="text-2xl font-bold text-light mb-4">✏️ Edit Word</h3>
-            
-            <div class="space-y-4">
-                <label class="block">
-                    <span class="text-light font-semibold mb-2 block">Word</span>
-                    <input type="text" id="edit-word-input" class="w-full p-3 text-lg" required>
-                </label>
-                
-                <label class="block">
-                    <span class="text-light font-semibold mb-2 block">Reading (optional)</span>
-                    <input type="text" id="edit-reading-input" class="w-full p-3 text-lg">
-                </label>
-                
-                <label class="block">
-                    <span class="text-light font-semibold mb-2 block">Meaning</span>
-                    <input type="text" id="edit-meaning-input" class="w-full p-3 text-lg" required>
-                </label>
-            </div>
-
-            <div class="space-y-3 mt-6">
-                <button id="edit-save-btn" class="btn-primary">Save</button>
-                <button id="edit-cancel-btn" class="nav-btn w-full">Cancel</button>
-            </div>
+            <span class="drag-hint">Swipe down to close</span>
         </div>
+        <h3 class="modal-title">✏️ Edit Word</h3>
+        <label class="edit-label">Word</label>
+        <input type="text" id="edit-word-input" class="edit-input" required>
+        <label class="edit-label">Reading (optional)</label>
+        <input type="text" id="edit-reading-input" class="edit-input">
+        <label class="edit-label">Meaning</label>
+        <input type="text" id="edit-meaning-input" class="edit-input" required>
+        <button id="edit-save-btn" class="modal-btn modal-btn-primary" style="margin-top: 8px;">Save</button>
+        <button id="edit-cancel-btn" class="modal-btn modal-btn-ghost">Cancel</button>
+    </div>
+
+    <!-- Hidden File Input for Import -->
+    <input type="file" id="import-file-input" class="file-input-hidden" accept=".json,.csv">
+
+    <!-- Word List Modal -->
+    <div id="wordlist-modal-overlay" class="modal-overlay"></div>
+    <div id="wordlist-modal" class="modal-sheet">
+        <div class="wordlist-header">
+            <div class="modal-drag-area" data-modal="wordlist">
+                <div class="modal-handle"></div>
+                <span class="drag-hint">Swipe down to close</span>
+            </div>
+            <h3 class="modal-title">📋 Word List</h3>
+            <div class="search-bar">
+                <input type="text" id="wordlist-search" class="search-input" placeholder="🔍 Search words...">
+            </div>
+            <div class="filter-chips">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="unevaluated">− New</button>
+                <button class="filter-chip" data-filter="correct">○</button>
+                <button class="filter-chip" data-filter="review">△</button>
+                <button class="filter-chip" data-filter="incorrect">✕</button>
+            </div>
+            <p id="wordlist-count" class="wordlist-count">0 words</p>
+        </div>
+        <div id="wordlist-container" class="wordlist-container"></div>
+        <button id="wordlist-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 12px; flex-shrink: 0;">Close</button>
     </div>
 
     <script>
-        // --- Theme Management ---
+        // ============================================
+        // Theme Management
+        // ============================================
         const LS_THEME_KEY = 'wordTest_theme';
         let currentTheme = localStorage.getItem(LS_THEME_KEY) || 'dark';
-        
+
         function setTheme(theme) {
             currentTheme = theme;
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem(LS_THEME_KEY, theme);
-            
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+            document.getElementById('theme-toggle').textContent = theme === 'dark' ? '🌙' : '☀️';
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0a0a0f' : '#fafafa');
         }
-        
+
         document.getElementById('theme-toggle').addEventListener('click', () => {
             setTheme(currentTheme === 'dark' ? 'light' : 'dark');
         });
-        
+
         setTheme(currentTheme);
-        
-        // --- localStorage Keys ---
+
+        // ============================================
+        // LocalStorage Keys
+        // ============================================
         const LS_WORDS_KEY = 'wordTest_allWords';
         const LS_STATE_KEY = 'wordTest_state';
+        const LS_TTS_KEY = 'wordTest_tts';
 
-        // --- App State ---
+        // ============================================
+        // App State
+        // ============================================
         let state = {
             allWords: [],
             wordMap: new Map(),
@@ -1148,83 +1748,76 @@
             unevaluatedWordIds: [],
             unevaluatedIndex: 0,
             wordStatuses: {},
-            wordDisplayCounts: {}, // NEW: Track display count per word
+            wordDisplayCounts: {},
             reviewWordPool: [],
             currentWord: null,
-            previousWord: null, 
+            previousWord: null,
             wordHistory: [],
             historyIndex: -1,
-            probabilities: {
-                correct: 0.05,
-                review: 0.30,
-                incorrect: 0.65,
-            },
+            probabilities: { correct: 0.05, review: 0.30, incorrect: 0.65 },
             reverseMode: false,
             lastUpdated: null,
             fileName: null,
-            answerVisible: false
+            answerVisible: false,
+            editingFromList: null
         };
 
-        // --- DOM Elements ---
-        const $ = (id) => document.getElementById(id);
+        // TTS State
+        let ttsState = {
+            autoRead: false,
+            speed: 1.0,
+            voices: [],
+            speaking: false
+        };
+
+        // ============================================
+        // DOM Elements
+        // ============================================
+        const $ = id => document.getElementById(id);
+
         const setupView = $('setup-view');
         const testView = $('test-view');
-        const loadingIndicator = $('loading-indicator');
-        const statusMessage = $('status-message');
+        const loadingView = $('loading-view');
         const wordInput = $('word-input');
         const saveWordsBtn = $('save-words-btn');
         const resumeTestBtn = $('resume-test-btn');
         const lastUpdatedTime = $('last-updated-time');
         const resumeInfo = $('resume-info');
 
-        const questionDisplay = $('question-display');
-        const questionWord = $('question-word');
+        const wordCard = $('word-card');
+        const questionSection = $('question-section');
+        const questionText = $('question-text');
         const answerSection = $('answer-section');
         const answerReading = $('answer-reading');
         const answerMeaning = $('answer-meaning');
-        const wordDisplay = $('word-display');
-        const reportButtons = $('report-buttons');
+        const wordChips = $('word-chips');
+        const displayCountChip = $('display-count-chip');
+        const statusChip = $('status-chip');
+
+        const prevAnswerBar = $('prev-answer-bar');
+        const prevAnswerContent = $('prev-answer-content');
+
+        const reportBtns = $('report-btns');
         const prevWordBtn = $('prev-word-btn');
         const nextWordBtn = $('next-word-btn');
-        const editWordBtn = $('edit-word-btn');
-        const reverseModeToggle = $('reverse-mode-toggle');
-        
-        const previousAnswerDisplay = $('previous-answer-display');
-        const previousAnswerContentArea = $('previous-answer-content-area');
-        
-        // NEW: Word info badges
-        const wordInfoBadges = $('word-info-badges');
-        const displayCountBadge = $('display-count-badge');
-        const statusBadge = $('status-badge');
 
-        const totalWordsCount = $('total-words-count');
+        const statsBar = $('stats-bar');
+        const unevaluatedProgress = $('unevaluated-progress');
+        const unevaluatedProgressBar = $('unevaluated-progress-bar');
+        const unevaluatedProgressText = $('unevaluated-progress-text');
+        const overallProgressBar = $('overall-progress-bar');
+        const overallProgressText = $('overall-progress-text');
         const unevaluatedCount = $('unevaluated-count');
         const correctCount = $('correct-count');
         const reviewCount = $('review-count');
         const incorrectCount = $('incorrect-count');
-        
-        const unevaluatedProgressBar = $('unevaluated-progress-bar');
-        const unevaluatedProgressText = $('unevaluated-progress-text');
-        const unevaluatedProgressSection = $('unevaluated-progress-section');
-        const overallProgressBar = $('overall-progress-bar');
-        const overallProgressText = $('overall-progress-text');
 
-        const swipeLeft = $('swipe-left');
-        const swipeRight = $('swipe-right');
+        const editWordBtn = $('edit-word-btn');
+        const reverseModeToggle = $('reverse-mode-toggle');
 
-        const customModal = $('custom-modal');
-        const modalMessage = $('modal-message');
-        const modalTitle = $('modal-title');
-        const modalCloseBtn = $('modal-close-btn');
-        
-        const confirmModal = $('confirm-modal');
-        const confirmTitle = $('confirm-title');
-        const confirmMessage = $('confirm-message');
-        const confirmOkBtn = $('confirm-ok-btn');
-        const confirmCancelBtn = $('confirm-cancel-btn');
-
-        const settingsModal = $('settings-modal');
         const settingsToggle = $('settings-toggle');
+        const settingsModal = $('settings-modal');
+        const settingsModalOverlay = $('settings-modal-overlay');
         const settingsCloseBtn = $('settings-close-btn');
         const settingsSaveBtn = $('settings-save-btn');
         const probCorrectInput = $('prob-correct');
@@ -1232,6 +1825,7 @@
         const probIncorrectInput = $('prob-incorrect');
         const probTotal = $('prob-total');
         const resetDataBtn = $('reset-data-btn');
+        const gotoRegisterBtn = $('goto-register-btn');
 
         const deleteCorrectCheck = $('delete-correct-check');
         const deleteReviewCheck = $('delete-review-check');
@@ -1243,39 +1837,71 @@
         const deleteUnevaluatedCount = $('delete-unevaluated-count');
         const deleteByStatusBtn = $('delete-by-status-btn');
 
+        const messageModalOverlay = $('message-modal-overlay');
+        const messageModal = $('message-modal');
+        const messageModalTitle = $('message-modal-title');
+        const messageModalText = $('message-modal-text');
+        const messageModalClose = $('message-modal-close');
+
+        const confirmModalOverlay = $('confirm-modal-overlay');
+        const confirmModal = $('confirm-modal');
+        const confirmModalTitle = $('confirm-modal-title');
+        const confirmModalText = $('confirm-modal-text');
+        const confirmModalOk = $('confirm-modal-ok');
+        const confirmModalCancel = $('confirm-modal-cancel');
+
+        const editModalOverlay = $('edit-modal-overlay');
         const editModal = $('edit-modal');
         const editWordInput = $('edit-word-input');
         const editReadingInput = $('edit-reading-input');
         const editMeaningInput = $('edit-meaning-input');
         const editSaveBtn = $('edit-save-btn');
         const editCancelBtn = $('edit-cancel-btn');
-        
-        const gotoRegisterBtn = $('goto-register-btn');
 
-        // --- Touch/Swipe Handling ---
+        const swipeLeft = $('swipe-left');
+        const swipeRight = $('swipe-right');
+
+        // New feature elements
+        const wordlistToggle = $('wordlist-toggle');
+        const wordlistModalOverlay = $('wordlist-modal-overlay');
+        const wordlistModal = $('wordlist-modal');
+        const wordlistSearch = $('wordlist-search');
+        const wordlistContainer = $('wordlist-container');
+        const wordlistCount = $('wordlist-count');
+        const wordlistCloseBtn = $('wordlist-close-btn');
+
+        const ttsQuestionBtn = $('tts-question-btn');
+        const ttsAnswerBtn = $('tts-answer-btn');
+        const ttsAutoToggle = $('tts-auto-toggle');
+        const ttsSpeedSlider = $('tts-speed-slider');
+        const ttsSpeedValue = $('tts-speed-value');
+
+        const exportJsonBtn = $('export-json-btn');
+        const exportCsvBtn = $('export-csv-btn');
+        const importBtn = $('import-btn');
+        const importFileInput = $('import-file-input');
+
+        // ============================================
+        // Touch/Swipe Handling
+        // ============================================
         let touchStartX = 0;
         let touchStartY = 0;
-        let touchEndX = 0;
-        let touchEndY = 0;
-        
-        wordDisplay.addEventListener('touchstart', (e) => {
+
+        wordCard.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
         }, { passive: true });
-        
-        wordDisplay.addEventListener('touchmove', (e) => {
+
+        wordCard.addEventListener('touchmove', e => {
             if (!state.answerVisible) return;
-            
             const currentX = e.changedTouches[0].screenX;
             const diffX = currentX - touchStartX;
-            
-            wordDisplay.style.transform = `translateX(${diffX}px)`;
-            wordDisplay.classList.add('swiping');
-            
-            if (diffX < -50) {
+            wordCard.style.transform = `translateX(${diffX * 0.3}px)`;
+            wordCard.classList.add('swiping');
+            if (diffX < -40) {
                 swipeRight.classList.add('visible');
                 swipeLeft.classList.remove('visible');
-            } else if (diffX > 50) {
+            } else if (diffX > 40) {
                 swipeLeft.classList.add('visible');
                 swipeRight.classList.remove('visible');
             } else {
@@ -1283,30 +1909,25 @@
                 swipeRight.classList.remove('visible');
             }
         }, { passive: true });
-        
-        wordDisplay.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            
+
+        wordCard.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
             const diffX = touchEndX - touchStartX;
             const diffY = Math.abs(touchEndY - touchStartY);
-            
-            wordDisplay.style.transform = '';
-            wordDisplay.classList.remove('swiping');
+
+            wordCard.style.transform = '';
+            wordCard.classList.remove('swiping');
             swipeLeft.classList.remove('visible');
             swipeRight.classList.remove('visible');
-            
+
             if (diffY < 50 && state.answerVisible) {
-                if (diffX > 100) {
-                    if (!prevWordBtn.disabled) previousWord();
-                } else if (diffX < -100) {
-                    if (!nextWordBtn.disabled) nextWord();
-                }
+                if (diffX > 80 && !prevWordBtn.disabled) previousWord();
+                else if (diffX < -80 && !nextWordBtn.disabled) nextWord();
             }
         });
-        
-        // Tap to toggle answer
-        questionDisplay.addEventListener('click', () => {
+
+        questionSection.addEventListener('click', () => {
             if (state.answerVisible) {
                 answerSection.classList.add('hidden');
                 state.answerVisible = false;
@@ -1316,59 +1937,64 @@
             }
         });
 
-        // --- Reverse Mode Toggle ---
-        reverseModeToggle.addEventListener('change', (e) => {
-            state.reverseMode = e.target.checked;
-            saveTestState();
-            if (state.currentWord) {
-                displayWord(state.currentWord);
-            }
-            displayPreviousAnswer();
-        });
-
-        // --- UI Helper Functions ---
+        // ============================================
+        // Modal Helpers
+        // ============================================
         function showModal(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            customModal.classList.remove('hidden');
+            messageModalTitle.textContent = title;
+            messageModalText.textContent = message;
+            messageModalOverlay.classList.add('active');
+            messageModal.classList.add('active');
         }
-        
-        modalCloseBtn.onclick = () => {
-            customModal.classList.add('hidden');
+
+        messageModalClose.onclick = () => {
+            messageModalOverlay.classList.remove('active');
+            messageModal.classList.remove('active');
         };
-        
-        function showConfirmModal(title, message, onConfirm) {
-            confirmTitle.textContent = title;
-            confirmMessage.textContent = message;
-            confirmModal.classList.remove('hidden');
-            
-            const newOkBtn = confirmOkBtn.cloneNode(true);
-            confirmOkBtn.parentNode.replaceChild(newOkBtn, confirmOkBtn);
-            $('confirm-ok-btn').onclick = () => {
-                onConfirm();
-                confirmModal.classList.add('hidden');
-            };
-        }
-        
-        confirmCancelBtn.onclick = () => {
-            confirmModal.classList.add('hidden');
+        messageModalOverlay.onclick = () => {
+            messageModalOverlay.classList.remove('active');
+            messageModal.classList.remove('active');
         };
 
+        let confirmCallback = null;
+        function showConfirmModal(title, message, onConfirm) {
+            confirmModalTitle.textContent = title;
+            confirmModalText.textContent = message;
+            confirmCallback = onConfirm;
+            confirmModalOverlay.classList.add('active');
+            confirmModal.classList.add('active');
+        }
+
+        confirmModalOk.onclick = () => {
+            if (confirmCallback) confirmCallback();
+            confirmModalOverlay.classList.remove('active');
+            confirmModal.classList.remove('active');
+        };
+        confirmModalCancel.onclick = () => {
+            confirmModalOverlay.classList.remove('active');
+            confirmModal.classList.remove('active');
+        };
+        confirmModalOverlay.onclick = () => {
+            confirmModalOverlay.classList.remove('active');
+            confirmModal.classList.remove('active');
+        };
+
+        // ============================================
+        // View Management
+        // ============================================
         function setView(viewName) {
             setupView.classList.add('hidden');
             testView.classList.add('hidden');
-            loadingIndicator.classList.add('hidden');
+            loadingView.classList.add('hidden');
 
-            if (viewName === 'setup') {
-                setupView.classList.remove('hidden');
-            } else if (viewName === 'test') {
-                testView.classList.remove('hidden');
-            } else if (viewName === 'loading') {
-                loadingIndicator.classList.remove('hidden');
-            }
+            if (viewName === 'setup') setupView.classList.remove('hidden');
+            else if (viewName === 'test') testView.classList.remove('hidden');
+            else if (viewName === 'loading') loadingView.classList.remove('hidden');
         }
 
-        // --- localStorage Functions ---
+        // ============================================
+        // LocalStorage Functions
+        // ============================================
         function createWordId(word, reading) {
             const str = word + (reading || '');
             let hash = 0;
@@ -1404,7 +2030,7 @@
                 unevaluatedWordIds: state.unevaluatedWordIds,
                 unevaluatedIndex: state.unevaluatedIndex,
                 wordStatuses: state.wordStatuses,
-                wordDisplayCounts: state.wordDisplayCounts, // NEW: Save display counts
+                wordDisplayCounts: state.wordDisplayCounts,
                 reviewWordPool: state.reviewWordPool,
                 wordHistory: state.wordHistory,
                 historyIndex: state.historyIndex,
@@ -1433,18 +2059,18 @@
                 return null;
             }
         }
-        
+
         function resetAppData() {
             localStorage.removeItem(LS_WORDS_KEY);
             localStorage.removeItem(LS_STATE_KEY);
-            
+
             state.allWords = [];
             state.wordMap = new Map();
             state.testPhase = 'unevaluated';
             state.unevaluatedWordIds = [];
             state.unevaluatedIndex = 0;
             state.wordStatuses = {};
-            state.wordDisplayCounts = {}; // NEW: Reset display counts
+            state.wordDisplayCounts = {};
             state.reviewWordPool = [];
             state.currentWord = null;
             state.previousWord = null;
@@ -1455,17 +2081,18 @@
             state.fileName = null;
             state.answerVisible = false;
 
-            settingsModal.classList.add('hidden');
+            closeSettingsModal();
             showModal('Reset Complete', 'All data deleted.');
             updateResumeButton(false);
             setView('setup');
             wordInput.value = '';
             updateStatsDisplay();
-            if (previousAnswerDisplay) {
-                previousAnswerDisplay.classList.add('hidden');
-            }
+            prevAnswerBar.classList.remove('visible');
         }
 
+        // ============================================
+        // Delete by Status
+        // ============================================
         function deleteWordsByStatus() {
             const selectedStatuses = [];
             if (deleteCorrectCheck.checked) selectedStatuses.push('correct');
@@ -1488,45 +2115,36 @@
                 return;
             }
 
-            showConfirmModal(
-                '⚠️ Confirm',
-                `Delete ${wordsToDelete.length} word(s)?`,
-                () => {
-                    const deleteIds = new Set(wordsToDelete.map(w => w.id));
-                    state.allWords = state.allWords.filter(w => !deleteIds.has(w.id));
-                    state.wordMap = new Map(state.allWords.map(w => [w.id, w]));
-                    
-                    deleteIds.forEach(id => {
-                        delete state.wordStatuses[id];
-                        delete state.wordDisplayCounts[id]; // NEW: Also delete display count
-                    });
-                    
-                    state.unevaluatedWordIds = state.unevaluatedWordIds.filter(id => !deleteIds.has(id));
-                    state.wordHistory = state.wordHistory.filter(id => !deleteIds.has(id));
-                    
-                    if (state.currentWord && deleteIds.has(state.currentWord.id)) {
-                        state.currentWord = null;
-                    }
-                    
-                    if (state.previousWord && deleteIds.has(state.previousWord.id)) {
-                        state.previousWord = null;
-                    }
+            showConfirmModal('⚠️ Confirm', `Delete ${wordsToDelete.length} word(s)?`, () => {
+                const deleteIds = new Set(wordsToDelete.map(w => w.id));
+                state.allWords = state.allWords.filter(w => !deleteIds.has(w.id));
+                state.wordMap = new Map(state.allWords.map(w => [w.id, w]));
 
-                    saveAllWords(state.allWords);
-                    
-                    if (state.allWords.length === 0) {
-                        resetAppData();
-                    } else {
-                        rebuildUnevaluatedList();
-                        saveTestState();
-                        settingsModal.classList.add('hidden');
-                        showModal('✅ Done', `${wordsToDelete.length} word(s) deleted.`);
-                        startTest();
-                        updateStatsDisplay();
-                        updateDeleteCounts();
-                    }
+                deleteIds.forEach(id => {
+                    delete state.wordStatuses[id];
+                    delete state.wordDisplayCounts[id];
+                });
+
+                state.unevaluatedWordIds = state.unevaluatedWordIds.filter(id => !deleteIds.has(id));
+                state.wordHistory = state.wordHistory.filter(id => !deleteIds.has(id));
+
+                if (state.currentWord && deleteIds.has(state.currentWord.id)) state.currentWord = null;
+                if (state.previousWord && deleteIds.has(state.previousWord.id)) state.previousWord = null;
+
+                saveAllWords(state.allWords);
+
+                if (state.allWords.length === 0) {
+                    resetAppData();
+                } else {
+                    rebuildUnevaluatedList();
+                    saveTestState();
+                    closeSettingsModal();
+                    showModal('✅ Done', `${wordsToDelete.length} word(s) deleted.`);
+                    startTest();
+                    updateStatsDisplay();
+                    updateDeleteCounts();
                 }
-            );
+            });
         }
 
         function updateDeleteCounts() {
@@ -1543,25 +2161,25 @@
         }
 
         function updateDeleteByStatusButton() {
-            const anyChecked = deleteCorrectCheck.checked || 
-                              deleteReviewCheck.checked || 
-                              deleteIncorrectCheck.checked || 
-                              deleteUnevaluatedCheck.checked;
+            const anyChecked = deleteCorrectCheck.checked || deleteReviewCheck.checked ||
+                              deleteIncorrectCheck.checked || deleteUnevaluatedCheck.checked;
             deleteByStatusBtn.disabled = !anyChecked;
         }
 
-        [deleteCorrectCheck, deleteReviewCheck, deleteIncorrectCheck, deleteUnevaluatedCheck].forEach(checkbox => {
-            checkbox.addEventListener('change', updateDeleteByStatusButton);
+        [deleteCorrectCheck, deleteReviewCheck, deleteIncorrectCheck, deleteUnevaluatedCheck].forEach(cb => {
+            cb.addEventListener('change', updateDeleteByStatusButton);
         });
 
         deleteByStatusBtn.addEventListener('click', deleteWordsByStatus);
-        
-        // --- Word Registration ---
+
+        // ============================================
+        // Word Registration
+        // ============================================
         function rebuildUnevaluatedList() {
             state.unevaluatedWordIds = state.allWords
                 .filter(word => !state.wordStatuses[word.id])
                 .map(word => word.id);
-            
+
             state.unevaluatedWordIds.sort((a, b) => {
                 const wordA = state.wordMap.get(a);
                 const wordB = state.wordMap.get(b);
@@ -1571,7 +2189,7 @@
             if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
                 state.unevaluatedIndex = 0;
             }
-            
+
             if (state.unevaluatedWordIds.length === 0) {
                 const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
                 state.testPhase = allCorrect ? 'finished' : 'retest';
@@ -1588,10 +2206,10 @@
             }
 
             setView('loading');
-            
+
             let existingWords = state.allWords;
             let existingWordMap = state.wordMap;
-            
+
             let newWords = [...existingWords];
             let addedCount = 0;
             let skippedCount = 0;
@@ -1600,9 +2218,9 @@
 
             for (let i = 0; i < lines.length; i++) {
                 const parts = lines[i].split('_').map(part => part.trim());
-                
+
                 let word, reading, meaning;
-                
+
                 if (parts.length === 2) {
                     [word, meaning] = parts;
                     reading = '';
@@ -1612,14 +2230,14 @@
                     skippedCount++;
                     continue;
                 }
-                
+
                 const wordId = createWordId(word, reading);
-                
+
                 if (existingWordMap.has(wordId)) {
                     skippedCount++;
                     continue;
                 }
-                
+
                 const newWordEntry = {
                     id: wordId,
                     word,
@@ -1627,7 +2245,7 @@
                     meaning,
                     initialOrder: newWords.length,
                 };
-                
+
                 newWords.push(newWordEntry);
                 existingWordMap.set(wordId, newWordEntry);
                 addedCount++;
@@ -1636,16 +2254,16 @@
             if (skippedCount > 0) {
                 showModal('Warning', `${skippedCount} skipped (duplicates/errors)`);
             }
-            
+
             if (addedCount === 0) {
                 showModal('Notice', 'No new words added.');
                 setView('setup');
                 return;
             }
-            
+
             state.allWords = newWords;
             state.wordMap = existingWordMap;
-            
+
             saveAllWords(newWords);
             rebuildUnevaluatedList();
             saveTestState();
@@ -1655,26 +2273,28 @@
             showModal('Success', `Added ${addedCount} word(s)! Total: ${state.allWords.length}`);
         }
 
-        // --- Test Logic ---
+        // ============================================
+        // Test Logic
+        // ============================================
         function startTest() {
             if (state.allWords.length === 0) {
                 showModal('Error', 'No words in database.');
                 setView('setup');
                 return;
             }
-            
+
             setView('test');
             state.answerVisible = false;
             answerSection.classList.add('hidden');
-            
+
             reverseModeToggle.checked = state.reverseMode;
-            
+
             rebuildUnevaluatedList();
-            
+
             if (state.testPhase === 'retest' && state.reviewWordPool.length === 0) {
                 buildReviewWordPool();
             }
-            
+
             if (!state.currentWord) {
                 nextWord();
             } else {
@@ -1685,7 +2305,6 @@
         }
 
         function nextWord() {
-            // Moving forward in history - don't increment display count
             if (state.historyIndex < state.wordHistory.length - 1) {
                 state.historyIndex++;
                 const wordId = state.wordHistory[state.historyIndex];
@@ -1700,13 +2319,11 @@
                 updateNavigationButtons();
                 return;
             }
-            
-            // NEW WORD - increment display count
-            
+
             if (state.testPhase === 'unevaluated' && state.unevaluatedWordIds.length > 0) {
                 if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
                     rebuildUnevaluatedList();
-                    
+
                     if (state.unevaluatedWordIds.length === 0) {
                         state.testPhase = 'retest';
                         showModal('🎉 Initial Complete!', 'Moving to review phase.');
@@ -1715,11 +2332,11 @@
                         return;
                     }
                 }
-                
+
                 const wordId = state.unevaluatedWordIds[state.unevaluatedIndex];
                 state.currentWord = state.wordMap.get(wordId);
                 state.unevaluatedIndex++;
-                
+
             } else if (state.testPhase === 'retest') {
                 if (state.reviewWordPool.length === 0) {
                     const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
@@ -1739,12 +2356,12 @@
                 const poolIndex = Math.floor(Math.random() * state.reviewWordPool.length);
                 const wordId = state.reviewWordPool[poolIndex];
                 state.currentWord = state.wordMap.get(wordId);
-                
+
             } else if (state.testPhase === 'finished') {
                 displayFinishedScreen();
                 return;
             }
-            
+
             if (!state.currentWord) {
                 if (state.allWords.length > 0) {
                     state.currentWord = state.allWords[0];
@@ -1760,15 +2377,14 @@
             state.wordHistory.push(state.currentWord.id);
             state.historyIndex = state.wordHistory.length - 1;
 
-            // Increment display count for new word
             incrementDisplayCount(state.currentWord);
-            
+
             displayWord(state.currentWord);
             updateStatsDisplay();
             updateNavigationButtons();
             saveTestState();
         }
-        
+
         function previousWord() {
             if (state.historyIndex > 0) {
                 state.historyIndex--;
@@ -1783,197 +2399,192 @@
                 updateNavigationButtons();
             }
         }
-        
+
         function updateNavigationButtons() {
             prevWordBtn.disabled = state.historyIndex <= 0;
             const atEndOfHistory = state.historyIndex >= state.wordHistory.length - 1;
             nextWordBtn.disabled = atEndOfHistory && (state.testPhase === 'finished' || (state.testPhase === 'unevaluated' && state.unevaluatedIndex >= state.unevaluatedWordIds.length));
         }
-        
+
         function buildReviewWordPool() {
             const newPool = [];
             const { correct, review, incorrect } = state.probabilities;
-            
+
             state.allWords.forEach(word => {
                 const status = state.wordStatuses[word.id];
                 if (!status) return;
-                
+
                 let probability = 0;
                 if (status === 'correct') probability = correct;
                 else if (status === 'review') probability = review;
                 else if (status === 'incorrect') probability = incorrect;
-                
+
                 const frequency = Math.max(1, Math.round(probability * 100));
                 for (let i = 0; i < frequency; i++) {
                     newPool.push(word.id);
                 }
             });
-            
+
             state.reviewWordPool = newPool;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[m]));
         }
 
         function displayPreviousAnswer() {
             if (!state.previousWord) {
-                previousAnswerDisplay.classList.add('hidden');
+                prevAnswerBar.classList.remove('visible');
                 return;
             }
-            
+
             const prev = state.previousWord;
-            previousAnswerDisplay.classList.remove('hidden');
-            
+            prevAnswerBar.classList.add('visible');
+
             let contentHTML = '';
-                
             if (state.reverseMode) {
-                contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.word)}</span>`;
-                if (prev.reading) {
-                    contentHTML += `<span class="previous-answer-sub">(${escapeHTML(prev.reading)})</span>`;
-                }
+                contentHTML += `<span>${escapeHTML(prev.word)}</span>`;
+                if (prev.reading) contentHTML += `<span class="prev-sub">(${escapeHTML(prev.reading)})</span>`;
             } else {
-                contentHTML += `<span class="previous-answer-main">${escapeHTML(prev.meaning)}</span>`;
+                contentHTML += `<span>${escapeHTML(prev.meaning)}</span>`;
             }
-            
-            previousAnswerContentArea.innerHTML = contentHTML;
-        }
-        
-        function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, function(match) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
-                }[match];
-            });
+
+            prevAnswerContent.innerHTML = contentHTML;
         }
 
-        // NEW: Increment display count for a word (only when newly displayed)
         function incrementDisplayCount(word) {
             if (!word) return;
-            if (!state.wordDisplayCounts[word.id]) {
-                state.wordDisplayCounts[word.id] = 0;
-            }
+            if (!state.wordDisplayCounts[word.id]) state.wordDisplayCounts[word.id] = 0;
             state.wordDisplayCounts[word.id]++;
         }
 
-        // NEW: Update word info badges (display count & status) - Display only, no counting
-        function updateWordInfoBadges(word) {
+        function updateWordChips(word) {
             if (!word) {
-                wordInfoBadges.classList.add('hidden');
+                wordChips.classList.add('hidden');
                 return;
             }
-            
-            // Display count (no increment here)
+
             const displayCount = state.wordDisplayCounts[word.id] || 0;
             const status = state.wordStatuses[word.id] || 'unevaluated';
-            
-            // Update display count badge
-            displayCountBadge.textContent = `👁️ ${displayCount}`;
-            
-            // Update status badge
-            let statusText = '';
-            let statusClass = 'info-chip-unevaluated';
-            
-            switch(status) {
+
+            displayCountChip.textContent = `👁️ ${displayCount}`;
+
+            let statusText = '− New';
+            let statusClass = 'chip-neutral';
+
+            switch (status) {
                 case 'correct':
-                    statusText = '〇 Correct';
-                    statusClass = 'info-chip-correct';
+                    statusText = '○ Correct';
+                    statusClass = 'chip-correct';
                     break;
                 case 'review':
                     statusText = '△ Review';
-                    statusClass = 'info-chip-review';
+                    statusClass = 'chip-review';
                     break;
                 case 'incorrect':
-                    statusText = '× Incorrect';
-                    statusClass = 'info-chip-incorrect';
+                    statusText = '✕ Incorrect';
+                    statusClass = 'chip-incorrect';
                     break;
-                default:
-                    statusText = '− New';
-                    statusClass = 'info-chip-unevaluated';
             }
-            
-            statusBadge.textContent = statusText;
-            statusBadge.className = 'info-chip ' + statusClass;
-            
-            wordInfoBadges.classList.remove('hidden');
+
+            statusChip.textContent = statusText;
+            statusChip.className = 'chip ' + statusClass;
+
+            wordChips.classList.remove('hidden');
         }
 
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
-            
+
             displayPreviousAnswer();
-            updateWordInfoBadges(word); // NEW: Update info badges
-                
+            updateWordChips(word);
+
             if (state.reverseMode) {
-                questionWord.textContent = word.meaning;
-                if (word.reading) {
-                    answerReading.textContent = word.reading;
-                    answerReading.style.display = 'block';
-                } else {
-                    answerReading.style.display = 'none';
-                }
+                questionText.textContent = word.meaning;
+                answerReading.textContent = word.reading || '';
+                answerReading.style.display = word.reading ? 'block' : 'none';
                 answerMeaning.textContent = word.word;
             } else {
-                questionWord.textContent = word.word;
-                if (word.reading) {
-                    answerReading.textContent = word.reading;
-                    answerReading.style.display = 'block';
-                } else {
-                    answerReading.style.display = 'none';
-                }
+                questionText.textContent = word.word;
+                answerReading.textContent = word.reading || '';
+                answerReading.style.display = word.reading ? 'block' : 'none';
                 answerMeaning.textContent = word.meaning;
             }
-            
+
             if (state.testPhase !== 'finished') {
-                reportButtons.style.display = 'grid';
+                reportBtns.style.display = 'grid';
+            }
+
+            // Auto TTS
+            if (ttsState.autoRead && state.currentWord) {
+                const text = state.reverseMode ? word.meaning : word.word;
+                setTimeout(() => speak(text, ttsQuestionBtn), 100);
             }
         }
 
         function displayFinishedScreen() {
             state.answerVisible = false;
-            previousAnswerDisplay.classList.add('hidden');
-            wordInfoBadges.classList.add('hidden'); // NEW: Hide info badges on finish
-            questionWord.textContent = '🥳 Complete!';
+            prevAnswerBar.classList.remove('visible');
+            wordChips.classList.add('hidden');
+            questionText.textContent = '🥳 Complete!';
             answerSection.classList.remove('hidden');
             answerReading.textContent = 'Great job!';
             answerReading.style.display = 'block';
             answerMeaning.textContent = 'All words marked correct!';
-            reportButtons.style.display = 'none';
+            reportBtns.style.display = 'none';
         }
 
-        reportButtons.addEventListener('click', (e) => {
+        // Report button handler with visual feedback
+        reportBtns.addEventListener('click', e => {
             const button = e.target.closest('button');
             if (!button || !state.currentWord) return;
 
             const result = button.dataset.result;
             state.wordStatuses[state.currentWord.id] = result;
-            
             state.previousWord = state.currentWord;
 
+            // Visual feedback
+            wordCard.classList.remove('correct-flash', 'review-flash', 'incorrect-flash');
+            void wordCard.offsetWidth; // Trigger reflow
+            wordCard.classList.add(`${result}-flash`);
+
             rebuildUnevaluatedList();
-            
+
             if (state.testPhase === 'retest') {
                 buildReviewWordPool();
             }
-            
+
             nextWord();
         });
 
         prevWordBtn.addEventListener('click', previousWord);
         nextWordBtn.addEventListener('click', nextWord);
 
-        // --- Edit Word ---
+        // ============================================
+        // Edit Word
+        // ============================================
         editWordBtn.addEventListener('click', () => {
             if (!state.currentWord) return;
+            state.editingFromList = null;
             editWordInput.value = state.currentWord.word;
             editReadingInput.value = state.currentWord.reading || '';
             editMeaningInput.value = state.currentWord.meaning;
-            editModal.classList.remove('hidden');
+            editModalOverlay.classList.add('active');
+            editModal.classList.add('active');
         });
 
         editCancelBtn.addEventListener('click', () => {
-            editModal.classList.add('hidden');
+            editModalOverlay.classList.remove('active');
+            editModal.classList.remove('active');
+            state.editingFromList = null;
+        });
+        editModalOverlay.addEventListener('click', () => {
+            editModalOverlay.classList.remove('active');
+            editModal.classList.remove('active');
+            state.editingFromList = null;
         });
 
         editSaveBtn.addEventListener('click', () => {
@@ -1986,7 +2597,10 @@
                 return;
             }
 
-            const oldId = state.currentWord.id;
+            const editTarget = state.editingFromList || state.currentWord;
+            if (!editTarget) return;
+
+            const oldId = editTarget.id;
             const newId = createWordId(newWord, newReading);
 
             if (newId !== oldId && state.wordMap.has(newId)) {
@@ -2001,17 +2615,14 @@
                         state.wordStatuses[newId] = state.wordStatuses[oldId];
                         delete state.wordStatuses[oldId];
                     }
-                    // NEW: Transfer display count
                     if (state.wordDisplayCounts[oldId]) {
                         state.wordDisplayCounts[newId] = state.wordDisplayCounts[oldId];
                         delete state.wordDisplayCounts[oldId];
                     }
                     state.wordMap.delete(oldId);
-                    
+
                     const unevalIdx = state.unevaluatedWordIds.indexOf(oldId);
-                    if (unevalIdx !== -1) {
-                        state.unevaluatedWordIds[unevalIdx] = newId;
-                    }
+                    if (unevalIdx !== -1) state.unevaluatedWordIds[unevalIdx] = newId;
                 }
 
                 state.allWords[wordIndex] = {
@@ -2023,30 +2634,38 @@
                 };
 
                 state.wordMap.set(newId, state.allWords[wordIndex]);
-                state.currentWord = state.allWords[wordIndex];
+
+                if (state.currentWord && state.currentWord.id === oldId) {
+                    state.currentWord = state.allWords[wordIndex];
+                }
 
                 if (newId !== oldId) {
                     for (let i = 0; i < state.wordHistory.length; i++) {
-                        if (state.wordHistory[i] === oldId) {
-                            state.wordHistory[i] = newId;
-                        }
+                        if (state.wordHistory[i] === oldId) state.wordHistory[i] = newId;
                     }
                 }
 
                 saveAllWords(state.allWords);
                 saveTestState();
-                displayWord(state.currentWord);
-                editModal.classList.add('hidden');
+
+                if (state.currentWord) displayWord(state.currentWord);
+
+                editModalOverlay.classList.remove('active');
+                editModal.classList.remove('active');
                 showModal('Success', 'Word updated!');
-                
+
                 if (state.previousWord && state.previousWord.id === oldId) {
-                    state.previousWord = state.currentWord;
+                    state.previousWord = state.allWords[wordIndex];
                     displayPreviousAnswer();
                 }
+
+                state.editingFromList = null;
             }
         });
 
-        // --- UI Updates ---
+        // ============================================
+        // UI Updates
+        // ============================================
         function updateResumeButton(hasData) {
             if (hasData && state.allWords.length > 0) {
                 resumeTestBtn.disabled = false;
@@ -2065,13 +2684,12 @@
         function updateStatsDisplay() {
             const totalWords = state.allWords.length;
             const counts = { unevaluated: 0, correct: 0, review: 0, incorrect: 0 };
-            
+
             state.allWords.forEach(word => {
                 const status = state.wordStatuses[word.id] || 'unevaluated';
                 if (counts[status] !== undefined) counts[status]++;
             });
-            
-            totalWordsCount.textContent = totalWords;
+
             unevaluatedCount.textContent = counts.unevaluated;
             correctCount.textContent = counts.correct;
             reviewCount.textContent = counts.review;
@@ -2081,29 +2699,339 @@
             const unevaluatedProgressPercent = totalWords > 0 ? (evaluatedCount / totalWords) * 100 : 0;
             unevaluatedProgressBar.style.width = `${unevaluatedProgressPercent}%`;
             unevaluatedProgressText.textContent = `${evaluatedCount} / ${totalWords}`;
-            
+
             if (counts.unevaluated > 0) {
-                unevaluatedProgressSection.style.display = 'block';
+                unevaluatedProgress.style.display = 'block';
             } else {
-                unevaluatedProgressSection.style.display = 'none';
+                unevaluatedProgress.style.display = 'none';
             }
-            
+
             const weightedProgress = counts.correct * 1 + counts.review * 0.5;
             const overallProgressPercent = totalWords > 0 ? (weightedProgress / totalWords) * 100 : 0;
             overallProgressBar.style.width = `${overallProgressPercent}%`;
             overallProgressText.textContent = `${weightedProgress.toFixed(1)} / ${totalWords}`;
+        }
 
-            if (state.testPhase === 'unevaluated') {
-                reportButtons.style.display = 'grid';
-            } else if (state.testPhase === 'retest') {
-                reportButtons.style.display = 'grid';
-            } else if (state.testPhase === 'finished') {
-                // No phase status display needed
+        // ============================================
+        // TTS (Text-to-Speech)
+        // ============================================
+        function initTTS() {
+            const savedTTS = localStorage.getItem(LS_TTS_KEY);
+            if (savedTTS) {
+                const parsed = JSON.parse(savedTTS);
+                ttsState.autoRead = parsed.autoRead || false;
+                ttsState.speed = parsed.speed || 1.0;
+            }
+            ttsAutoToggle.checked = ttsState.autoRead;
+            ttsSpeedSlider.value = ttsState.speed;
+            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
+
+            if ('speechSynthesis' in window) {
+                speechSynthesis.onvoiceschanged = () => {
+                    ttsState.voices = speechSynthesis.getVoices();
+                };
+                ttsState.voices = speechSynthesis.getVoices();
             }
         }
 
-        // --- Settings ---
-        settingsToggle.onclick = () => {
+        function saveTTSState() {
+            localStorage.setItem(LS_TTS_KEY, JSON.stringify({
+                autoRead: ttsState.autoRead,
+                speed: ttsState.speed
+            }));
+        }
+
+        function detectLanguage(text) {
+            if (/[\uAC00-\uD7AF]/.test(text)) return 'ko-KR';
+            if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) return 'ja-JP';
+            if (/[\u4E00-\u9FFF]/.test(text)) return 'zh-CN';
+            return 'en-US';
+        }
+
+        function getVoiceForLang(lang) {
+            const voices = ttsState.voices;
+            let voice = voices.find(v => v.lang === lang);
+            if (!voice) voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+            return voice || voices[0];
+        }
+
+        function speak(text, btn) {
+            if (!('speechSynthesis' in window)) {
+                showModal('Not Supported', 'Text-to-speech is not available.');
+                return;
+            }
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            const lang = detectLanguage(text);
+            utterance.lang = lang;
+            utterance.rate = ttsState.speed;
+            const voice = getVoiceForLang(lang);
+            if (voice) utterance.voice = voice;
+
+            if (btn) btn.classList.add('speaking');
+            ttsState.speaking = true;
+
+            utterance.onend = () => {
+                if (btn) btn.classList.remove('speaking');
+                ttsState.speaking = false;
+            };
+            utterance.onerror = () => {
+                if (btn) btn.classList.remove('speaking');
+                ttsState.speaking = false;
+            };
+            speechSynthesis.speak(utterance);
+        }
+
+        ttsQuestionBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (state.currentWord) {
+                const text = state.reverseMode ? state.currentWord.meaning : state.currentWord.word;
+                speak(text, ttsQuestionBtn);
+            }
+        });
+
+        ttsAnswerBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (state.currentWord) {
+                const text = state.reverseMode ? state.currentWord.word : state.currentWord.meaning;
+                speak(text, ttsAnswerBtn);
+            }
+        });
+
+        ttsAutoToggle.addEventListener('change', () => {
+            ttsState.autoRead = ttsAutoToggle.checked;
+            saveTTSState();
+        });
+
+        ttsSpeedSlider.addEventListener('input', () => {
+            ttsState.speed = parseFloat(ttsSpeedSlider.value);
+            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
+            saveTTSState();
+        });
+
+        // ============================================
+        // Export/Import
+        // ============================================
+        function exportJSON() {
+            const exportData = {
+                version: 1,
+                exportDate: new Date().toISOString(),
+                words: state.allWords,
+                statuses: state.wordStatuses,
+                displayCounts: state.wordDisplayCounts,
+                probabilities: state.probabilities
+            };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            downloadBlob(blob, `tango_backup_${formatDate()}.json`);
+            showModal('✅ Exported', 'JSON backup file downloaded.');
+        }
+
+        function exportCSV() {
+            let csv = 'word,reading,meaning,status,displayCount\n';
+            state.allWords.forEach(w => {
+                const status = state.wordStatuses[w.id] || 'unevaluated';
+                const count = state.wordDisplayCounts[w.id] || 0;
+                csv += `"${escapeCsv(w.word)}","${escapeCsv(w.reading || '')}","${escapeCsv(w.meaning)}","${status}",${count}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            downloadBlob(blob, `tango_words_${formatDate()}.csv`);
+            showModal('✅ Exported', 'CSV file downloaded.');
+        }
+
+        function escapeCsv(str) {
+            return str.replace(/"/g, '""');
+        }
+
+        function formatDate() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function handleImport(file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const content = e.target.result;
+                if (file.name.endsWith('.json')) importJSON(content);
+                else if (file.name.endsWith('.csv')) importCSV(content);
+                else showModal('Error', 'Unsupported format. Use JSON or CSV.');
+            };
+            reader.readAsText(file);
+        }
+
+        function importJSON(content) {
+            try {
+                const data = JSON.parse(content);
+                if (!data.words || !Array.isArray(data.words)) {
+                    showModal('Error', 'Invalid JSON format.');
+                    return;
+                }
+                let addedCount = 0, skippedCount = 0;
+                data.words.forEach(w => {
+                    if (!w.word || !w.meaning) { skippedCount++; return; }
+                    const id = w.id || createWordId(w.word, w.reading);
+                    if (state.wordMap.has(id)) { skippedCount++; return; }
+                    const newWord = { id, word: w.word, reading: w.reading || '', meaning: w.meaning, initialOrder: state.allWords.length };
+                    state.allWords.push(newWord);
+                    state.wordMap.set(id, newWord);
+                    if (data.statuses && data.statuses[id]) state.wordStatuses[id] = data.statuses[id];
+                    if (data.displayCounts && data.displayCounts[id]) state.wordDisplayCounts[id] = data.displayCounts[id];
+                    addedCount++;
+                });
+                saveAllWords(state.allWords);
+                rebuildUnevaluatedList();
+                saveTestState();
+                updateStatsDisplay();
+                updateResumeButton(true);
+                showModal('✅ Imported', `Added: ${addedCount}, Skipped: ${skippedCount}`);
+            } catch (err) {
+                showModal('Error', 'Failed to parse JSON file.');
+            }
+        }
+
+        function importCSV(content) {
+            const lines = content.split('\n').filter(l => l.trim());
+            if (lines.length < 2) { showModal('Error', 'CSV file is empty.'); return; }
+            let addedCount = 0, skippedCount = 0;
+            for (let i = 1; i < lines.length; i++) {
+                const parts = parseCSVLine(lines[i]);
+                if (parts.length < 2) { skippedCount++; continue; }
+                const word = parts[0], reading = parts[1] || '', meaning = parts[2] || parts[1];
+                if (!word || !meaning) { skippedCount++; continue; }
+                const id = createWordId(word, reading);
+                if (state.wordMap.has(id)) { skippedCount++; continue; }
+                const newWord = { id, word, reading, meaning, initialOrder: state.allWords.length };
+                state.allWords.push(newWord);
+                state.wordMap.set(id, newWord);
+                if (parts[3]) state.wordStatuses[id] = parts[3];
+                if (parts[4]) state.wordDisplayCounts[id] = parseInt(parts[4]) || 0;
+                addedCount++;
+            }
+            saveAllWords(state.allWords);
+            rebuildUnevaluatedList();
+            saveTestState();
+            updateStatsDisplay();
+            updateResumeButton(true);
+            showModal('✅ Imported', `Added: ${addedCount}, Skipped: ${skippedCount}`);
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '', inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+                    else inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else current += char;
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        exportJsonBtn.addEventListener('click', exportJSON);
+        exportCsvBtn.addEventListener('click', exportCSV);
+        importBtn.addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', e => {
+            if (e.target.files.length > 0) {
+                handleImport(e.target.files[0]);
+                e.target.value = '';
+            }
+        });
+
+        // ============================================
+        // Word List
+        // ============================================
+        let wordlistFilter = 'all';
+
+        function openWordlistModal() {
+            wordlistFilter = 'all';
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            document.querySelector('.filter-chip[data-filter="all"]').classList.add('active');
+            wordlistSearch.value = '';
+            renderWordlist();
+            wordlistModalOverlay.classList.add('active');
+            wordlistModal.classList.add('active');
+        }
+
+        function closeWordlistModal() {
+            wordlistModalOverlay.classList.remove('active');
+            wordlistModal.classList.remove('active');
+        }
+
+        function renderWordlist() {
+            const searchTerm = wordlistSearch.value.toLowerCase().trim();
+            let filtered = state.allWords.filter(w => {
+                const status = state.wordStatuses[w.id] || 'unevaluated';
+                if (wordlistFilter !== 'all' && status !== wordlistFilter) return false;
+                if (searchTerm) {
+                    return w.word.toLowerCase().includes(searchTerm) ||
+                           (w.reading && w.reading.toLowerCase().includes(searchTerm)) ||
+                           w.meaning.toLowerCase().includes(searchTerm);
+                }
+                return true;
+            });
+            wordlistCount.textContent = `${filtered.length} / ${state.allWords.length} words`;
+            if (filtered.length === 0) {
+                wordlistContainer.innerHTML = '<div class="wordlist-empty"><div class="wordlist-empty-icon">📭</div><p>No words found</p></div>';
+                return;
+            }
+            wordlistContainer.innerHTML = filtered.map(w => {
+                const status = state.wordStatuses[w.id] || 'unevaluated';
+                const count = state.wordDisplayCounts[w.id] || 0;
+                const statusIcon = { unevaluated: '−', correct: '○', review: '△', incorrect: '✕' }[status];
+                const statusClass = `status-${status}`;
+                const detail = w.reading ? `${w.reading} → ${w.meaning}` : w.meaning;
+                return `<div class="word-item" data-id="${w.id}"><div class="word-item-main"><div class="word-item-word">${escapeHTML(w.word)}</div><div class="word-item-detail">${escapeHTML(detail)}</div></div><div class="word-item-right"><span class="word-item-count">👁️${count}</span><div class="word-item-status ${statusClass}">${statusIcon}</div></div></div>`;
+            }).join('');
+        }
+
+        wordlistToggle.addEventListener('click', openWordlistModal);
+        wordlistCloseBtn.addEventListener('click', closeWordlistModal);
+        wordlistModalOverlay.addEventListener('click', closeWordlistModal);
+        wordlistSearch.addEventListener('input', renderWordlist);
+
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                wordlistFilter = chip.dataset.filter;
+                renderWordlist();
+            });
+        });
+
+        wordlistContainer.addEventListener('click', e => {
+            const item = e.target.closest('.word-item');
+            if (!item) return;
+            const wordId = item.dataset.id;
+            const word = state.wordMap.get(wordId);
+            if (!word) return;
+            closeWordlistModal();
+            editWordInput.value = word.word;
+            editReadingInput.value = word.reading || '';
+            editMeaningInput.value = word.meaning;
+            state.editingFromList = word;
+            editModalOverlay.classList.add('active');
+            editModal.classList.add('active');
+        });
+
+        // ============================================
+        // Settings
+        // ============================================
+        function openSettingsModal() {
             probCorrectInput.value = Math.round(state.probabilities.correct * 100);
             probReviewInput.value = Math.round(state.probabilities.review * 100);
             probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
@@ -2111,12 +3039,21 @@
             updateDeleteCounts();
             updateDeleteByStatusButton();
             reverseModeToggle.checked = state.reverseMode;
-            settingsModal.classList.remove('hidden');
-        };
+            ttsAutoToggle.checked = ttsState.autoRead;
+            ttsSpeedSlider.value = ttsState.speed;
+            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
+            settingsModalOverlay.classList.add('active');
+            settingsModal.classList.add('active');
+        }
 
-        settingsCloseBtn.onclick = () => {
-            settingsModal.classList.add('hidden');
-        };
+        function closeSettingsModal() {
+            settingsModalOverlay.classList.remove('active');
+            settingsModal.classList.remove('active');
+        }
+
+        settingsToggle.addEventListener('click', openSettingsModal);
+        settingsCloseBtn.addEventListener('click', closeSettingsModal);
+        settingsModalOverlay.addEventListener('click', closeSettingsModal);
 
         [probCorrectInput, probReviewInput, probIncorrectInput].forEach(input => {
             input.addEventListener('input', updateProbabilityTotal);
@@ -2128,21 +3065,21 @@
             const i = parseInt(probIncorrectInput.value) || 0;
             const total = c + r + i;
 
-            probTotal.textContent = `${total}%`;
+            probTotal.textContent = `Total: ${total}%`;
             if (total === 100) {
-                probTotal.style.color = '#06b6d4';
+                probTotal.className = 'prob-total prob-total-valid';
                 settingsSaveBtn.disabled = false;
             } else {
-                probTotal.style.color = '#ef4444';
+                probTotal.className = 'prob-total prob-total-invalid';
                 settingsSaveBtn.disabled = true;
             }
         }
 
-        settingsSaveBtn.onclick = () => {
+        settingsSaveBtn.addEventListener('click', () => {
             const c = parseInt(probCorrectInput.value);
             const r = parseInt(probReviewInput.value);
             const i = parseInt(probIncorrectInput.value);
-            
+
             if (c + r + i !== 100) {
                 showModal('Error', 'Total must equal 100%');
                 return;
@@ -2156,30 +3093,37 @@
 
             saveTestState();
             showModal('✅ Saved', 'Settings updated!');
-            settingsModal.classList.add('hidden');
+            closeSettingsModal();
 
             if (state.testPhase === 'retest') {
                 buildReviewWordPool();
             }
-        };
-        
-        resetDataBtn.onclick = () => {
-            showConfirmModal(
-                '⚠️ Warning',
-                'Delete all data? Cannot be undone.',
-                resetAppData
-            );
-        };
+        });
+
+        resetDataBtn.addEventListener('click', () => {
+            showConfirmModal('⚠️ Warning', 'Delete all data? Cannot be undone.', resetAppData);
+        });
 
         gotoRegisterBtn.addEventListener('click', () => {
-            settingsModal.classList.add('hidden');
+            closeSettingsModal();
             setView('setup');
             wordInput.focus();
         });
 
-        // --- Init ---
+        reverseModeToggle.addEventListener('change', e => {
+            state.reverseMode = e.target.checked;
+            saveTestState();
+            if (state.currentWord) displayWord(state.currentWord);
+            displayPreviousAnswer();
+        });
+
+        // ============================================
+        // Init
+        // ============================================
         function initApp() {
             setView('loading');
+
+            initTTS();
 
             const loadedWords = loadAllWords();
             if (loadedWords.length > 0) {
@@ -2191,14 +3135,11 @@
             if (loadedState && state.allWords.length > 0) {
                 if (loadedState.totalWordsCount === state.allWords.length) {
                     Object.assign(state, loadedState);
-                    // NEW: Ensure wordDisplayCounts exists
-                    if (!state.wordDisplayCounts) {
-                        state.wordDisplayCounts = {};
-                    }
+                    if (!state.wordDisplayCounts) state.wordDisplayCounts = {};
                 } else {
                     state.lastUpdated = loadedState.lastUpdated;
                 }
-                
+
                 rebuildUnevaluatedList();
                 updateStatsDisplay();
                 updateResumeButton(true);
@@ -2217,13 +3158,80 @@
 
         // Prevent zoom on double-tap
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
+        document.addEventListener('touchend', e => {
             const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, false);
+
+        // ============================================
+        // Modal Drag to Close
+        // ============================================
+        const modalConfig = {
+            message: { modal: messageModal, overlay: messageModalOverlay },
+            confirm: { modal: confirmModal, overlay: confirmModalOverlay },
+            settings: { modal: settingsModal, overlay: settingsModalOverlay },
+            edit: { modal: editModal, overlay: editModalOverlay },
+            wordlist: { modal: wordlistModal, overlay: wordlistModalOverlay }
+        };
+
+        let dragState = {
+            active: false,
+            startY: 0,
+            currentY: 0,
+            modalType: null
+        };
+
+        document.querySelectorAll('.modal-drag-area').forEach(dragArea => {
+            dragArea.addEventListener('touchstart', e => {
+                const modalType = dragArea.dataset.modal;
+                const config = modalConfig[modalType];
+                if (!config || !config.modal.classList.contains('active')) return;
+
+                dragState.active = true;
+                dragState.startY = e.touches[0].clientY;
+                dragState.currentY = dragState.startY;
+                dragState.modalType = modalType;
+                config.modal.classList.add('dragging');
+            }, { passive: true });
+        });
+
+        document.addEventListener('touchmove', e => {
+            if (!dragState.active) return;
+
+            dragState.currentY = e.touches[0].clientY;
+            const diff = dragState.currentY - dragState.startY;
+
+            if (diff > 0) {
+                const config = modalConfig[dragState.modalType];
+                if (config) {
+                    config.modal.style.transform = `translateY(${diff}px)`;
+                    config.overlay.style.opacity = Math.max(0, 1 - diff / 300);
+                }
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            if (!dragState.active) return;
+
+            const diff = dragState.currentY - dragState.startY;
+            const config = modalConfig[dragState.modalType];
+
+            if (config) {
+                config.modal.classList.remove('dragging');
+                config.modal.style.transform = '';
+                config.overlay.style.opacity = '';
+
+                // Close if dragged down more than 100px
+                if (diff > 100) {
+                    config.modal.classList.remove('active');
+                    config.overlay.classList.remove('active');
+                }
+            }
+
+            dragState.active = false;
+            dragState.modalType = null;
+        });
     </script>
 </body>
 </html>
