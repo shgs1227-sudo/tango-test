@@ -213,7 +213,6 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            flex-shrink: 0;
         }
 
         .prev-content {
@@ -221,12 +220,6 @@
             font-weight: 700;
             color: var(--text-primary);
             text-align: right;
-            /* Text overflow handling */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-            min-width: 0;
         }
 
         .prev-sub {
@@ -243,13 +236,8 @@
             flex-direction: column;
             min-height: 0;
             position: relative;
+            overflow: hidden;
             transition: transform 0.15s ease;
-            
-            /* Enable scrolling for long content */
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: var(--text-muted) transparent;
         }
 
         .word-card.swiping {
@@ -293,24 +281,41 @@
             padding: 24px 20px;
             cursor: pointer;
             user-select: none;
-            /* Adjustments for scrolling */
-            min-height: min-content;
-            width: 100%;
+            min-height: 0;
+            /* はみ出し対策として念のためスクロールも許可 */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .question-text {
-            font-size: clamp(1.5rem, 8vw, 2.5rem);
             font-weight: 800;
             color: var(--text-primary);
             text-align: center;
-            line-height: 1.3;
-            /* Text wrapping adjustments */
-            width: 100%;
-            word-wrap: break-word;
+            line-height: 1.4;
+            max-width: 100%;
+            /* 単語途切れ対策 */
             overflow-wrap: break-word;
-            word-break: break-word;
+            word-wrap: break-word;
             hyphens: auto;
         }
+
+        /* フォントサイズ調整用クラス */
+        .size-normal {
+            font-size: clamp(1.5rem, 8vw, 2.5rem);
+        }
+
+        .size-medium {
+            font-size: clamp(1.2rem, 6vw, 2.0rem);
+        }
+
+        .size-small {
+            font-size: clamp(1.0rem, 5vw, 1.5rem);
+        }
+
+        .size-tiny {
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
+        }
+
 
         .tap-hint {
             font-size: 0.75rem;
@@ -319,7 +324,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            flex-shrink: 0;
         }
 
         .tap-hint-icon {
@@ -338,7 +342,6 @@
             margin-top: 16px;
             flex-wrap: wrap;
             justify-content: center;
-            flex-shrink: 0;
         }
 
         .chip {
@@ -378,8 +381,6 @@
             padding: 20px;
             text-align: center;
             animation: slideUp 0.3s ease;
-            flex-shrink: 0;
-            width: 100%;
         }
 
         @keyframes slideUp {
@@ -392,10 +393,7 @@
             font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 8px;
-            /* Text wrapping */
-            word-wrap: break-word;
             overflow-wrap: break-word;
-            word-break: break-word;
         }
 
         .answer-meaning {
@@ -403,10 +401,7 @@
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.4;
-            /* Text wrapping */
-            word-wrap: break-word;
             overflow-wrap: break-word;
-            word-break: break-word;
         }
 
         .edit-btn {
@@ -1451,10 +1446,12 @@
 <body>
     <div class="ambient-bg"></div>
 
+    <!-- Swipe Indicators -->
     <div id="swipe-left" class="swipe-indicator left">‹</div>
     <div id="swipe-right" class="swipe-indicator right">›</div>
 
     <div class="app-shell">
+        <!-- Header -->
         <header class="app-header">
             <div class="header-left">
                 <button id="settings-toggle" class="header-btn" aria-label="Settings">⚙️</button>
@@ -1469,6 +1466,7 @@
             </div>
         </header>
 
+        <!-- Loading View -->
         <div id="loading-view" class="loading-view hidden">
             <div class="loading-dots">
                 <div class="loading-dot"></div>
@@ -1478,6 +1476,7 @@
             <p class="loading-text">Loading...</p>
         </div>
 
+        <!-- Setup View -->
         <div id="setup-view" class="setup-view view-enter">
             <div class="setup-card glass">
                 <h2 class="setup-title">📝 Register Words</h2>
@@ -1495,12 +1494,15 @@
             </div>
         </div>
 
+        <!-- Test View -->
         <div id="test-view" class="main-content hidden view-enter">
+            <!-- Previous Answer -->
             <div id="prev-answer-bar" class="prev-answer-bar glass">
                 <span class="prev-label">Prev Answer</span>
                 <div id="prev-answer-content" class="prev-content"></div>
             </div>
 
+            <!-- Word Card -->
             <div id="word-card" class="word-card glass">
                 <div id="question-section" class="question-section">
                     <p id="question-text" class="question-text">Tap to Start</p>
@@ -1522,17 +1524,20 @@
                 </div>
             </div>
 
+            <!-- Report Buttons -->
             <div id="report-btns" class="report-btns">
                 <button data-result="incorrect" class="report-btn btn-incorrect">✕</button>
                 <button data-result="review" class="report-btn btn-review">△</button>
                 <button data-result="correct" class="report-btn btn-correct">○</button>
             </div>
 
+            <!-- Navigation -->
             <div class="nav-row">
                 <button id="prev-word-btn" class="nav-btn" disabled>← Back</button>
                 <button id="next-word-btn" class="nav-btn">Next →</button>
             </div>
 
+            <!-- Stats Bar -->
             <div id="stats-bar" class="stats-bar glass">
                 <div id="unevaluated-progress" class="progress-row">
                     <div class="progress-label">
@@ -1562,6 +1567,7 @@
         </div>
     </div>
 
+    <!-- Message Modal -->
     <div id="message-modal-overlay" class="modal-overlay"></div>
     <div id="message-modal" class="modal-sheet">
         <div class="modal-drag-area" data-modal="message">
@@ -1572,6 +1578,7 @@
         <button id="message-modal-close" class="modal-btn modal-btn-primary">OK</button>
     </div>
 
+    <!-- Confirm Modal -->
     <div id="confirm-modal-overlay" class="modal-overlay"></div>
     <div id="confirm-modal" class="modal-sheet">
         <div class="modal-drag-area" data-modal="confirm">
@@ -1583,6 +1590,7 @@
         <button id="confirm-modal-cancel" class="modal-btn modal-btn-ghost">Cancel</button>
     </div>
 
+    <!-- Settings Modal -->
     <div id="settings-modal-overlay" class="modal-overlay"></div>
     <div id="settings-modal" class="modal-sheet">
         <div class="modal-drag-area" data-modal="settings">
@@ -1683,6 +1691,7 @@
         <button id="settings-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 12px;">Close</button>
     </div>
 
+    <!-- Edit Modal -->
     <div id="edit-modal-overlay" class="modal-overlay"></div>
     <div id="edit-modal" class="modal-sheet">
         <div class="modal-drag-area" data-modal="edit">
@@ -1700,8 +1709,10 @@
         <button id="edit-cancel-btn" class="modal-btn modal-btn-ghost">Cancel</button>
     </div>
 
+    <!-- Hidden File Input for Import -->
     <input type="file" id="import-file-input" class="file-input-hidden" accept=".json,.csv">
 
+    <!-- Word List Modal -->
     <div id="wordlist-modal-overlay" class="modal-overlay"></div>
     <div id="wordlist-modal" class="modal-sheet">
         <div class="wordlist-header">
@@ -1904,6 +1915,11 @@
         let touchStartY = 0;
 
         wordCard.addEventListener('touchstart', e => {
+            // Prevent swipe if touching inside a scrollable area that is actually scrolling
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
+                // Allow normal touch behavior for scrolling
+                return;
+            }
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
         }, { passive: true });
@@ -1911,32 +1927,32 @@
         wordCard.addEventListener('touchmove', e => {
             if (!state.answerVisible) return;
             
+            // Prevent swipe logic if we are scrolling content
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
+                return;
+            }
+
             const currentX = e.changedTouches[0].screenX;
-            const currentY = e.changedTouches[0].screenY;
             const diffX = currentX - touchStartX;
-            const diffY = Math.abs(currentY - touchStartY);
-
-            // 縦スクロールの意図が強い場合（長い文章を読む時など）は、横スワイプ判定（カード移動）をキャンセルする
-            if (diffY > Math.abs(diffX)) return;
-
-            wordCard.style.transform = `translateX(${diffX * 0.3}px)`;
-            wordCard.classList.add('swiping');
-            if (diffX < -40) {
-                swipeRight.classList.add('visible');
-                swipeLeft.classList.remove('visible');
-            } else if (diffX > 40) {
-                swipeLeft.classList.add('visible');
-                swipeRight.classList.remove('visible');
-            } else {
-                swipeLeft.classList.remove('visible');
-                swipeRight.classList.remove('visible');
+            
+            // Only trigger card swipe if horizontal movement is dominant
+            if (Math.abs(diffX) > Math.abs(e.changedTouches[0].screenY - touchStartY)) {
+                wordCard.style.transform = `translateX(${diffX * 0.3}px)`;
+                wordCard.classList.add('swiping');
+                if (diffX < -40) {
+                    swipeRight.classList.add('visible');
+                    swipeLeft.classList.remove('visible');
+                } else if (diffX > 40) {
+                    swipeLeft.classList.add('visible');
+                    swipeRight.classList.remove('visible');
+                } else {
+                    swipeLeft.classList.remove('visible');
+                    swipeRight.classList.remove('visible');
+                }
             }
         }, { passive: true });
 
         wordCard.addEventListener('touchend', e => {
-            // スワイプ中でなければ処理しない
-            if (!wordCard.classList.contains('swiping')) return;
-
             const touchEndX = e.changedTouches[0].screenX;
             const touchEndY = e.changedTouches[0].screenY;
             const diffX = touchEndX - touchStartX;
@@ -1947,20 +1963,33 @@
             swipeLeft.classList.remove('visible');
             swipeRight.classList.remove('visible');
 
-            // 縦移動が大きすぎない場合のみスワイプ判定
+            // Logic to prevent swipe action if it was likely a scroll
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
+                 if (diffY > 10) return; // It was a scroll
+            }
+
             if (diffY < 50 && state.answerVisible) {
                 if (diffX > 80 && !prevWordBtn.disabled) previousWord();
                 else if (diffX < -80 && !nextWordBtn.disabled) nextWord();
             }
         });
 
-        questionSection.addEventListener('click', () => {
+        questionSection.addEventListener('click', (e) => {
+            // Prevent click when selecting text or scrolling
+            if (window.getSelection().toString().length > 0) return;
+            
             if (state.answerVisible) {
                 answerSection.classList.add('hidden');
                 state.answerVisible = false;
             } else {
                 answerSection.classList.remove('hidden');
                 state.answerVisible = true;
+                // Scroll to bottom of card to show answer if needed
+                 setTimeout(() => {
+                    if (wordCard.scrollHeight > wordCard.clientHeight) {
+                         // Optional: smooth scroll to answer
+                    }
+                 }, 50);
             }
         });
 
@@ -2522,6 +2551,26 @@
             wordChips.classList.remove('hidden');
         }
 
+        // ============================================
+        // Font Size Adjustment Logic
+        // ============================================
+        function adjustFontSize(element, text) {
+            // Remove all size classes first
+            element.classList.remove('size-normal', 'size-medium', 'size-small', 'size-tiny');
+            
+            const len = text.length;
+            
+            if (len > 60) {
+                element.classList.add('size-tiny');
+            } else if (len > 30) {
+                element.classList.add('size-small');
+            } else if (len > 15) {
+                element.classList.add('size-medium');
+            } else {
+                element.classList.add('size-normal');
+            }
+        }
+
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
@@ -2529,17 +2578,24 @@
             displayPreviousAnswer();
             updateWordChips(word);
 
+            let displayText = '';
+
             if (state.reverseMode) {
-                questionText.textContent = word.meaning;
+                displayText = word.meaning;
+                questionText.textContent = displayText;
                 answerReading.textContent = word.reading || '';
                 answerReading.style.display = word.reading ? 'block' : 'none';
                 answerMeaning.textContent = word.word;
             } else {
-                questionText.textContent = word.word;
+                displayText = word.word;
+                questionText.textContent = displayText;
                 answerReading.textContent = word.reading || '';
                 answerReading.style.display = word.reading ? 'block' : 'none';
                 answerMeaning.textContent = word.meaning;
             }
+            
+            // Adjust Font Size based on text length
+            adjustFontSize(questionText, displayText);
 
             if (state.testPhase !== 'finished') {
                 reportBtns.style.display = 'grid';
@@ -2557,6 +2613,7 @@
             prevAnswerBar.classList.remove('visible');
             wordChips.classList.add('hidden');
             questionText.textContent = '🥳 Complete!';
+            questionText.className = 'question-text size-normal'; // Reset to normal size
             answerSection.classList.remove('hidden');
             answerReading.textContent = 'Great job!';
             answerReading.style.display = 'block';
