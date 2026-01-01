@@ -27,12 +27,6 @@
                             850: '#121215',
                             900: '#0a0a0f',
                             950: '#050507',
-                        },
-                        accent: {
-                            cyan: '#22d3ee',
-                            emerald: '#34d399',
-                            amber: '#fbbf24',
-                            rose: '#fb7185',
                         }
                     }
                 }
@@ -48,7 +42,9 @@
             -webkit-touch-callout: none;
         }
 
+        /* --- THEME DEFINITIONS --- */
         :root {
+            /* Default Dark */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --app-bg: #0a0a0f;
@@ -57,7 +53,9 @@
             --text-primary: #fafafa;
             --text-secondary: #a1a1aa;
             --text-muted: #71717a;
+            --accent-primary: #22d3ee;
             --accent-glow: rgba(34, 211, 238, 0.15);
+            --modal-bg: #18181b;
         }
 
         [data-theme="light"] {
@@ -65,9 +63,47 @@
             --card-bg: rgba(255, 255, 255, 0.9);
             --card-border: rgba(228, 228, 231, 0.8);
             --text-primary: #18181b;
-            --text-secondary: #3f3f46;
-            --text-muted: #71717a;
-            --accent-glow: rgba(34, 211, 238, 0.1);
+            --text-secondary: #52525b;
+            --text-muted: #a1a1aa;
+            --accent-primary: #0891b2;
+            --accent-glow: rgba(8, 145, 178, 0.1);
+            --modal-bg: #ffffff;
+        }
+
+        [data-theme="dark-blue"] {
+            --app-bg: #0f172a; /* Slate 900 */
+            --card-bg: rgba(30, 41, 59, 0.85); /* Slate 800 */
+            --card-border: rgba(71, 85, 105, 0.5);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-primary: #60a5fa; /* Blue 400 */
+            --accent-glow: rgba(96, 165, 250, 0.15);
+            --modal-bg: #1e293b;
+        }
+
+        [data-theme="light-blue"] {
+            --app-bg: #f0f9ff; /* Sky 50 */
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(186, 230, 253, 0.8); /* Sky 200 */
+            --text-primary: #0c4a6e; /* Sky 900 */
+            --text-secondary: #0284c7; /* Sky 600 */
+            --text-muted: #94a3b8;
+            --accent-primary: #0ea5e9; /* Sky 500 */
+            --accent-glow: rgba(14, 165, 233, 0.15);
+            --modal-bg: #ffffff;
+        }
+
+        [data-theme="light-green"] {
+            --app-bg: #f0fdf4; /* Green 50 */
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(187, 247, 208, 0.8); /* Green 200 */
+            --text-primary: #14532d; /* Green 900 */
+            --text-secondary: #16a34a; /* Green 600 */
+            --text-muted: #94a3b8;
+            --accent-primary: #22c55e; /* Green 500 */
+            --accent-glow: rgba(34, 197, 94, 0.15);
+            --modal-bg: #ffffff;
         }
 
         html {
@@ -84,7 +120,7 @@
             position: fixed;
             width: 100%;
             color: var(--text-primary);
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Ambient Background */
@@ -95,12 +131,9 @@
             z-index: 0;
             opacity: 0.6;
             background: 
-                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(34, 211, 238, 0.08), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(52, 211, 153, 0.06), transparent);
-        }
-
-        [data-theme="light"] .ambient-bg {
-            opacity: 0.4;
+                radial-gradient(ellipse 80% 50% at 20% 20%, var(--accent-glow), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, var(--accent-glow), transparent);
+            transition: opacity 0.5s ease;
         }
 
         /* App Container */
@@ -122,6 +155,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--card-border);
             border-radius: 20px;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         /* Header */
@@ -152,6 +186,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
+            color: var(--text-primary);
         }
 
         .header-btn:active {
@@ -172,7 +207,7 @@
         .logo-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, #22d3ee 0%, #34d399 100%);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #34d399 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -220,6 +255,10 @@
             font-weight: 700;
             color: var(--text-primary);
             text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 60%;
         }
 
         .prev-sub {
@@ -244,32 +283,13 @@
             transition: none;
         }
 
-        .word-card.correct-flash {
-            animation: flashCorrect 0.4s ease;
-        }
+        .word-card.correct-flash { animation: flashCorrect 0.4s ease; }
+        .word-card.review-flash { animation: flashReview 0.4s ease; }
+        .word-card.incorrect-flash { animation: flashIncorrect 0.4s ease; }
 
-        .word-card.review-flash {
-            animation: flashReview 0.4s ease;
-        }
-
-        .word-card.incorrect-flash {
-            animation: flashIncorrect 0.4s ease;
-        }
-
-        @keyframes flashCorrect {
-            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
-            50% { box-shadow: inset 0 0 0 4px rgba(52, 211, 153, 0.5); }
-        }
-
-        @keyframes flashReview {
-            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
-            50% { box-shadow: inset 0 0 0 4px rgba(251, 191, 36, 0.5); }
-        }
-
-        @keyframes flashIncorrect {
-            0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
-            50% { box-shadow: inset 0 0 0 4px rgba(251, 113, 133, 0.5); }
-        }
+        @keyframes flashCorrect { 0%, 100% { box-shadow: inset 0 0 0 0 transparent; } 50% { box-shadow: inset 0 0 0 4px rgba(52, 211, 153, 0.5); } }
+        @keyframes flashReview { 0%, 100% { box-shadow: inset 0 0 0 0 transparent; } 50% { box-shadow: inset 0 0 0 4px rgba(251, 191, 36, 0.5); } }
+        @keyframes flashIncorrect { 0%, 100% { box-shadow: inset 0 0 0 0 transparent; } 50% { box-shadow: inset 0 0 0 4px rgba(251, 113, 133, 0.5); } }
 
         /* Question Section */
         .question-section {
@@ -282,7 +302,7 @@
             cursor: pointer;
             user-select: none;
             min-height: 0;
-            /* はみ出し対策として念のためスクロールも許可 */
+            /* Scroll improvements from v3 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -293,29 +313,20 @@
             text-align: center;
             line-height: 1.4;
             max-width: 100%;
-            /* 単語途切れ対策 */
+            margin-bottom: 8px;
+            
+            /* Text wrapping improvements from v3 */
             overflow-wrap: break-word;
             word-wrap: break-word;
+            word-break: normal;
             hyphens: auto;
         }
 
-        /* フォントサイズ調整用クラス */
-        .size-normal {
-            font-size: clamp(1.5rem, 8vw, 2.5rem);
-        }
-
-        .size-medium {
-            font-size: clamp(1.2rem, 6vw, 2.0rem);
-        }
-
-        .size-small {
-            font-size: clamp(1.0rem, 5vw, 1.5rem);
-        }
-
-        .size-tiny {
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
-        }
-
+        /* Auto Font Resizing Classes (from v3) */
+        .size-normal { font-size: clamp(1.5rem, 8vw, 2.5rem); }
+        .size-medium { font-size: clamp(1.2rem, 6vw, 2.0rem); }
+        .size-small { font-size: clamp(1.0rem, 5vw, 1.5rem); }
+        .size-tiny { font-size: clamp(0.9rem, 4vw, 1.2rem); }
 
         .tap-hint {
             font-size: 0.75rem;
@@ -324,16 +335,11 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0;
         }
 
-        .tap-hint-icon {
-            animation: tapPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes tapPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
+        .tap-hint-icon { animation: tapPulse 2s ease-in-out infinite; }
+        @keyframes tapPulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
 
         /* Word Info Chips */
         .word-chips {
@@ -342,6 +348,7 @@
             margin-top: 16px;
             flex-wrap: wrap;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .chip {
@@ -354,25 +361,10 @@
             gap: 4px;
         }
 
-        .chip-neutral {
-            background: rgba(113, 113, 122, 0.2);
-            color: #a1a1aa;
-        }
-
-        .chip-correct {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-        }
-
-        .chip-review {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-        }
-
-        .chip-incorrect {
-            background: rgba(251, 113, 133, 0.15);
-            color: #fb7185;
-        }
+        .chip-neutral { background: rgba(113, 113, 122, 0.2); color: var(--text-secondary); }
+        .chip-correct { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .chip-review { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .chip-incorrect { background: rgba(251, 113, 133, 0.15); color: #fb7185; }
 
         /* Answer Section */
         .answer-section {
@@ -381,12 +373,10 @@
             padding: 20px;
             text-align: center;
             animation: slideUp 0.3s ease;
+            flex-shrink: 0;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         .answer-reading {
             font-size: 1.1rem;
@@ -417,11 +407,6 @@
             transition: all 0.2s ease;
         }
 
-        .edit-btn:active {
-            transform: scale(0.95);
-            background: rgba(139, 92, 246, 0.25);
-        }
-
         /* Report Buttons */
         .report-btns {
             display: grid;
@@ -441,36 +426,16 @@
             position: relative;
             overflow: hidden;
         }
-
-        .report-btn:active {
-            transform: scale(0.94);
-        }
-
+        .report-btn:active { transform: scale(0.94); }
         .report-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+            content: ''; position: absolute; inset: 0;
             background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        .btn-incorrect {
-            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(251, 113, 133, 0.3);
-        }
-
-        .btn-review {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
-        }
-
-        .btn-correct {
-            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
-        }
+        .btn-incorrect { background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%); color: white; box-shadow: 0 4px 20px rgba(251, 113, 133, 0.3); }
+        .btn-review { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: white; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3); }
+        .btn-correct { background: linear-gradient(135deg, #34d399 0%, #059669 100%); color: white; box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3); }
 
         /* Navigation */
         .nav-row {
@@ -496,951 +461,219 @@
             justify-content: center;
             gap: 6px;
         }
-
-        .nav-btn:active:not(:disabled) {
-            transform: scale(0.96);
-            opacity: 0.8;
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
+        .nav-btn:active:not(:disabled) { transform: scale(0.96); opacity: 0.8; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         /* Stats Bar */
-        .stats-bar {
-            flex-shrink: 0;
-            padding: 12px 16px;
-            margin-top: 10px;
-        }
-
-        .progress-row {
-            margin-bottom: 10px;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .progress-title {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .progress-value {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-        }
-
-        .progress-track {
-            height: 6px;
-            background: rgba(113, 113, 122, 0.2);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .progress-fill-orange {
-            background: linear-gradient(90deg, #fbbf24, #f59e0b);
-        }
-
-        .progress-fill-cyan {
-            background: linear-gradient(90deg, #22d3ee, #06b6d4);
-        }
-
-        .stats-chips {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-        }
-
-        .stat-chip {
-            flex: 1;
-            padding: 8px 4px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .stat-chip-neutral {
-            background: rgba(113, 113, 122, 0.15);
-            color: #a1a1aa;
-        }
-
-        .stat-chip-correct {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-        }
-
-        .stat-chip-review {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-        }
-
-        .stat-chip-incorrect {
-            background: rgba(251, 113, 133, 0.15);
-            color: #fb7185;
-        }
+        .stats-bar { flex-shrink: 0; padding: 12px 16px; margin-top: 10px; }
+        .progress-row { margin-bottom: 10px; }
+        .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .progress-title { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .progress-value { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+        .progress-track { height: 6px; background: rgba(113, 113, 122, 0.2); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-fill-orange { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        .progress-fill-cyan { background: linear-gradient(90deg, #22d3ee, #06b6d4); }
+        .stats-chips { display: flex; gap: 6px; justify-content: center; }
+        .stat-chip { flex: 1; padding: 8px 4px; border-radius: 10px; text-align: center; font-size: 0.85rem; font-weight: 700; }
+        .stat-chip-neutral { background: rgba(113, 113, 122, 0.15); color: var(--text-secondary); }
+        .stat-chip-correct { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .stat-chip-review { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .stat-chip-incorrect { background: rgba(251, 113, 133, 0.15); color: #fb7185; }
 
         /* Setup View */
-        .setup-view {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
-
-        .setup-card {
-            padding: 20px;
-        }
-
-        .setup-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .setup-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
+        .setup-view { flex: 1; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; padding-bottom: 20px; }
+        .setup-card { padding: 20px; }
+        .setup-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .setup-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        
         textarea {
-            width: 100%;
-            height: 140px;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid var(--card-border);
-            background: rgba(24, 24, 27, 0.5);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 14px;
-            resize: none;
-            transition: all 0.2s ease;
+            width: 100%; height: 140px; padding: 14px; border-radius: 14px;
+            border: 1px solid var(--card-border); background: rgba(24, 24, 27, 0.5);
+            color: var(--text-primary); font-family: inherit; font-size: 14px; resize: none; transition: all 0.2s ease;
         }
-
-        [data-theme="light"] textarea {
-            background: rgba(244, 244, 245, 0.8);
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #22d3ee;
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
-        }
-
-        textarea::placeholder {
-            color: var(--text-muted);
-        }
-
+        [data-theme="light"] textarea, [data-theme="light-blue"] textarea, [data-theme="light-green"] textarea { background: rgba(244, 244, 245, 0.8); }
+        
+        textarea:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px var(--accent-glow); }
+        textarea::placeholder { color: var(--text-muted); }
+        
         .primary-btn {
-            width: 100%;
-            height: 52px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
-            margin-top: 12px;
+            width: 100%; height: 52px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #06b6d4 100%);
+            color: white; font-size: 1rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.15s ease;
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3); margin-top: 12px;
         }
-
-        .primary-btn:active:not(:disabled) {
-            transform: scale(0.97);
-        }
-
-        .primary-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
+        .primary-btn:active:not(:disabled) { transform: scale(0.97); }
+        .primary-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         .secondary-btn {
-            width: 100%;
-            height: 52px;
-            border-radius: 14px;
+            width: 100%; height: 52px; border-radius: 14px;
             background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
+            color: white; font-size: 1rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.15s ease;
             box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
         }
+        .secondary-btn:active:not(:disabled) { transform: scale(0.97); }
+        .secondary-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .secondary-btn:active:not(:disabled) {
-            transform: scale(0.97);
-        }
-
-        .secondary-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .resume-info {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        /* Modal */
+        /* Modals */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
         .modal-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-height: 85dvh;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            border-bottom: none;
-            border-radius: 24px 24px 0 0;
-            padding: 20px;
-            padding-bottom: calc(20px + var(--safe-bottom));
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1001;
-            overflow-y: auto;
-            /* touch-action: none; REMOVED to allow scrolling on mobile */
-            overscroll-behavior-y: contain; /* Added to prevent body scrolling */
+            position: fixed; bottom: 0; left: 0; right: 0; max-height: 85dvh;
+            background: var(--modal-bg);
+            border: 1px solid var(--card-border); border-bottom: none;
+            border-radius: 24px 24px 0 0; padding: 20px; padding-bottom: calc(20px + var(--safe-bottom));
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001; overflow-y: auto; overscroll-behavior-y: contain;
         }
+        .modal-overlay.active + .modal-sheet, .modal-sheet.active { transform: translateY(0); }
+        
+        #confirm-modal-overlay, #message-modal-overlay, #theme-modal-overlay { z-index: 2000; }
+        #confirm-modal, #message-modal, #theme-modal { z-index: 2001; }
 
-        /* 確認モーダルはSettingsより上に表示 */
-        #confirm-modal-overlay,
-        #message-modal-overlay {
-            z-index: 2000;
-        }
-        #confirm-modal,
-        #message-modal {
-            z-index: 2001;
-        }
+        .modal-handle { width: 36px; height: 4px; background: var(--text-muted); border-radius: 2px; margin: 0 auto; opacity: 0.5; }
+        .modal-drag-area { padding: 16px 0 12px; margin: -20px -20px 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; border-radius: 24px 24px 0 0; }
+        
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
+        .modal-message { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
+        
+        .modal-btn { width: 100%; height: 50px; border-radius: 14px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.15s ease; }
+        .modal-btn:active { transform: scale(0.97); }
+        .modal-btn-primary { background: var(--accent-primary); color: white; }
+        .modal-btn-danger { background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%); color: white; }
+        .modal-btn-ghost { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-primary); margin-top: 10px; }
 
-        .modal-overlay.active + .modal-sheet,
-        .modal-sheet.active {
-            transform: translateY(0);
+        /* Theme Selection Modal */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
-
-        .modal-handle {
-            width: 36px;
-            height: 4px;
-            background: var(--text-muted);
-            border-radius: 2px;
-            margin: 0 auto;
-            opacity: 0.5;
-            transition: opacity 0.2s, width 0.2s, background 0.2s;
-        }
-
-        .modal-drag-area {
-            padding: 16px 0 12px;
-            margin: -20px -20px 8px;
-            cursor: grab;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            border-radius: 24px 24px 0 0;
-            transition: background 0.2s;
-            touch-action: none; /* Keep touch-action none ONLY on drag handle */
-        }
-
-        .modal-drag-area:active {
-            cursor: grabbing;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .modal-drag-area:active .modal-handle {
-            opacity: 0.8;
-            width: 48px;
-            background: var(--text-secondary);
-        }
-
-        .drag-hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            opacity: 0.6;
-            letter-spacing: 0.03em;
-        }
-
-        .modal-sheet.dragging {
-            transition: none;
-        }
-
-        .modal-sheet.dragging {
-            transition: none;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .modal-message {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .modal-btn {
-            width: 100%;
-            height: 50px;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.97);
-        }
-
-        .modal-btn-primary {
-            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
-            color: white;
-        }
-
-        .modal-btn-danger {
-            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
-            color: white;
-        }
-
-        .modal-btn-ghost {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-primary);
-            margin-top: 10px;
-        }
-
-        /* Settings Modal */
-        .settings-section {
-            margin-bottom: 20px;
-        }
-
-        .settings-section-title {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 10px;
-        }
-
-        .settings-item {
+        .theme-option {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px;
-            background: rgba(63, 63, 70, 0.15);
-            border-radius: 14px;
-            margin-bottom: 8px;
+            padding: 16px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        [data-theme="light"] .settings-item {
-            background: rgba(228, 228, 231, 0.5);
+        .theme-option:active { transform: scale(0.98); }
+        .theme-option.active {
+            border-color: var(--accent-primary);
+            background: var(--accent-glow);
         }
-
-        .settings-item-label {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
+        .theme-preview {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
-
-        /* Toggle Switch */
-        .toggle {
-            position: relative;
-            width: 52px;
-            height: 30px;
-        }
-
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-track {
-            position: absolute;
-            inset: 0;
-            background: rgba(113, 113, 122, 0.3);
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-thumb {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
+        .theme-color-dot {
+            width: 32px; height: 32px;
             border-radius: 50%;
-            transition: transform 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0,0,0,0.1);
         }
+        .theme-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .theme-check {
+            color: var(--accent-primary);
+            opacity: 0;
+            font-weight: 800;
+        }
+        .theme-option.active .theme-check { opacity: 1; }
 
-        .toggle input:checked + .toggle-track {
-            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
-        }
+        /* Theme Color Dots for Preview */
+        .dot-dark { background: #0a0a0f; }
+        .dot-light { background: #fafafa; }
+        .dot-dark-blue { background: #0f172a; }
+        .dot-light-blue { background: #f0f9ff; }
+        .dot-light-green { background: #f0fdf4; }
 
-        .toggle input:checked + .toggle-track .toggle-thumb {
-            transform: translateX(22px);
-        }
+        /* Settings Items */
+        .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: rgba(63, 63, 70, 0.15); border-radius: 14px; margin-bottom: 8px; }
+        [data-theme="light"] .settings-item, [data-theme="light-blue"] .settings-item, [data-theme="light-green"] .settings-item { background: rgba(228, 228, 231, 0.5); }
+        .settings-item-label { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
+
+        /* Toggle */
+        .toggle { position: relative; width: 52px; height: 30px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-track { position: absolute; inset: 0; background: rgba(113, 113, 122, 0.3); border-radius: 15px; transition: background 0.3s ease; }
+        .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+        .toggle input:checked + .toggle-track { background: var(--accent-primary); }
+        .toggle input:checked + .toggle-track .toggle-thumb { transform: translateX(22px); }
 
         /* Probability Inputs */
-        .prob-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .prob-item {
-            text-align: center;
-        }
-
-        .prob-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .prob-input {
-            width: 100%;
-            height: 44px;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            background: rgba(24, 24, 27, 0.5);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        [data-theme="light"] .prob-input {
-            background: rgba(244, 244, 245, 0.8);
-        }
-
-        .prob-input:focus {
-            outline: none;
-            border-color: #22d3ee;
-        }
-
-        .prob-total {
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .prob-total-valid {
-            color: #34d399;
-        }
-
-        .prob-total-invalid {
-            color: #fb7185;
-        }
+        .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .prob-item { text-align: center; }
+        .prob-label { font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; }
+        .prob-input { width: 100%; height: 44px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(24, 24, 27, 0.5); color: var(--text-primary); font-family: inherit; font-size: 1rem; font-weight: 700; text-align: center; }
+        [data-theme="light"] .prob-input, [data-theme="light-blue"] .prob-input, [data-theme="light-green"] .prob-input { background: rgba(244, 244, 245, 0.8); }
+        .prob-total { text-align: center; font-size: 0.9rem; font-weight: 700; margin-top: 8px; }
+        .prob-total-valid { color: #34d399; } .prob-total-invalid { color: #fb7185; }
 
         /* Delete Options */
-        .delete-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(63, 63, 70, 0.15);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-
-        [data-theme="light"] .delete-option {
-            background: rgba(228, 228, 231, 0.5);
-        }
-
-        .delete-checkbox {
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            border: 2px solid var(--card-border);
-            background: transparent;
-            cursor: pointer;
-            appearance: none;
-            transition: all 0.2s ease;
-        }
-
-        .delete-checkbox:checked {
-            background: #fb7185;
-            border-color: #fb7185;
-        }
-
-        .delete-option-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .danger-btn {
-            width: 100%;
-            height: 50px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            margin-top: 8px;
-        }
-
-        .danger-btn:active:not(:disabled) {
-            transform: scale(0.97);
-        }
-
-        .danger-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        /* Edit Modal */
-        .edit-input {
-            width: 100%;
-            height: 48px;
-            padding: 0 14px;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            background: rgba(24, 24, 27, 0.5);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 1rem;
-            margin-bottom: 12px;
-        }
-
-        [data-theme="light"] .edit-input {
-            background: rgba(244, 244, 245, 0.8);
-        }
-
-        .edit-input:focus {
-            outline: none;
-            border-color: #22d3ee;
-        }
-
-        .edit-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            display: block;
-        }
+        .delete-option { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(63, 63, 70, 0.15); border-radius: 12px; margin-bottom: 8px; cursor: pointer; }
+        [data-theme="light"] .delete-option, [data-theme="light-blue"] .delete-option, [data-theme="light-green"] .delete-option { background: rgba(228, 228, 231, 0.5); }
+        .delete-checkbox { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--card-border); background: transparent; appearance: none; }
+        .delete-checkbox:checked { background: #fb7185; border-color: #fb7185; }
+        .delete-option-label { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+        .danger-btn { width: 100%; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%); color: white; font-size: 1rem; font-weight: 700; border: none; cursor: pointer; margin-top: 8px; }
+        .danger-btn:active:not(:disabled) { transform: scale(0.97); }
+        .danger-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         /* TTS Button */
-        .tts-btn {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(34, 211, 238, 0.15);
-            border: 1px solid rgba(34, 211, 238, 0.3);
-            color: #22d3ee;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .tts-btn { position: absolute; bottom: 12px; right: 12px; width: 40px; height: 40px; border-radius: 12px; background: var(--accent-glow); border: 1px solid var(--accent-glow); color: var(--accent-primary); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; }
+        .tts-btn:active { transform: scale(0.9); }
+        .tts-btn.speaking { animation: speakingPulse 0.8s ease-in-out infinite; }
+        @keyframes speakingPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); } 50% { box-shadow: 0 0 0 8px rgba(0,0,0,0); } }
 
-        .tts-btn:active {
-            transform: scale(0.9);
-            background: rgba(34, 211, 238, 0.25);
-        }
-
-        .tts-btn.speaking {
-            animation: speakingPulse 0.8s ease-in-out infinite;
-        }
-
-        @keyframes speakingPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(34, 211, 238, 0); }
-        }
-
-        /* Export/Import Buttons */
-        .export-import-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .export-btn, .import-btn {
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .export-btn {
-            background: rgba(34, 211, 238, 0.15);
-            color: #22d3ee;
-            border: 1px solid rgba(34, 211, 238, 0.3);
-        }
-
-        .import-btn {
-            background: rgba(139, 92, 246, 0.15);
-            color: #a78bfa;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .export-btn:active, .import-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* TTS Speed Slider */
-        .tts-speed-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .tts-speed-slider {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(113, 113, 122, 0.3);
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .tts-speed-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .tts-speed-value {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            min-width: 40px;
-            text-align: right;
-        }
-
-        /* Word List Modal */
-        #wordlist-modal {
-            max-height: 95dvh;
-            height: 95dvh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .wordlist-header {
-            flex-shrink: 0;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .search-input {
-            flex: 1;
-            height: 44px;
-            padding: 0 14px;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            background: rgba(24, 24, 27, 0.5);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-
-        [data-theme="light"] .search-input {
-            background: rgba(244, 244, 245, 0.8);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #22d3ee;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .filter-chips {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-
-        .filter-chip {
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid var(--card-border);
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-chip.active {
-            background: rgba(34, 211, 238, 0.15);
-            border-color: rgba(34, 211, 238, 0.5);
-            color: #22d3ee;
-        }
-
-        .filter-chip:active {
-            transform: scale(0.95);
-        }
-
-        .wordlist-count {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .wordlist-container {
-            flex: 1;
-            overflow-y: auto;
-            margin: 0 -20px;
-            padding: 0 20px;
-        }
-
-        .word-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px;
-            background: rgba(63, 63, 70, 0.15);
-            border-radius: 14px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        [data-theme="light"] .word-item {
-            background: rgba(228, 228, 231, 0.5);
-        }
-
-        .word-item:active {
-            transform: scale(0.98);
-            opacity: 0.8;
-        }
-
-        .word-item-main {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .word-item-word {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .word-item-detail {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .word-item-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .word-item-count {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .word-item-status {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-        }
-
-        .status-unevaluated { background: rgba(113, 113, 122, 0.2); color: #a1a1aa; }
+        /* Word List */
+        #wordlist-modal { height: 95dvh; display: flex; flex-direction: column; }
+        .search-input { width: 100%; height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(24, 24, 27, 0.5); color: var(--text-primary); font-size: 0.95rem; }
+        [data-theme="light"] .search-input, [data-theme="light-blue"] .search-input, [data-theme="light-green"] .search-input { background: rgba(244, 244, 245, 0.8); }
+        
+        .word-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: rgba(63, 63, 70, 0.15); border-radius: 14px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; }
+        [data-theme="light"] .word-item, [data-theme="light-blue"] .word-item, [data-theme="light-green"] .word-item { background: rgba(228, 228, 231, 0.5); }
+        .word-item:active { transform: scale(0.98); opacity: 0.8; }
+        
+        .word-item-word { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .word-item-detail { font-size: 0.8rem; color: var(--text-muted); }
+        
+        .status-unevaluated { background: rgba(113, 113, 122, 0.2); color: var(--text-secondary); }
         .status-correct { background: rgba(52, 211, 153, 0.2); color: #34d399; }
         .status-review { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
         .status-incorrect { background: rgba(251, 113, 133, 0.2); color: #fb7185; }
-
-        .wordlist-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-
-        .wordlist-empty-icon {
-            font-size: 3rem;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-
-        .file-input-hidden {
-            display: none;
-        }
-
-        /* Loading */
-        .loading-view {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .loading-dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .loading-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
-            animation: loadingBounce 0.6s infinite alternate;
-        }
-
-        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes loadingBounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-
-        .loading-text {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
-
-        /* Swipe Indicators */
-        .swipe-indicator {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            z-index: 100;
-            color: var(--text-muted);
-        }
-
-        .swipe-indicator.left { left: 8px; }
-        .swipe-indicator.right { right: 8px; }
-        .swipe-indicator.visible { opacity: 0.5; }
+        
+        /* Edit Modal Inputs */
+        .edit-input { width: 100%; height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(24, 24, 27, 0.5); color: var(--text-primary); font-size: 1rem; margin-bottom: 12px; }
+        [data-theme="light"] .edit-input, [data-theme="light-blue"] .edit-input, [data-theme="light-green"] .edit-input { background: rgba(244, 244, 245, 0.8); }
 
         /* Utilities */
         .hidden { display: none !important; }
-
-        /* View Transitions */
-        .view-enter {
-            animation: viewEnter 0.4s ease;
-        }
-
-        @keyframes viewEnter {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Scrollbar */
+        .view-enter { animation: viewEnter 0.4s ease; }
+        @keyframes viewEnter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 0; height: 0; }
+
+        /* Loading */
+        .loading-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+        .loading-dots { display: flex; gap: 8px; }
+        .loading-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary); animation: loadingBounce 0.6s infinite alternate; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; } .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes loadingBounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+
+        /* Swipe Indicators */
+        .swipe-indicator { position: fixed; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 100; color: var(--text-muted); }
+        .swipe-indicator.left { left: 8px; } .swipe-indicator.right { right: 8px; } .swipe-indicator.visible { opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -1462,7 +695,7 @@
             </div>
             <div class="header-right">
                 <button id="wordlist-toggle" class="header-btn" aria-label="Word List">📋</button>
-                <button id="theme-toggle" class="header-btn" aria-label="Toggle Theme">🌙</button>
+                <button id="theme-toggle" class="header-btn" aria-label="Theme">🎨</button>
             </div>
         </header>
 
@@ -1473,7 +706,7 @@
                 <div class="loading-dot"></div>
                 <div class="loading-dot"></div>
             </div>
-            <p class="loading-text">Loading...</p>
+            <p style="color: var(--text-muted);">Loading...</p>
         </div>
 
         <!-- Setup View -->
@@ -1567,6 +800,54 @@
         </div>
     </div>
 
+    <!-- Theme Modal -->
+    <div id="theme-modal-overlay" class="modal-overlay"></div>
+    <div id="theme-modal" class="modal-sheet">
+        <div class="modal-drag-area" data-modal="theme">
+            <div class="modal-handle"></div>
+            <span class="drag-hint">Swipe down to close</span>
+        </div>
+        <h3 class="modal-title">🎨 Select Theme</h3>
+        <div class="theme-grid">
+            <div class="theme-option" data-value="dark">
+                <div class="theme-preview">
+                    <div class="theme-color-dot dot-dark"></div>
+                    <span class="theme-name">Dark</span>
+                </div>
+                <span class="theme-check">✓</span>
+            </div>
+            <div class="theme-option" data-value="light">
+                <div class="theme-preview">
+                    <div class="theme-color-dot dot-light"></div>
+                    <span class="theme-name">Light</span>
+                </div>
+                <span class="theme-check">✓</span>
+            </div>
+            <div class="theme-option" data-value="dark-blue">
+                <div class="theme-preview">
+                    <div class="theme-color-dot dot-dark-blue"></div>
+                    <span class="theme-name">Dark Blue</span>
+                </div>
+                <span class="theme-check">✓</span>
+            </div>
+            <div class="theme-option" data-value="light-blue">
+                <div class="theme-preview">
+                    <div class="theme-color-dot dot-light-blue"></div>
+                    <span class="theme-name">Light Blue</span>
+                </div>
+                <span class="theme-check">✓</span>
+            </div>
+            <div class="theme-option" data-value="light-green">
+                <div class="theme-preview">
+                    <div class="theme-color-dot dot-light-green"></div>
+                    <span class="theme-name">Light Green</span>
+                </div>
+                <span class="theme-check">✓</span>
+            </div>
+        </div>
+        <button id="theme-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 16px;">Close</button>
+    </div>
+
     <!-- Message Modal -->
     <div id="message-modal-overlay" class="modal-overlay"></div>
     <div id="message-modal" class="modal-sheet">
@@ -1600,7 +881,6 @@
         <h3 class="modal-title">⚙️ Settings</h3>
 
         <div class="settings-section">
-            <p class="settings-section-title">Display</p>
             <div class="settings-item">
                 <span class="settings-item-label">🔄 Reverse Mode</span>
                 <label class="toggle">
@@ -1611,25 +891,17 @@
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">🔊 Text-to-Speech</p>
             <div class="settings-item">
-                <span class="settings-item-label">Auto Read</span>
+                <span class="settings-item-label">🔊 Auto Read (TTS)</span>
                 <label class="toggle">
                     <input type="checkbox" id="tts-auto-toggle">
                     <div class="toggle-track"><div class="toggle-thumb"></div></div>
                 </label>
             </div>
-            <div class="settings-item" style="flex-direction: column; align-items: stretch; gap: 8px;">
-                <span class="settings-item-label">Speed</span>
-                <div class="tts-speed-container">
-                    <input type="range" id="tts-speed-slider" class="tts-speed-slider" min="0.5" max="2" step="0.1" value="1">
-                    <span id="tts-speed-value" class="tts-speed-value">1.0x</span>
-                </div>
-            </div>
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">Review Probability</p>
+            <p style="font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Review Probability</p>
             <div class="prob-grid">
                 <div class="prob-item">
                     <p class="prob-label" style="color: #34d399;">○ Correct</p>
@@ -1649,21 +921,20 @@
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">Words</p>
             <button id="goto-register-btn" class="secondary-btn">➕ Add More Words</button>
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">📦 Data Management</p>
-            <div class="export-import-grid">
-                <button id="export-json-btn" class="export-btn">📤 JSON</button>
-                <button id="export-csv-btn" class="export-btn">📤 CSV</button>
+            <p style="font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Data Management</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button id="export-json-btn" class="modal-btn" style="background: rgba(34,211,238,0.15); color: var(--accent-primary); border: 1px solid rgba(34,211,238,0.3);">📤 JSON</button>
+                <button id="export-csv-btn" class="modal-btn" style="background: rgba(34,211,238,0.15); color: var(--accent-primary); border: 1px solid rgba(34,211,238,0.3);">📤 CSV</button>
             </div>
-            <button id="import-btn" class="import-btn" style="width: 100%;">📥 Import File</button>
+            <button id="import-btn" class="modal-btn" style="background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); margin-top: 8px;">📥 Import File</button>
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">Delete by Status</p>
+            <p style="font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Delete by Status</p>
             <label class="delete-option">
                 <input type="checkbox" id="delete-correct-check" class="delete-checkbox">
                 <span class="delete-option-label">○ Correct (<span id="delete-correct-count">0</span>)</span>
@@ -1684,7 +955,6 @@
         </div>
 
         <div class="settings-section">
-            <p class="settings-section-title">Danger Zone</p>
             <button id="reset-data-btn" class="danger-btn">🗑️ Delete All Data</button>
         </div>
 
@@ -1699,64 +969,116 @@
             <span class="drag-hint">Swipe down to close</span>
         </div>
         <h3 class="modal-title">✏️ Edit Word</h3>
-        <label class="edit-label">Word</label>
+        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">Word</label>
         <input type="text" id="edit-word-input" class="edit-input" required>
-        <label class="edit-label">Reading (optional)</label>
+        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">Reading (optional)</label>
         <input type="text" id="edit-reading-input" class="edit-input">
-        <label class="edit-label">Meaning</label>
+        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">Meaning</label>
         <input type="text" id="edit-meaning-input" class="edit-input" required>
         <button id="edit-save-btn" class="modal-btn modal-btn-primary" style="margin-top: 8px;">Save</button>
         <button id="edit-cancel-btn" class="modal-btn modal-btn-ghost">Cancel</button>
     </div>
 
     <!-- Hidden File Input for Import -->
-    <input type="file" id="import-file-input" class="file-input-hidden" accept=".json,.csv">
+    <input type="file" id="import-file-input" class="file-input-hidden" accept=".json,.csv" style="display:none;">
 
     <!-- Word List Modal -->
     <div id="wordlist-modal-overlay" class="modal-overlay"></div>
     <div id="wordlist-modal" class="modal-sheet">
-        <div class="wordlist-header">
+        <div style="flex-shrink: 0;">
             <div class="modal-drag-area" data-modal="wordlist">
                 <div class="modal-handle"></div>
                 <span class="drag-hint">Swipe down to close</span>
             </div>
             <h3 class="modal-title">📋 Word List</h3>
-            <div class="search-bar">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                 <input type="text" id="wordlist-search" class="search-input" placeholder="🔍 Search words...">
             </div>
-            <div class="filter-chips">
+            <div class="filter-chips" style="margin-bottom: 12px;">
                 <button class="filter-chip active" data-filter="all">All</button>
                 <button class="filter-chip" data-filter="unevaluated">− New</button>
                 <button class="filter-chip" data-filter="correct">○</button>
                 <button class="filter-chip" data-filter="review">△</button>
                 <button class="filter-chip" data-filter="incorrect">✕</button>
             </div>
-            <p id="wordlist-count" class="wordlist-count">0 words</p>
+            <p id="wordlist-count" style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 8px;">0 words</p>
         </div>
-        <div id="wordlist-container" class="wordlist-container"></div>
+        <div id="wordlist-container" style="flex: 1; overflow-y: auto; margin: 0 -20px; padding: 0 20px;"></div>
         <button id="wordlist-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 12px; flex-shrink: 0;">Close</button>
     </div>
 
     <script>
         // ============================================
-        // Theme Management
+        // Theme Management (Updated)
         // ============================================
-        const LS_THEME_KEY = 'wordTest_theme';
+        const LS_THEME_KEY = 'wordTest_theme_v2';
         let currentTheme = localStorage.getItem(LS_THEME_KEY) || 'dark';
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeModal = document.getElementById('theme-modal');
+        const themeModalOverlay = document.getElementById('theme-modal-overlay');
+        const themeCloseBtn = document.getElementById('theme-close-btn');
+        const themeOptions = document.querySelectorAll('.theme-option');
 
         function setTheme(theme) {
             currentTheme = theme;
-            document.documentElement.setAttribute('data-theme', theme);
+            
+            // Set data-theme attribute
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            
             localStorage.setItem(LS_THEME_KEY, theme);
-            document.getElementById('theme-toggle').textContent = theme === 'dark' ? '🌙' : '☀️';
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0a0a0f' : '#fafafa');
+            
+            // Update Meta Theme Color
+            let metaColor = '#0a0a0f';
+            switch(theme) {
+                case 'light': metaColor = '#fafafa'; break;
+                case 'dark-blue': metaColor = '#0f172a'; break;
+                case 'light-blue': metaColor = '#f0f9ff'; break;
+                case 'light-green': metaColor = '#f0fdf4'; break;
+            }
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', metaColor);
+
+            // Update Active State in Modal
+            themeOptions.forEach(opt => {
+                if (opt.dataset.value === theme) {
+                    opt.classList.add('active');
+                } else {
+                    opt.classList.remove('active');
+                }
+            });
         }
 
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        // Initialize Theme
+        setTheme(currentTheme);
+
+        // Open Theme Modal
+        themeToggleBtn.addEventListener('click', () => {
+            themeModalOverlay.classList.add('active');
+            themeModal.classList.add('active');
         });
 
-        setTheme(currentTheme);
+        // Close Theme Modal
+        function closeThemeModal() {
+            themeModalOverlay.classList.remove('active');
+            themeModal.classList.remove('active');
+        }
+        themeCloseBtn.addEventListener('click', closeThemeModal);
+        themeModalOverlay.addEventListener('click', closeThemeModal);
+
+        // Theme Selection Logic
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selectedTheme = option.dataset.value;
+                setTheme(selectedTheme);
+                // Optional: Close modal immediately or wait
+                setTimeout(closeThemeModal, 200);
+            });
+        });
+
 
         // ============================================
         // LocalStorage Keys
@@ -1900,8 +1222,6 @@
         const ttsQuestionBtn = $('tts-question-btn');
         const ttsAnswerBtn = $('tts-answer-btn');
         const ttsAutoToggle = $('tts-auto-toggle');
-        const ttsSpeedSlider = $('tts-speed-slider');
-        const ttsSpeedValue = $('tts-speed-value');
 
         const exportJsonBtn = $('export-json-btn');
         const exportCsvBtn = $('export-csv-btn');
@@ -1915,27 +1235,18 @@
         let touchStartY = 0;
 
         wordCard.addEventListener('touchstart', e => {
-            // Prevent swipe if touching inside a scrollable area that is actually scrolling
-            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
-                // Allow normal touch behavior for scrolling
-                return;
-            }
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) return;
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
         }, { passive: true });
 
         wordCard.addEventListener('touchmove', e => {
             if (!state.answerVisible) return;
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) return;
             
-            // Prevent swipe logic if we are scrolling content
-            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
-                return;
-            }
-
             const currentX = e.changedTouches[0].screenX;
             const diffX = currentX - touchStartX;
             
-            // Only trigger card swipe if horizontal movement is dominant
             if (Math.abs(diffX) > Math.abs(e.changedTouches[0].screenY - touchStartY)) {
                 wordCard.style.transform = `translateX(${diffX * 0.3}px)`;
                 wordCard.classList.add('swiping');
@@ -1957,17 +1268,14 @@
             const touchEndY = e.changedTouches[0].screenY;
             const diffX = touchEndX - touchStartX;
             const diffY = Math.abs(touchEndY - touchStartY);
-
+            
             wordCard.style.transform = '';
             wordCard.classList.remove('swiping');
             swipeLeft.classList.remove('visible');
             swipeRight.classList.remove('visible');
-
-            // Logic to prevent swipe action if it was likely a scroll
-            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight) {
-                 if (diffY > 10) return; // It was a scroll
-            }
-
+            
+            if (questionSection.contains(e.target) && questionSection.scrollHeight > questionSection.clientHeight && diffY > 10) return;
+            
             if (diffY < 50 && state.answerVisible) {
                 if (diffX > 80 && !prevWordBtn.disabled) previousWord();
                 else if (diffX < -80 && !nextWordBtn.disabled) nextWord();
@@ -1975,7 +1283,6 @@
         });
 
         questionSection.addEventListener('click', (e) => {
-            // Prevent click when selecting text or scrolling
             if (window.getSelection().toString().length > 0) return;
             
             if (state.answerVisible) {
@@ -1984,17 +1291,11 @@
             } else {
                 answerSection.classList.remove('hidden');
                 state.answerVisible = true;
-                // Scroll to bottom of card to show answer if needed
-                 setTimeout(() => {
-                    if (wordCard.scrollHeight > wordCard.clientHeight) {
-                         // Optional: smooth scroll to answer
-                    }
-                 }, 50);
             }
         });
 
         // ============================================
-        // Modal Helpers
+        // Helpers & Modal
         // ============================================
         function showModal(title, message) {
             messageModalTitle.textContent = title;
@@ -2035,9 +1336,6 @@
             confirmModal.classList.remove('active');
         };
 
-        // ============================================
-        // View Management
-        // ============================================
         function setView(viewName) {
             setupView.classList.add('hidden');
             testView.classList.add('hidden');
@@ -2049,14 +1347,13 @@
         }
 
         // ============================================
-        // LocalStorage Functions
+        // Core Logic
         // ============================================
         function createWordId(word, reading) {
             const str = word + (reading || '');
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
                 hash = hash & hash;
             }
             return 'word_id_' + Math.abs(hash).toString(16);
@@ -2096,7 +1393,6 @@
                 totalWordsCount: state.allWords.length,
                 fileName: `Test_${timestamp.toISOString().replace(/[:.]/g, '-').slice(0, 19)}`
             };
-
             try {
                 localStorage.setItem(LS_STATE_KEY, JSON.stringify(saveData));
                 state.lastUpdated = saveData.lastUpdated;
@@ -2119,24 +1415,26 @@
         function resetAppData() {
             localStorage.removeItem(LS_WORDS_KEY);
             localStorage.removeItem(LS_STATE_KEY);
-
-            state.allWords = [];
-            state.wordMap = new Map();
-            state.testPhase = 'unevaluated';
-            state.unevaluatedWordIds = [];
-            state.unevaluatedIndex = 0;
-            state.wordStatuses = {};
-            state.wordDisplayCounts = {};
-            state.reviewWordPool = [];
-            state.currentWord = null;
-            state.previousWord = null;
-            state.wordHistory = [];
-            state.historyIndex = -1;
-            state.reverseMode = false;
-            state.lastUpdated = null;
-            state.fileName = null;
-            state.answerVisible = false;
-
+            state = {
+                allWords: [],
+                wordMap: new Map(),
+                testPhase: 'unevaluated',
+                unevaluatedWordIds: [],
+                unevaluatedIndex: 0,
+                wordStatuses: {},
+                wordDisplayCounts: {},
+                reviewWordPool: [],
+                currentWord: null,
+                previousWord: null,
+                wordHistory: [],
+                historyIndex: -1,
+                probabilities: state.probabilities,
+                reverseMode: false,
+                lastUpdated: null,
+                fileName: null,
+                answerVisible: false,
+                editingFromList: null
+            };
             closeSettingsModal();
             showModal('Reset Complete', 'All data deleted.');
             updateResumeButton(false);
@@ -2146,56 +1444,51 @@
             prevAnswerBar.classList.remove('visible');
         }
 
-        // ============================================
-        // Delete by Status
-        // ============================================
+        // Delete Logic
         function deleteWordsByStatus() {
             const selectedStatuses = [];
             if (deleteCorrectCheck.checked) selectedStatuses.push('correct');
             if (deleteReviewCheck.checked) selectedStatuses.push('review');
             if (deleteIncorrectCheck.checked) selectedStatuses.push('incorrect');
             if (deleteUnevaluatedCheck.checked) selectedStatuses.push('unevaluated');
-
+            
             if (selectedStatuses.length === 0) {
                 showModal('Error', 'Select at least one category.');
                 return;
             }
-
-            const wordsToDelete = state.allWords.filter(word => {
-                const status = state.wordStatuses[word.id] || 'unevaluated';
-                return selectedStatuses.includes(status);
-            });
-
+            
+            const wordsToDelete = state.allWords.filter(word => selectedStatuses.includes(state.wordStatuses[word.id] || 'unevaluated'));
+            
             if (wordsToDelete.length === 0) {
                 showModal('Notice', 'No words match selection.');
                 return;
             }
-
+            
             showConfirmModal('⚠️ Confirm', `Delete ${wordsToDelete.length} word(s)?`, () => {
                 const deleteIds = new Set(wordsToDelete.map(w => w.id));
                 state.allWords = state.allWords.filter(w => !deleteIds.has(w.id));
                 state.wordMap = new Map(state.allWords.map(w => [w.id, w]));
-
+                
                 deleteIds.forEach(id => {
                     delete state.wordStatuses[id];
                     delete state.wordDisplayCounts[id];
                 });
-
+                
                 state.unevaluatedWordIds = state.unevaluatedWordIds.filter(id => !deleteIds.has(id));
                 state.wordHistory = state.wordHistory.filter(id => !deleteIds.has(id));
-
+                
                 if (state.currentWord && deleteIds.has(state.currentWord.id)) state.currentWord = null;
                 if (state.previousWord && deleteIds.has(state.previousWord.id)) state.previousWord = null;
-
+                
                 saveAllWords(state.allWords);
-
+                
                 if (state.allWords.length === 0) {
                     resetAppData();
                 } else {
                     rebuildUnevaluatedList();
                     saveTestState();
                     closeSettingsModal();
-                    showModal('✅ Done', `${wordsToDelete.length} word(s) deleted.`);
+                    showModal('✅ Done', `Deleted.`);
                     startTest();
                     updateStatsDisplay();
                     updateDeleteCounts();
@@ -2209,7 +1502,6 @@
                 const status = state.wordStatuses[word.id] || 'unevaluated';
                 if (counts[status] !== undefined) counts[status]++;
             });
-
             deleteCorrectCount.textContent = counts.correct;
             deleteReviewCount.textContent = counts.review;
             deleteIncorrectCount.textContent = counts.incorrect;
@@ -2217,38 +1509,21 @@
         }
 
         function updateDeleteByStatusButton() {
-            const anyChecked = deleteCorrectCheck.checked || deleteReviewCheck.checked ||
-                              deleteIncorrectCheck.checked || deleteUnevaluatedCheck.checked;
-            deleteByStatusBtn.disabled = !anyChecked;
+            deleteByStatusBtn.disabled = !(deleteCorrectCheck.checked || deleteReviewCheck.checked || deleteIncorrectCheck.checked || deleteUnevaluatedCheck.checked);
         }
-
-        [deleteCorrectCheck, deleteReviewCheck, deleteIncorrectCheck, deleteUnevaluatedCheck].forEach(cb => {
-            cb.addEventListener('change', updateDeleteByStatusButton);
-        });
-
+        
+        [deleteCorrectCheck, deleteReviewCheck, deleteIncorrectCheck, deleteUnevaluatedCheck].forEach(cb => cb.addEventListener('change', updateDeleteByStatusButton));
         deleteByStatusBtn.addEventListener('click', deleteWordsByStatus);
 
-        // ============================================
         // Word Registration
-        // ============================================
         function rebuildUnevaluatedList() {
-            state.unevaluatedWordIds = state.allWords
-                .filter(word => !state.wordStatuses[word.id])
-                .map(word => word.id);
-
-            state.unevaluatedWordIds.sort((a, b) => {
-                const wordA = state.wordMap.get(a);
-                const wordB = state.wordMap.get(b);
-                return (wordA.initialOrder || 0) - (wordB.initialOrder || 0);
-            });
-
-            if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
-                state.unevaluatedIndex = 0;
-            }
-
+            state.unevaluatedWordIds = state.allWords.filter(word => !state.wordStatuses[word.id]).map(word => word.id);
+            state.unevaluatedWordIds.sort((a, b) => (state.wordMap.get(a).initialOrder || 0) - (state.wordMap.get(b).initialOrder || 0));
+            
+            if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) state.unevaluatedIndex = 0;
+            
             if (state.unevaluatedWordIds.length === 0) {
-                const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
-                state.testPhase = allCorrect ? 'finished' : 'retest';
+                state.testPhase = state.allWords.every(word => state.wordStatuses[word.id] === 'correct') ? 'finished' : 'retest';
             } else {
                 state.testPhase = 'unevaluated';
             }
@@ -2256,106 +1531,76 @@
 
         function handleSaveWords() {
             const rawText = wordInput.value.trim();
-            if (!rawText) {
-                showModal('Error', 'Enter words first.');
-                return;
-            }
-
+            if (!rawText) { showModal('Error', 'Enter words first.'); return; }
+            
             setView('loading');
-
-            let existingWords = state.allWords;
-            let existingWordMap = state.wordMap;
-
-            let newWords = [...existingWords];
+            let newWords = [...state.allWords];
             let addedCount = 0;
-            let skippedCount = 0;
-
+            
             const lines = rawText.split('\n').filter(line => line.trim() !== '');
-
             for (let i = 0; i < lines.length; i++) {
                 const parts = lines[i].split('_').map(part => part.trim());
-
                 let word, reading, meaning;
-
+                
                 if (parts.length === 2) {
                     [word, meaning] = parts;
                     reading = '';
                 } else if (parts.length === 3) {
                     [word, reading, meaning] = parts;
                 } else {
-                    skippedCount++;
                     continue;
                 }
-
+                
                 const wordId = createWordId(word, reading);
-
-                if (existingWordMap.has(wordId)) {
-                    skippedCount++;
-                    continue;
-                }
-
-                const newWordEntry = {
-                    id: wordId,
-                    word,
-                    reading: reading || '',
-                    meaning,
-                    initialOrder: newWords.length,
-                };
-
+                if (state.wordMap.has(wordId)) continue;
+                
+                const newWordEntry = { id: wordId, word, reading: reading || '', meaning, initialOrder: newWords.length };
                 newWords.push(newWordEntry);
-                existingWordMap.set(wordId, newWordEntry);
+                state.wordMap.set(wordId, newWordEntry);
                 addedCount++;
             }
-
-            if (skippedCount > 0) {
-                showModal('Warning', `${skippedCount} skipped (duplicates/errors)`);
-            }
-
+            
             if (addedCount === 0) {
                 showModal('Notice', 'No new words added.');
                 setView('setup');
                 return;
             }
-
+            
             state.allWords = newWords;
-            state.wordMap = existingWordMap;
-
             saveAllWords(newWords);
             rebuildUnevaluatedList();
             saveTestState();
             startTest();
-
+            
             wordInput.value = '';
-            showModal('Success', `Added ${addedCount} word(s)! Total: ${state.allWords.length}`);
+            showModal('Success', `Added ${addedCount} words.`);
         }
 
-        // ============================================
-        // Test Logic
-        // ============================================
+        // Test Loop
         function startTest() {
             if (state.allWords.length === 0) {
-                showModal('Error', 'No words in database.');
+                showModal('Error', 'No words.');
                 setView('setup');
                 return;
             }
-
+            
             setView('test');
             state.answerVisible = false;
             answerSection.classList.add('hidden');
-
             reverseModeToggle.checked = state.reverseMode;
-
+            
             rebuildUnevaluatedList();
-
+            
             if (state.testPhase === 'retest' && state.reviewWordPool.length === 0) {
                 buildReviewWordPool();
             }
-
+            
             if (!state.currentWord) {
                 nextWord();
             } else {
                 displayWord(state.currentWord);
             }
+            
             updateNavigationButtons();
             updateStatsDisplay();
         }
@@ -2363,8 +1608,7 @@
         function nextWord() {
             if (state.historyIndex < state.wordHistory.length - 1) {
                 state.historyIndex++;
-                const wordId = state.wordHistory[state.historyIndex];
-                state.currentWord = state.wordMap.get(wordId);
+                state.currentWord = state.wordMap.get(state.wordHistory[state.historyIndex]);
                 if (!state.currentWord) {
                     state.wordHistory.splice(state.historyIndex, 1);
                     state.historyIndex--;
@@ -2375,28 +1619,23 @@
                 updateNavigationButtons();
                 return;
             }
-
+            
             if (state.testPhase === 'unevaluated' && state.unevaluatedWordIds.length > 0) {
                 if (state.unevaluatedIndex >= state.unevaluatedWordIds.length) {
                     rebuildUnevaluatedList();
-
                     if (state.unevaluatedWordIds.length === 0) {
                         state.testPhase = 'retest';
-                        showModal('🎉 Initial Complete!', 'Moving to review phase.');
+                        showModal('🎉 Phase 1 Complete', 'Review Mode');
                         buildReviewWordPool();
                         nextWord();
                         return;
                     }
                 }
-
-                const wordId = state.unevaluatedWordIds[state.unevaluatedIndex];
-                state.currentWord = state.wordMap.get(wordId);
+                state.currentWord = state.wordMap.get(state.unevaluatedWordIds[state.unevaluatedIndex]);
                 state.unevaluatedIndex++;
-
             } else if (state.testPhase === 'retest') {
                 if (state.reviewWordPool.length === 0) {
-                    const allCorrect = state.allWords.every(word => state.wordStatuses[word.id] === 'correct');
-                    if (allCorrect) {
+                    if (state.allWords.every(word => state.wordStatuses[word.id] === 'correct')) {
                         state.testPhase = 'finished';
                         displayFinishedScreen();
                         saveTestState();
@@ -2408,16 +1647,13 @@
                         return;
                     }
                 }
-
                 const poolIndex = Math.floor(Math.random() * state.reviewWordPool.length);
-                const wordId = state.reviewWordPool[poolIndex];
-                state.currentWord = state.wordMap.get(wordId);
-
+                state.currentWord = state.wordMap.get(state.reviewWordPool[poolIndex]);
             } else if (state.testPhase === 'finished') {
                 displayFinishedScreen();
                 return;
             }
-
+            
             if (!state.currentWord) {
                 if (state.allWords.length > 0) {
                     state.currentWord = state.allWords[0];
@@ -2426,15 +1662,15 @@
                     return;
                 }
             }
-
+            
             if (state.historyIndex < state.wordHistory.length - 1) {
                 state.wordHistory = state.wordHistory.slice(0, state.historyIndex + 1);
             }
+            
             state.wordHistory.push(state.currentWord.id);
             state.historyIndex = state.wordHistory.length - 1;
-
+            
             incrementDisplayCount(state.currentWord);
-
             displayWord(state.currentWord);
             updateStatsDisplay();
             updateNavigationButtons();
@@ -2444,8 +1680,7 @@
         function previousWord() {
             if (state.historyIndex > 0) {
                 state.historyIndex--;
-                const wordId = state.wordHistory[state.historyIndex];
-                state.currentWord = state.wordMap.get(wordId);
+                state.currentWord = state.wordMap.get(state.wordHistory[state.historyIndex]);
                 if (!state.currentWord) {
                     state.wordHistory.splice(state.historyIndex, 1);
                     previousWord();
@@ -2458,36 +1693,24 @@
 
         function updateNavigationButtons() {
             prevWordBtn.disabled = state.historyIndex <= 0;
-            const atEndOfHistory = state.historyIndex >= state.wordHistory.length - 1;
-            nextWordBtn.disabled = atEndOfHistory && (state.testPhase === 'finished' || (state.testPhase === 'unevaluated' && state.unevaluatedIndex >= state.unevaluatedWordIds.length));
+            nextWordBtn.disabled = false;
         }
 
         function buildReviewWordPool() {
             const newPool = [];
-            const { correct, review, incorrect } = state.probabilities;
-
             state.allWords.forEach(word => {
                 const status = state.wordStatuses[word.id];
                 if (!status) return;
-
-                let probability = 0;
-                if (status === 'correct') probability = correct;
-                else if (status === 'review') probability = review;
-                else if (status === 'incorrect') probability = incorrect;
-
-                const frequency = Math.max(1, Math.round(probability * 100));
-                for (let i = 0; i < frequency; i++) {
+                const prob = status === 'correct' ? state.probabilities.correct : (status === 'review' ? state.probabilities.review : state.probabilities.incorrect);
+                for (let i = 0; i < Math.max(1, Math.round(prob * 100)); i++) {
                     newPool.push(word.id);
                 }
             });
-
             state.reviewWordPool = newPool;
         }
 
         function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, m => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-            }[m]));
+            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
         }
 
         function displayPreviousAnswer() {
@@ -2495,25 +1718,14 @@
                 prevAnswerBar.classList.remove('visible');
                 return;
             }
-
-            const prev = state.previousWord;
             prevAnswerBar.classList.add('visible');
-
-            let contentHTML = '';
-            if (state.reverseMode) {
-                contentHTML += `<span>${escapeHTML(prev.word)}</span>`;
-                if (prev.reading) contentHTML += `<span class="prev-sub">(${escapeHTML(prev.reading)})</span>`;
-            } else {
-                contentHTML += `<span>${escapeHTML(prev.meaning)}</span>`;
-            }
-
-            prevAnswerContent.innerHTML = contentHTML;
+            const txt = state.reverseMode ? `${escapeHTML(state.previousWord.word)} <span class="prev-sub">(${escapeHTML(state.previousWord.reading || '')})</span>` : escapeHTML(state.previousWord.meaning);
+            prevAnswerContent.innerHTML = txt;
         }
 
         function incrementDisplayCount(word) {
             if (!word) return;
-            if (!state.wordDisplayCounts[word.id]) state.wordDisplayCounts[word.id] = 0;
-            state.wordDisplayCounts[word.id]++;
+            state.wordDisplayCounts[word.id] = (state.wordDisplayCounts[word.id] || 0) + 1;
         }
 
         function updateWordChips(word) {
@@ -2521,91 +1733,47 @@
                 wordChips.classList.add('hidden');
                 return;
             }
-
-            const displayCount = state.wordDisplayCounts[word.id] || 0;
             const status = state.wordStatuses[word.id] || 'unevaluated';
-
-            displayCountChip.textContent = `👁️ ${displayCount}`;
-
+            displayCountChip.textContent = `👁️ ${state.wordDisplayCounts[word.id] || 0}`;
+            
             let statusText = '− New';
             let statusClass = 'chip-neutral';
-
-            switch (status) {
-                case 'correct':
-                    statusText = '○ Correct';
-                    statusClass = 'chip-correct';
-                    break;
-                case 'review':
-                    statusText = '△ Review';
-                    statusClass = 'chip-review';
-                    break;
-                case 'incorrect':
-                    statusText = '✕ Incorrect';
-                    statusClass = 'chip-incorrect';
-                    break;
-            }
-
+            
+            if (status === 'correct') { statusText = '○ Correct'; statusClass = 'chip-correct'; }
+            else if (status === 'review') { statusText = '△ Review'; statusClass = 'chip-review'; }
+            else if (status === 'incorrect') { statusText = '✕ Incorrect'; statusClass = 'chip-incorrect'; }
+            
             statusChip.textContent = statusText;
-            statusChip.className = 'chip ' + statusClass;
-
+            statusChip.className = `chip ${statusClass}`;
             wordChips.classList.remove('hidden');
         }
 
-        // ============================================
-        // Font Size Adjustment Logic
-        // ============================================
+        // Font Size Adjustment logic (From v3)
         function adjustFontSize(element, text) {
-            // Remove all size classes first
             element.classList.remove('size-normal', 'size-medium', 'size-small', 'size-tiny');
-            
             const len = text.length;
-            
-            if (len > 60) {
-                element.classList.add('size-tiny');
-            } else if (len > 30) {
-                element.classList.add('size-small');
-            } else if (len > 15) {
-                element.classList.add('size-medium');
-            } else {
-                element.classList.add('size-normal');
-            }
+            if (len > 60) element.classList.add('size-tiny');
+            else if (len > 30) element.classList.add('size-small');
+            else if (len > 15) element.classList.add('size-medium');
+            else element.classList.add('size-normal');
         }
 
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
-
             displayPreviousAnswer();
             updateWordChips(word);
-
-            let displayText = '';
-
-            if (state.reverseMode) {
-                displayText = word.meaning;
-                questionText.textContent = displayText;
-                answerReading.textContent = word.reading || '';
-                answerReading.style.display = word.reading ? 'block' : 'none';
-                answerMeaning.textContent = word.word;
-            } else {
-                displayText = word.word;
-                questionText.textContent = displayText;
-                answerReading.textContent = word.reading || '';
-                answerReading.style.display = word.reading ? 'block' : 'none';
-                answerMeaning.textContent = word.meaning;
-            }
             
-            // Adjust Font Size based on text length
+            let displayText = state.reverseMode ? word.meaning : word.word;
+            questionText.textContent = displayText;
             adjustFontSize(questionText, displayText);
-
-            if (state.testPhase !== 'finished') {
-                reportBtns.style.display = 'grid';
-            }
-
-            // Auto TTS
-            if (ttsState.autoRead && state.currentWord) {
-                const text = state.reverseMode ? word.meaning : word.word;
-                setTimeout(() => speak(text, ttsQuestionBtn), 100);
-            }
+            
+            answerReading.textContent = word.reading || '';
+            answerReading.style.display = word.reading ? 'block' : 'none';
+            answerMeaning.textContent = state.reverseMode ? word.word : word.meaning;
+            
+            if (state.testPhase !== 'finished') reportBtns.style.display = 'grid';
+            if (ttsState.autoRead && state.currentWord) setTimeout(() => speak(displayText, ttsQuestionBtn), 100);
         }
 
         function displayFinishedScreen() {
@@ -2613,43 +1781,31 @@
             prevAnswerBar.classList.remove('visible');
             wordChips.classList.add('hidden');
             questionText.textContent = '🥳 Complete!';
-            questionText.className = 'question-text size-normal'; // Reset to normal size
+            adjustFontSize(questionText, 'Complete');
             answerSection.classList.remove('hidden');
             answerReading.textContent = 'Great job!';
-            answerReading.style.display = 'block';
-            answerMeaning.textContent = 'All words marked correct!';
+            answerMeaning.textContent = 'All correct!';
             reportBtns.style.display = 'none';
         }
 
-        // Report button handler with visual feedback
         reportBtns.addEventListener('click', e => {
-            const button = e.target.closest('button');
-            if (!button || !state.currentWord) return;
-
-            const result = button.dataset.result;
-            state.wordStatuses[state.currentWord.id] = result;
+            const btn = e.target.closest('button');
+            if (!btn || !state.currentWord) return;
+            const res = btn.dataset.result;
+            state.wordStatuses[state.currentWord.id] = res;
             state.previousWord = state.currentWord;
-
-            // Visual feedback
             wordCard.classList.remove('correct-flash', 'review-flash', 'incorrect-flash');
-            void wordCard.offsetWidth; // Trigger reflow
-            wordCard.classList.add(`${result}-flash`);
-
+            void wordCard.offsetWidth;
+            wordCard.classList.add(`${res}-flash`);
             rebuildUnevaluatedList();
-
-            if (state.testPhase === 'retest') {
-                buildReviewWordPool();
-            }
-
+            if (state.testPhase === 'retest') buildReviewWordPool();
             nextWord();
         });
 
         prevWordBtn.addEventListener('click', previousWord);
         nextWordBtn.addEventListener('click', nextWord);
 
-        // ============================================
-        // Edit Word
-        // ============================================
+        // Edit
         editWordBtn.addEventListener('click', () => {
             if (!state.currentWord) return;
             state.editingFromList = null;
@@ -2663,223 +1819,117 @@
         editCancelBtn.addEventListener('click', () => {
             editModalOverlay.classList.remove('active');
             editModal.classList.remove('active');
-            state.editingFromList = null;
-        });
-        editModalOverlay.addEventListener('click', () => {
-            editModalOverlay.classList.remove('active');
-            editModal.classList.remove('active');
-            state.editingFromList = null;
         });
 
         editSaveBtn.addEventListener('click', () => {
-            const newWord = editWordInput.value.trim();
-            const newReading = editReadingInput.value.trim();
-            const newMeaning = editMeaningInput.value.trim();
-
-            if (!newWord || !newMeaning) {
-                showModal('Error', 'Word and meaning required.');
-                return;
-            }
-
-            const editTarget = state.editingFromList || state.currentWord;
-            if (!editTarget) return;
-
-            const oldId = editTarget.id;
-            const newId = createWordId(newWord, newReading);
-
-            if (newId !== oldId && state.wordMap.has(newId)) {
-                showModal('Error', 'Word already exists.');
-                return;
-            }
-
-            const wordIndex = state.allWords.findIndex(w => w.id === oldId);
-            if (wordIndex !== -1) {
+            const nw = editWordInput.value.trim();
+            const nr = editReadingInput.value.trim();
+            const nm = editMeaningInput.value.trim();
+            
+            if (!nw || !nm) { showModal('Error', 'Required fields.'); return; }
+            
+            const target = state.editingFromList || state.currentWord;
+            const oldId = target.id;
+            const newId = createWordId(nw, nr);
+            
+            if (newId !== oldId && state.wordMap.has(newId)) { showModal('Error', 'Exists.'); return; }
+            
+            const idx = state.allWords.findIndex(w => w.id === oldId);
+            if (idx !== -1) {
                 if (newId !== oldId) {
-                    if (state.wordStatuses[oldId]) {
-                        state.wordStatuses[newId] = state.wordStatuses[oldId];
-                        delete state.wordStatuses[oldId];
-                    }
-                    if (state.wordDisplayCounts[oldId]) {
-                        state.wordDisplayCounts[newId] = state.wordDisplayCounts[oldId];
-                        delete state.wordDisplayCounts[oldId];
-                    }
+                    if (state.wordStatuses[oldId]) { state.wordStatuses[newId] = state.wordStatuses[oldId]; delete state.wordStatuses[oldId]; }
+                    if (state.wordDisplayCounts[oldId]) { state.wordDisplayCounts[newId] = state.wordDisplayCounts[oldId]; delete state.wordDisplayCounts[oldId]; }
                     state.wordMap.delete(oldId);
-
-                    const unevalIdx = state.unevaluatedWordIds.indexOf(oldId);
-                    if (unevalIdx !== -1) state.unevaluatedWordIds[unevalIdx] = newId;
+                    const ui = state.unevaluatedWordIds.indexOf(oldId);
+                    if (ui !== -1) state.unevaluatedWordIds[ui] = newId;
                 }
-
-                state.allWords[wordIndex] = {
-                    id: newId,
-                    word: newWord,
-                    reading: newReading,
-                    meaning: newMeaning,
-                    initialOrder: state.allWords[wordIndex].initialOrder
-                };
-
-                state.wordMap.set(newId, state.allWords[wordIndex]);
-
-                if (state.currentWord && state.currentWord.id === oldId) {
-                    state.currentWord = state.allWords[wordIndex];
-                }
-
-                if (newId !== oldId) {
-                    for (let i = 0; i < state.wordHistory.length; i++) {
-                        if (state.wordHistory[i] === oldId) state.wordHistory[i] = newId;
-                    }
-                }
-
+                
+                const updated = { id: newId, word: nw, reading: nr, meaning: nm, initialOrder: state.allWords[idx].initialOrder };
+                state.allWords[idx] = updated;
+                state.wordMap.set(newId, updated);
+                
+                if (state.currentWord && state.currentWord.id === oldId) state.currentWord = updated;
+                if (newId !== oldId) state.wordHistory = state.wordHistory.map(id => id === oldId ? newId : id);
+                
                 saveAllWords(state.allWords);
                 saveTestState();
-
+                
                 if (state.currentWord) displayWord(state.currentWord);
-
+                
                 editModalOverlay.classList.remove('active');
                 editModal.classList.remove('active');
-                showModal('Success', 'Word updated!');
-
-                if (state.previousWord && state.previousWord.id === oldId) {
-                    state.previousWord = state.allWords[wordIndex];
-                    displayPreviousAnswer();
-                }
-
-                state.editingFromList = null;
+                showModal('Success', 'Updated.');
             }
         });
 
-        // ============================================
         // UI Updates
-        // ============================================
         function updateResumeButton(hasData) {
             if (hasData && state.allWords.length > 0) {
                 resumeTestBtn.disabled = false;
-                const date = new Date(state.lastUpdated);
-                lastUpdatedTime.textContent = date.toLocaleString();
-                resumeInfo.textContent = `${state.allWords.length} word(s)`;
+                lastUpdatedTime.textContent = new Date(state.lastUpdated).toLocaleString();
+                resumeInfo.textContent = `${state.allWords.length} words`;
                 resumeTestBtn.onclick = startTest;
             } else {
                 resumeTestBtn.disabled = true;
                 lastUpdatedTime.textContent = '--';
-                resumeInfo.textContent = 'No saved data';
                 resumeTestBtn.onclick = null;
             }
         }
 
         function updateStatsDisplay() {
-            const totalWords = state.allWords.length;
             const counts = { unevaluated: 0, correct: 0, review: 0, incorrect: 0 };
-
-            state.allWords.forEach(word => {
-                const status = state.wordStatuses[word.id] || 'unevaluated';
-                if (counts[status] !== undefined) counts[status]++;
-            });
-
+            state.allWords.forEach(w => counts[state.wordStatuses[w.id] || 'unevaluated']++);
+            
             unevaluatedCount.textContent = counts.unevaluated;
             correctCount.textContent = counts.correct;
             reviewCount.textContent = counts.review;
             incorrectCount.textContent = counts.incorrect;
-
-            const evaluatedCount = totalWords - counts.unevaluated;
-            const unevaluatedProgressPercent = totalWords > 0 ? (evaluatedCount / totalWords) * 100 : 0;
-            unevaluatedProgressBar.style.width = `${unevaluatedProgressPercent}%`;
-            unevaluatedProgressText.textContent = `${evaluatedCount} / ${totalWords}`;
-
-            if (counts.unevaluated > 0) {
-                unevaluatedProgress.style.display = 'block';
-            } else {
-                unevaluatedProgress.style.display = 'none';
-            }
-
-            const weightedProgress = counts.correct * 1 + counts.review * 0.5;
-            const overallProgressPercent = totalWords > 0 ? (weightedProgress / totalWords) * 100 : 0;
-            overallProgressBar.style.width = `${overallProgressPercent}%`;
-            overallProgressText.textContent = `${weightedProgress.toFixed(1)} / ${totalWords}`;
+            
+            unevaluatedProgressBar.style.width = state.allWords.length ? `${((state.allWords.length - counts.unevaluated) / state.allWords.length) * 100}%` : '0%';
+            unevaluatedProgressText.textContent = `${state.allWords.length - counts.unevaluated} / ${state.allWords.length}`;
+            unevaluatedProgress.style.display = counts.unevaluated > 0 ? 'block' : 'none';
+            
+            overallProgressBar.style.width = state.allWords.length ? `${((counts.correct + counts.review * 0.5) / state.allWords.length) * 100}%` : '0%';
+            overallProgressText.textContent = `${(counts.correct + counts.review * 0.5).toFixed(1)} / ${state.allWords.length}`;
         }
 
-        // ============================================
-        // TTS (Text-to-Speech)
-        // ============================================
+        // TTS
         function initTTS() {
-            const savedTTS = localStorage.getItem(LS_TTS_KEY);
-            if (savedTTS) {
-                const parsed = JSON.parse(savedTTS);
-                ttsState.autoRead = parsed.autoRead || false;
-                ttsState.speed = parsed.speed || 1.0;
-            }
+            const saved = JSON.parse(localStorage.getItem(LS_TTS_KEY) || '{}');
+            ttsState.autoRead = saved.autoRead || false;
             ttsAutoToggle.checked = ttsState.autoRead;
-            ttsSpeedSlider.value = ttsState.speed;
-            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
-
             if ('speechSynthesis' in window) {
-                speechSynthesis.onvoiceschanged = () => {
-                    ttsState.voices = speechSynthesis.getVoices();
-                };
+                speechSynthesis.onvoiceschanged = () => ttsState.voices = speechSynthesis.getVoices();
                 ttsState.voices = speechSynthesis.getVoices();
             }
         }
 
         function saveTTSState() {
-            localStorage.setItem(LS_TTS_KEY, JSON.stringify({
-                autoRead: ttsState.autoRead,
-                speed: ttsState.speed
-            }));
-        }
-
-        function detectLanguage(text) {
-            if (/[\uAC00-\uD7AF]/.test(text)) return 'ko-KR';
-            if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) return 'ja-JP';
-            if (/[\u4E00-\u9FFF]/.test(text)) return 'zh-CN';
-            return 'en-US';
-        }
-
-        function getVoiceForLang(lang) {
-            const voices = ttsState.voices;
-            let voice = voices.find(v => v.lang === lang);
-            if (!voice) voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
-            return voice || voices[0];
+            localStorage.setItem(LS_TTS_KEY, JSON.stringify({ autoRead: ttsState.autoRead }));
         }
 
         function speak(text, btn) {
-            if (!('speechSynthesis' in window)) {
-                showModal('Not Supported', 'Text-to-speech is not available.');
-                return;
-            }
+            if (!('speechSynthesis' in window)) return;
             speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            const lang = detectLanguage(text);
-            utterance.lang = lang;
-            utterance.rate = ttsState.speed;
-            const voice = getVoiceForLang(lang);
-            if (voice) utterance.voice = voice;
-
+            const ut = new SpeechSynthesisUtterance(text);
+            if (/[\uAC00-\uD7AF]/.test(text)) ut.lang = 'ko-KR';
+            else if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) ut.lang = 'ja-JP';
+            else if (/[\u4E00-\u9FFF]/.test(text)) ut.lang = 'zh-CN';
+            else ut.lang = 'en-US';
+            
             if (btn) btn.classList.add('speaking');
-            ttsState.speaking = true;
-
-            utterance.onend = () => {
-                if (btn) btn.classList.remove('speaking');
-                ttsState.speaking = false;
-            };
-            utterance.onerror = () => {
-                if (btn) btn.classList.remove('speaking');
-                ttsState.speaking = false;
-            };
-            speechSynthesis.speak(utterance);
+            ut.onend = ut.onerror = () => btn && btn.classList.remove('speaking');
+            speechSynthesis.speak(ut);
         }
 
         ttsQuestionBtn.addEventListener('click', e => {
             e.stopPropagation();
-            if (state.currentWord) {
-                const text = state.reverseMode ? state.currentWord.meaning : state.currentWord.word;
-                speak(text, ttsQuestionBtn);
-            }
+            if (state.currentWord) speak(state.reverseMode ? state.currentWord.meaning : state.currentWord.word, ttsQuestionBtn);
         });
 
         ttsAnswerBtn.addEventListener('click', e => {
             e.stopPropagation();
-            if (state.currentWord) {
-                const text = state.reverseMode ? state.currentWord.word : state.currentWord.meaning;
-                speak(text, ttsAnswerBtn);
-            }
+            if (state.currentWord) speak(state.reverseMode ? state.currentWord.word : state.currentWord.meaning, ttsAnswerBtn);
         });
 
         ttsAutoToggle.addEventListener('change', () => {
@@ -2887,235 +1937,163 @@
             saveTTSState();
         });
 
-        ttsSpeedSlider.addEventListener('input', () => {
-            ttsState.speed = parseFloat(ttsSpeedSlider.value);
-            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
-            saveTTSState();
-        });
+        // Import/Export
+        function formatDate() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
 
-        // ============================================
-        // Export/Import
-        // ============================================
-        function exportJSON() {
-            const exportData = {
+        function downloadBlob(blob, name) {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        exportJsonBtn.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify({
                 version: 1,
                 exportDate: new Date().toISOString(),
                 words: state.allWords,
                 statuses: state.wordStatuses,
-                displayCounts: state.wordDisplayCounts,
-                probabilities: state.probabilities
-            };
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                displayCounts: state.wordDisplayCounts
+            }, null, 2)], { type: 'application/json' });
             downloadBlob(blob, `tango_backup_${formatDate()}.json`);
-            showModal('✅ Exported', 'JSON backup file downloaded.');
-        }
+        });
 
-        function exportCSV() {
-            let csv = 'word,reading,meaning,status,displayCount\n';
-            state.allWords.forEach(w => {
-                const status = state.wordStatuses[w.id] || 'unevaluated';
-                const count = state.wordDisplayCounts[w.id] || 0;
-                csv += `"${escapeCsv(w.word)}","${escapeCsv(w.reading || '')}","${escapeCsv(w.meaning)}","${status}",${count}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            downloadBlob(blob, `tango_words_${formatDate()}.csv`);
-            showModal('✅ Exported', 'CSV file downloaded.');
-        }
+        exportCsvBtn.addEventListener('click', () => {
+            let csv = 'word,reading,meaning,status,count\n' + state.allWords.map(w => `"${w.word.replace(/"/g,'""')}","${(w.reading||'').replace(/"/g,'""')}","${w.meaning.replace(/"/g,'""')}","${state.wordStatuses[w.id]||'unevaluated'}",${state.wordDisplayCounts[w.id]||0}`).join('\n');
+            downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), `tango_${formatDate()}.csv`);
+        });
 
-        function escapeCsv(str) {
-            return str.replace(/"/g, '""');
-        }
-
-        function formatDate() {
-            const d = new Date();
-            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        }
-
-        function downloadBlob(blob, filename) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function handleImport(file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                const content = e.target.result;
-                if (file.name.endsWith('.json')) importJSON(content);
-                else if (file.name.endsWith('.csv')) importCSV(content);
-                else showModal('Error', 'Unsupported format. Use JSON or CSV.');
-            };
-            reader.readAsText(file);
-        }
-
-        function importJSON(content) {
-            try {
-                const data = JSON.parse(content);
-                if (!data.words || !Array.isArray(data.words)) {
-                    showModal('Error', 'Invalid JSON format.');
-                    return;
-                }
-                let addedCount = 0, skippedCount = 0;
-                data.words.forEach(w => {
-                    if (!w.word || !w.meaning) { skippedCount++; return; }
-                    const id = w.id || createWordId(w.word, w.reading);
-                    if (state.wordMap.has(id)) { skippedCount++; return; }
-                    const newWord = { id, word: w.word, reading: w.reading || '', meaning: w.meaning, initialOrder: state.allWords.length };
-                    state.allWords.push(newWord);
-                    state.wordMap.set(id, newWord);
-                    if (data.statuses && data.statuses[id]) state.wordStatuses[id] = data.statuses[id];
-                    if (data.displayCounts && data.displayCounts[id]) state.wordDisplayCounts[id] = data.displayCounts[id];
-                    addedCount++;
-                });
-                saveAllWords(state.allWords);
-                rebuildUnevaluatedList();
-                saveTestState();
-                updateStatsDisplay();
-                updateResumeButton(true);
-                showModal('✅ Imported', `Added: ${addedCount}, Skipped: ${skippedCount}`);
-            } catch (err) {
-                showModal('Error', 'Failed to parse JSON file.');
-            }
-        }
-
-        function importCSV(content) {
-            const lines = content.split('\n').filter(l => l.trim());
-            if (lines.length < 2) { showModal('Error', 'CSV file is empty.'); return; }
-            let addedCount = 0, skippedCount = 0;
-            for (let i = 1; i < lines.length; i++) {
-                const parts = parseCSVLine(lines[i]);
-                if (parts.length < 2) { skippedCount++; continue; }
-                const word = parts[0], reading = parts[1] || '', meaning = parts[2] || parts[1];
-                if (!word || !meaning) { skippedCount++; continue; }
-                const id = createWordId(word, reading);
-                if (state.wordMap.has(id)) { skippedCount++; continue; }
-                const newWord = { id, word, reading, meaning, initialOrder: state.allWords.length };
-                state.allWords.push(newWord);
-                state.wordMap.set(id, newWord);
-                if (parts[3]) state.wordStatuses[id] = parts[3];
-                if (parts[4]) state.wordDisplayCounts[id] = parseInt(parts[4]) || 0;
-                addedCount++;
-            }
-            saveAllWords(state.allWords);
-            rebuildUnevaluatedList();
-            saveTestState();
-            updateStatsDisplay();
-            updateResumeButton(true);
-            showModal('✅ Imported', `Added: ${addedCount}, Skipped: ${skippedCount}`);
-        }
-
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '', inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"') {
-                    if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
-                    else inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else current += char;
-            }
-            result.push(current.trim());
-            return result;
-        }
-
-        exportJsonBtn.addEventListener('click', exportJSON);
-        exportCsvBtn.addEventListener('click', exportCSV);
         importBtn.addEventListener('click', () => importFileInput.click());
+
         importFileInput.addEventListener('change', e => {
-            if (e.target.files.length > 0) {
-                handleImport(e.target.files[0]);
+            if(e.target.files.length) {
+                const r = new FileReader();
+                r.onload = evt => { 
+                    const c = evt.target.result;
+                    if(e.target.files[0].name.endsWith('.json')) {
+                        try {
+                            const d = JSON.parse(c);
+                            let added = 0;
+                            d.words.forEach(w => {
+                                if(!state.wordMap.has(w.id || createWordId(w.word, w.reading))) {
+                                    const nw = { ...w, id: w.id || createWordId(w.word, w.reading), initialOrder: state.allWords.length };
+                                    state.allWords.push(nw);
+                                    state.wordMap.set(nw.id, nw);
+                                    if(d.statuses[nw.id]) state.wordStatuses[nw.id] = d.statuses[nw.id];
+                                    added++;
+                                }
+                            });
+                            saveAllWords(state.allWords);
+                            saveTestState();
+                            rebuildUnevaluatedList();
+                            updateResumeButton(true);
+                            showModal('Imported', `${added} words.`);
+                        } catch(x){ showModal('Error', 'Invalid JSON'); }
+                    } else {
+                        const lines = c.split('\n').filter(l=>l.trim());
+                        let added = 0;
+                        for(let i=1; i<lines.length; i++) {
+                            const p = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                            if(!p || p.length < 2) continue;
+                            const w = p[0].replace(/"/g,''), r = p[1].replace(/"/g,''), m = p[2]?p[2].replace(/"/g,''):r;
+                            const id = createWordId(w,r);
+                            if(!state.wordMap.has(id)) {
+                                const nw = { id, word:w, reading:r, meaning:m, initialOrder: state.allWords.length };
+                                state.allWords.push(nw);
+                                state.wordMap.set(id,nw);
+                                added++;
+                            }
+                        }
+                        saveAllWords(state.allWords);
+                        saveTestState();
+                        rebuildUnevaluatedList();
+                        updateResumeButton(true);
+                        showModal('Imported', `${added} words.`);
+                    }
+                };
+                r.readAsText(e.target.files[0]);
                 e.target.value = '';
             }
         });
 
-        // ============================================
         // Word List
-        // ============================================
-        let wordlistFilter = 'all';
-
-        function openWordlistModal() {
-            wordlistFilter = 'all';
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            document.querySelector('.filter-chip[data-filter="all"]').classList.add('active');
-            wordlistSearch.value = '';
-            renderWordlist();
-            wordlistModalOverlay.classList.add('active');
-            wordlistModal.classList.add('active');
-        }
-
-        function closeWordlistModal() {
-            wordlistModalOverlay.classList.remove('active');
-            wordlistModal.classList.remove('active');
-        }
-
         function renderWordlist() {
-            const searchTerm = wordlistSearch.value.toLowerCase().trim();
-            let filtered = state.allWords.filter(w => {
+            const filter = document.querySelector('.filter-chip.active').dataset.filter;
+            const term = wordlistSearch.value.toLowerCase().trim();
+            
+            const list = state.allWords.filter(w => {
                 const status = state.wordStatuses[w.id] || 'unevaluated';
-                if (wordlistFilter !== 'all' && status !== wordlistFilter) return false;
-                if (searchTerm) {
-                    return w.word.toLowerCase().includes(searchTerm) ||
-                           (w.reading && w.reading.toLowerCase().includes(searchTerm)) ||
-                           w.meaning.toLowerCase().includes(searchTerm);
-                }
-                return true;
+                const matchesFilter = filter === 'all' || status === filter;
+                const matchesSearch = w.word.toLowerCase().includes(term) || w.meaning.toLowerCase().includes(term);
+                return matchesFilter && matchesSearch;
             });
-            wordlistCount.textContent = `${filtered.length} / ${state.allWords.length} words`;
-            if (filtered.length === 0) {
-                wordlistContainer.innerHTML = '<div class="wordlist-empty"><div class="wordlist-empty-icon">📭</div><p>No words found</p></div>';
+            
+            wordlistCount.textContent = `${list.length} words`;
+            
+            if (list.length === 0) {
+                wordlistContainer.innerHTML = '<p style="text-align:center;padding:20px;color:var(--text-muted);">No words</p>';
                 return;
             }
-            wordlistContainer.innerHTML = filtered.map(w => {
+            
+            wordlistContainer.innerHTML = list.map(w => {
                 const status = state.wordStatuses[w.id] || 'unevaluated';
-                const count = state.wordDisplayCounts[w.id] || 0;
-                const statusIcon = { unevaluated: '−', correct: '○', review: '△', incorrect: '✕' }[status];
-                const statusClass = `status-${status}`;
-                const detail = w.reading ? `${w.reading} → ${w.meaning}` : w.meaning;
-                return `<div class="word-item" data-id="${w.id}"><div class="word-item-main"><div class="word-item-word">${escapeHTML(w.word)}</div><div class="word-item-detail">${escapeHTML(detail)}</div></div><div class="word-item-right"><span class="word-item-count">👁️${count}</span><div class="word-item-status ${statusClass}">${statusIcon}</div></div></div>`;
+                const statusChar = status === 'unevaluated' ? '−' : (status === 'correct' ? '○' : (status === 'review' ? '△' : '✕'));
+                
+                return `<div class="word-item" data-id="${w.id}">
+                    <div style="flex:1;min-width:0;">
+                        <div class="word-item-word">${escapeHTML(w.word)}</div>
+                        <div class="word-item-detail">${escapeHTML(w.meaning)}</div>
+                    </div>
+                    <div class="status-${status}" style="width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">
+                        ${statusChar}
+                    </div>
+                </div>`;
             }).join('');
         }
 
-        wordlistToggle.addEventListener('click', openWordlistModal);
-        wordlistCloseBtn.addEventListener('click', closeWordlistModal);
-        wordlistModalOverlay.addEventListener('click', closeWordlistModal);
+        wordlistToggle.addEventListener('click', () => {
+            wordlistModalOverlay.classList.add('active');
+            wordlistModal.classList.add('active');
+            renderWordlist();
+        });
+
+        wordlistCloseBtn.addEventListener('click', () => {
+            wordlistModalOverlay.classList.remove('active');
+            wordlistModal.classList.remove('active');
+        });
+
         wordlistSearch.addEventListener('input', renderWordlist);
 
-        document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                wordlistFilter = chip.dataset.filter;
-                renderWordlist();
-            });
-        });
+        document.querySelectorAll('.filter-chip').forEach(c => c.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            c.classList.add('active');
+            renderWordlist();
+        }));
 
         wordlistContainer.addEventListener('click', e => {
-            const item = e.target.closest('.word-item');
-            if (!item) return;
-            const wordId = item.dataset.id;
-            const word = state.wordMap.get(wordId);
-            if (!word) return;
-            closeWordlistModal();
-            editWordInput.value = word.word;
-            editReadingInput.value = word.reading || '';
-            editMeaningInput.value = word.meaning;
-            state.editingFromList = word;
-            editModalOverlay.classList.add('active');
-            editModal.classList.add('active');
+            const i = e.target.closest('.word-item');
+            if(i) {
+                const w = state.wordMap.get(i.dataset.id);
+                if(w) {
+                    wordlistModalOverlay.classList.remove('active');
+                    wordlistModal.classList.remove('active');
+                    editWordInput.value = w.word;
+                    editReadingInput.value = w.reading||'';
+                    editMeaningInput.value = w.meaning;
+                    state.editingFromList = w;
+                    editModalOverlay.classList.add('active');
+                    editModal.classList.add('active');
+                }
+            }
         });
 
-        // ============================================
         // Settings
-        // ============================================
-        function openSettingsModal() {
+        settingsToggle.addEventListener('click', () => {
             probCorrectInput.value = Math.round(state.probabilities.correct * 100);
             probReviewInput.value = Math.round(state.probabilities.review * 100);
             probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
@@ -3123,107 +2101,110 @@
             updateDeleteCounts();
             updateDeleteByStatusButton();
             reverseModeToggle.checked = state.reverseMode;
-            ttsAutoToggle.checked = ttsState.autoRead;
-            ttsSpeedSlider.value = ttsState.speed;
-            ttsSpeedValue.textContent = ttsState.speed.toFixed(1) + 'x';
             settingsModalOverlay.classList.add('active');
             settingsModal.classList.add('active');
-        }
-
-        function closeSettingsModal() {
-            settingsModalOverlay.classList.remove('active');
-            settingsModal.classList.remove('active');
-        }
-
-        settingsToggle.addEventListener('click', openSettingsModal);
-        settingsCloseBtn.addEventListener('click', closeSettingsModal);
-        settingsModalOverlay.addEventListener('click', closeSettingsModal);
-
-        [probCorrectInput, probReviewInput, probIncorrectInput].forEach(input => {
-            input.addEventListener('input', updateProbabilityTotal);
         });
 
-        function updateProbabilityTotal() {
-            const c = parseInt(probCorrectInput.value) || 0;
-            const r = parseInt(probReviewInput.value) || 0;
-            const i = parseInt(probIncorrectInput.value) || 0;
-            const total = c + r + i;
+        settingsCloseBtn.addEventListener('click', () => {
+            settingsModalOverlay.classList.remove('active');
+            settingsModal.classList.remove('active');
+        });
+        
+        settingsModalOverlay.addEventListener('click', () => {
+            settingsModalOverlay.classList.remove('active');
+            settingsModal.classList.remove('active');
+        });
 
-            probTotal.textContent = `Total: ${total}%`;
-            if (total === 100) {
-                probTotal.className = 'prob-total prob-total-valid';
-                settingsSaveBtn.disabled = false;
-            } else {
-                probTotal.className = 'prob-total prob-total-invalid';
-                settingsSaveBtn.disabled = true;
-            }
+        [probCorrectInput, probReviewInput, probIncorrectInput].forEach(i => i.addEventListener('input', updateProbabilityTotal));
+
+        function updateProbabilityTotal() {
+            const tot = (parseInt(probCorrectInput.value)||0) + (parseInt(probReviewInput.value)||0) + (parseInt(probIncorrectInput.value)||0);
+            probTotal.textContent = `Total: ${tot}%`;
+            probTotal.className = `prob-total ${tot===100?'prob-total-valid':'prob-total-invalid'}`;
+            settingsSaveBtn.disabled = tot !== 100;
         }
 
         settingsSaveBtn.addEventListener('click', () => {
-            const c = parseInt(probCorrectInput.value);
-            const r = parseInt(probReviewInput.value);
-            const i = parseInt(probIncorrectInput.value);
-
-            if (c + r + i !== 100) {
-                showModal('Error', 'Total must equal 100%');
-                return;
-            }
-
             state.probabilities = {
-                correct: c / 100,
-                review: r / 100,
-                incorrect: i / 100,
+                correct: parseInt(probCorrectInput.value)/100,
+                review: parseInt(probReviewInput.value)/100,
+                incorrect: parseInt(probIncorrectInput.value)/100
             };
-
             saveTestState();
-            showModal('✅ Saved', 'Settings updated!');
-            closeSettingsModal();
-
-            if (state.testPhase === 'retest') {
-                buildReviewWordPool();
-            }
+            showModal('Saved', 'Settings updated.');
+            settingsModalOverlay.classList.remove('active');
+            settingsModal.classList.remove('active');
+            if (state.testPhase === 'retest') buildReviewWordPool();
         });
 
-        resetDataBtn.addEventListener('click', () => {
-            showConfirmModal('⚠️ Warning', 'Delete all data? Cannot be undone.', resetAppData);
-        });
-
+        resetDataBtn.addEventListener('click', () => showConfirmModal('⚠️ Warning', 'Delete all data?', resetAppData));
+        
         gotoRegisterBtn.addEventListener('click', () => {
-            closeSettingsModal();
+            settingsModalOverlay.classList.remove('active');
+            settingsModal.classList.remove('active');
             setView('setup');
-            wordInput.focus();
         });
 
         reverseModeToggle.addEventListener('change', e => {
             state.reverseMode = e.target.checked;
             saveTestState();
-            if (state.currentWord) displayWord(state.currentWord);
-            displayPreviousAnswer();
+            if(state.currentWord) displayWord(state.currentWord);
         });
 
-        // ============================================
-        // Init
-        // ============================================
-        function initApp() {
-            setView('loading');
-
-            initTTS();
-
-            const loadedWords = loadAllWords();
-            if (loadedWords.length > 0) {
-                state.allWords = loadedWords;
-                state.wordMap = new Map(loadedWords.map(w => [w.id, w]));
-            }
-
-            const loadedState = loadTestState();
-            if (loadedState && state.allWords.length > 0) {
-                if (loadedState.totalWordsCount === state.allWords.length) {
-                    Object.assign(state, loadedState);
-                    if (!state.wordDisplayCounts) state.wordDisplayCounts = {};
-                } else {
-                    state.lastUpdated = loadedState.lastUpdated;
+        // Modal Drag
+        document.querySelectorAll('.modal-drag-area').forEach(area => {
+            let startY = 0, currentY = 0, active = false;
+            const modal = area.closest('.modal-sheet');
+            const overlay = modal.previousElementSibling;
+            
+            area.addEventListener('touchstart', e => {
+                active = true;
+                startY = e.touches[0].clientY;
+                modal.style.transition = 'none';
+            });
+            
+            document.addEventListener('touchmove', e => {
+                if (!active) return;
+                currentY = e.touches[0].clientY;
+                const diff = currentY - startY;
+                if (diff > 0) {
+                    modal.style.transform = `translateY(${diff}px)`;
+                    overlay.style.opacity = Math.max(0, 1 - diff/300);
                 }
+            });
+            
+            document.addEventListener('touchend', () => {
+                if (!active) return;
+                active = false;
+                modal.style.transition = '';
+                const diff = currentY - startY;
+                if (diff > 100) {
+                    modal.classList.remove('active');
+                    overlay.classList.remove('active');
+                } else {
+                    modal.style.transform = '';
+                    overlay.style.opacity = '';
+                }
+            });
+        });
 
+        // Initialization
+        window.onload = () => {
+            initTTS();
+            initApp();
+        };
+
+        function initApp() {
+            const w = loadAllWords();
+            const s = loadTestState();
+            
+            if (w.length) {
+                state.allWords = w;
+                state.wordMap = new Map(w.map(x => [x.id, x]));
+            }
+            
+            if (s && w.length) {
+                Object.assign(state, s);
                 rebuildUnevaluatedList();
                 updateStatsDisplay();
                 updateResumeButton(true);
@@ -3231,91 +2212,18 @@
                 rebuildUnevaluatedList();
                 updateResumeButton(false);
             }
-
+            
             updateProbabilityTotal();
             setView('setup');
         }
 
-        saveWordsBtn.addEventListener('click', handleSaveWords);
-
-        window.onload = initApp;
-
-        // Prevent zoom on double-tap
+        // Prevent double-tap zoom
         let lastTouchEnd = 0;
         document.addEventListener('touchend', e => {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, false);
-
-        // ============================================
-        // Modal Drag to Close
-        // ============================================
-        const modalConfig = {
-            message: { modal: messageModal, overlay: messageModalOverlay },
-            confirm: { modal: confirmModal, overlay: confirmModalOverlay },
-            settings: { modal: settingsModal, overlay: settingsModalOverlay },
-            edit: { modal: editModal, overlay: editModalOverlay },
-            wordlist: { modal: wordlistModal, overlay: wordlistModalOverlay }
-        };
-
-        let dragState = {
-            active: false,
-            startY: 0,
-            currentY: 0,
-            modalType: null
-        };
-
-        document.querySelectorAll('.modal-drag-area').forEach(dragArea => {
-            dragArea.addEventListener('touchstart', e => {
-                const modalType = dragArea.dataset.modal;
-                const config = modalConfig[modalType];
-                if (!config || !config.modal.classList.contains('active')) return;
-
-                dragState.active = true;
-                dragState.startY = e.touches[0].clientY;
-                dragState.currentY = dragState.startY;
-                dragState.modalType = modalType;
-                config.modal.classList.add('dragging');
-            }, { passive: true });
-        });
-
-        document.addEventListener('touchmove', e => {
-            if (!dragState.active) return;
-
-            dragState.currentY = e.touches[0].clientY;
-            const diff = dragState.currentY - dragState.startY;
-
-            if (diff > 0) {
-                const config = modalConfig[dragState.modalType];
-                if (config) {
-                    config.modal.style.transform = `translateY(${diff}px)`;
-                    config.overlay.style.opacity = Math.max(0, 1 - diff / 300);
-                }
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchend', () => {
-            if (!dragState.active) return;
-
-            const diff = dragState.currentY - dragState.startY;
-            const config = modalConfig[dragState.modalType];
-
-            if (config) {
-                config.modal.classList.remove('dragging');
-                config.modal.style.transform = '';
-                config.overlay.style.opacity = '';
-
-                // Close if dragged down more than 100px
-                if (diff > 100) {
-                    config.modal.classList.remove('active');
-                    config.overlay.classList.remove('active');
-                }
-            }
-
-            dragState.active = false;
-            dragState.modalType = null;
-        });
     </script>
 </body>
 </html>
