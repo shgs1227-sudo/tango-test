@@ -16,7 +16,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
                     },
                     colors: {
                         surface: {
@@ -71,37 +71,37 @@
         }
 
         [data-theme="dark-blue"] {
-            --app-bg: #0f172a; /* Slate 900 */
-            --card-bg: rgba(30, 41, 59, 0.85); /* Slate 800 */
+            --app-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.85);
             --card-border: rgba(71, 85, 105, 0.5);
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            --accent-primary: #60a5fa; /* Blue 400 */
+            --accent-primary: #60a5fa;
             --accent-glow: rgba(96, 165, 250, 0.15);
             --modal-bg: #1e293b;
         }
 
         [data-theme="light-blue"] {
-            --app-bg: #f0f9ff; /* Sky 50 */
+            --app-bg: #f0f9ff;
             --card-bg: rgba(255, 255, 255, 0.9);
-            --card-border: rgba(186, 230, 253, 0.8); /* Sky 200 */
-            --text-primary: #0c4a6e; /* Sky 900 */
-            --text-secondary: #0284c7; /* Sky 600 */
+            --card-border: rgba(186, 230, 253, 0.8);
+            --text-primary: #0c4a6e;
+            --text-secondary: #0284c7;
             --text-muted: #94a3b8;
-            --accent-primary: #0ea5e9; /* Sky 500 */
+            --accent-primary: #0ea5e9;
             --accent-glow: rgba(14, 165, 233, 0.15);
             --modal-bg: #ffffff;
         }
 
         [data-theme="light-green"] {
-            --app-bg: #f0fdf4; /* Green 50 */
+            --app-bg: #f0fdf4;
             --card-bg: rgba(255, 255, 255, 0.9);
-            --card-border: rgba(187, 247, 208, 0.8); /* Green 200 */
-            --text-primary: #14532d; /* Green 900 */
-            --text-secondary: #16a34a; /* Green 600 */
+            --card-border: rgba(187, 247, 208, 0.8);
+            --text-primary: #14532d;
+            --text-secondary: #16a34a;
             --text-muted: #94a3b8;
-            --accent-primary: #22c55e; /* Green 500 */
+            --accent-primary: #22c55e;
             --accent-glow: rgba(34, 197, 94, 0.15);
             --modal-bg: #ffffff;
         }
@@ -113,7 +113,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--app-bg);
             height: 100dvh;
             overflow: hidden;
@@ -302,7 +302,7 @@
             cursor: pointer;
             user-select: none;
             min-height: 0;
-            /* Scroll improvements from v3 */
+            /* Scroll improvements */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -315,14 +315,13 @@
             max-width: 100%;
             margin-bottom: 8px;
             
-            /* Text wrapping improvements from v3 */
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            word-break: normal;
+            /* Text wrapping improvements */
+            overflow-wrap: anywhere;
+            word-break: break-word;
             hyphens: auto;
         }
 
-        /* Auto Font Resizing Classes (from v3) */
+        /* Auto Font Resizing Classes */
         .size-normal { font-size: clamp(1.5rem, 8vw, 2.5rem); }
         .size-medium { font-size: clamp(1.2rem, 6vw, 2.0rem); }
         .size-small { font-size: clamp(1.0rem, 5vw, 1.5rem); }
@@ -336,6 +335,11 @@
             align-items: center;
             gap: 6px;
             flex-shrink: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .tap-hint.hidden {
+            display: none !important;
         }
 
         .tap-hint-icon { animation: tapPulse 2s ease-in-out infinite; }
@@ -349,6 +353,11 @@
             flex-wrap: wrap;
             justify-content: center;
             flex-shrink: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .word-chips.hidden {
+            display: none !important;
         }
 
         .chip {
@@ -384,6 +393,7 @@
             color: var(--text-secondary);
             margin-bottom: 8px;
             overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         .answer-meaning {
@@ -391,7 +401,8 @@
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.4;
-            overflow-wrap: break-word;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .edit-btn {
@@ -515,7 +526,7 @@
         .secondary-btn:active:not(:disabled) { transform: scale(0.97); }
         .secondary-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        /* Modals */
+        /* Modals - UNIFIED STYLES */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
@@ -533,8 +544,9 @@
         }
         .modal-overlay.active + .modal-sheet, .modal-sheet.active { transform: translateY(0); }
         
-        #confirm-modal-overlay, #message-modal-overlay, #theme-modal-overlay { z-index: 2000; }
-        #confirm-modal, #message-modal, #theme-modal { z-index: 2001; }
+        /* High priority alerts */
+        #confirm-modal-overlay, #message-modal-overlay { z-index: 2000; }
+        #confirm-modal, #message-modal { z-index: 2001; }
 
         .modal-handle { width: 36px; height: 4px; background: var(--text-muted); border-radius: 2px; margin: 0 auto; opacity: 0.5; }
         .modal-drag-area { padding: 16px 0 12px; margin: -20px -20px 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; border-radius: 24px 24px 0 0; }
@@ -592,7 +604,7 @@
         }
         .theme-option.active .theme-check { opacity: 1; }
 
-        /* Theme Color Dots for Preview */
+        /* Theme Color Dots */
         .dot-dark { background: #0a0a0f; }
         .dot-light { background: #fafafa; }
         .dot-dark-blue { background: #0f172a; }
@@ -739,7 +751,7 @@
             <div id="word-card" class="word-card glass">
                 <div id="question-section" class="question-section">
                     <p id="question-text" class="question-text">Tap to Start</p>
-                    <div class="tap-hint">
+                    <div id="tap-hint" class="tap-hint">
                         <span class="tap-hint-icon">👆</span>
                         <span>Tap to reveal</span>
                     </div>
@@ -810,39 +822,19 @@
         <h3 class="modal-title">🎨 Select Theme</h3>
         <div class="theme-grid">
             <div class="theme-option" data-value="dark">
-                <div class="theme-preview">
-                    <div class="theme-color-dot dot-dark"></div>
-                    <span class="theme-name">Dark</span>
-                </div>
-                <span class="theme-check">✓</span>
+                <div class="theme-preview"><div class="theme-color-dot dot-dark"></div><span class="theme-name">Dark</span></div><span class="theme-check">✓</span>
             </div>
             <div class="theme-option" data-value="light">
-                <div class="theme-preview">
-                    <div class="theme-color-dot dot-light"></div>
-                    <span class="theme-name">Light</span>
-                </div>
-                <span class="theme-check">✓</span>
+                <div class="theme-preview"><div class="theme-color-dot dot-light"></div><span class="theme-name">Light</span></div><span class="theme-check">✓</span>
             </div>
             <div class="theme-option" data-value="dark-blue">
-                <div class="theme-preview">
-                    <div class="theme-color-dot dot-dark-blue"></div>
-                    <span class="theme-name">Dark Blue</span>
-                </div>
-                <span class="theme-check">✓</span>
+                <div class="theme-preview"><div class="theme-color-dot dot-dark-blue"></div><span class="theme-name">Dark Blue</span></div><span class="theme-check">✓</span>
             </div>
             <div class="theme-option" data-value="light-blue">
-                <div class="theme-preview">
-                    <div class="theme-color-dot dot-light-blue"></div>
-                    <span class="theme-name">Light Blue</span>
-                </div>
-                <span class="theme-check">✓</span>
+                <div class="theme-preview"><div class="theme-color-dot dot-light-blue"></div><span class="theme-name">Light Blue</span></div><span class="theme-check">✓</span>
             </div>
             <div class="theme-option" data-value="light-green">
-                <div class="theme-preview">
-                    <div class="theme-color-dot dot-light-green"></div>
-                    <span class="theme-name">Light Green</span>
-                </div>
-                <span class="theme-check">✓</span>
+                <div class="theme-preview"><div class="theme-color-dot dot-light-green"></div><span class="theme-name">Light Green</span></div><span class="theme-check">✓</span>
             </div>
         </div>
         <button id="theme-close-btn" class="modal-btn modal-btn-ghost" style="margin-top: 16px;">Close</button>
@@ -1055,27 +1047,63 @@
         // Initialize Theme
         setTheme(currentTheme);
 
-        // Open Theme Modal
-        themeToggleBtn.addEventListener('click', () => {
-            themeModalOverlay.classList.add('active');
-            themeModal.classList.add('active');
+        // ============================================
+        // Helper: Unified Modal Controller
+        // ============================================
+        function initModal(modalId, overlayId, triggerBtnId, closeBtnId, onOpen = null) {
+            const modal = document.getElementById(modalId);
+            const overlay = document.getElementById(overlayId);
+            const trigger = document.getElementById(triggerBtnId);
+            const close = document.getElementById(closeBtnId);
+            
+            if (!modal || !overlay) return () => {};
+
+            // Open
+            if(trigger) {
+                trigger.addEventListener('click', () => {
+                    overlay.classList.add('active');
+                    modal.classList.add('active');
+                    if(onOpen) onOpen();
+                });
+            }
+            
+            // Close Function
+            const closeFn = () => {
+                overlay.classList.remove('active');
+                modal.classList.remove('active');
+            };
+            
+            // Close Triggers
+            if(close) close.addEventListener('click', closeFn);
+            overlay.addEventListener('click', closeFn);
+            
+            return closeFn;
+        }
+
+        // Initialize Modals
+        const closeSettingsFn = initModal('settings-modal', 'settings-modal-overlay', 'settings-toggle', 'settings-close-btn', () => {
+            // Settings Open Logic
+            probCorrectInput.value = Math.round(state.probabilities.correct * 100);
+            probReviewInput.value = Math.round(state.probabilities.review * 100);
+            probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
+            updateProbabilityTotal();
+            updateDeleteCounts();
+            updateDeleteByStatusButton();
+            reverseModeToggle.checked = state.reverseMode;
         });
 
-        // Close Theme Modal
-        function closeThemeModal() {
-            themeModalOverlay.classList.remove('active');
-            themeModal.classList.remove('active');
-        }
-        themeCloseBtn.addEventListener('click', closeThemeModal);
-        themeModalOverlay.addEventListener('click', closeThemeModal);
+        const closeThemeFn = initModal('theme-modal', 'theme-modal-overlay', 'theme-toggle', 'theme-close-btn');
+        
+        const closeWordlistFn = initModal('wordlist-modal', 'wordlist-modal-overlay', 'wordlist-toggle', 'wordlist-close-btn', () => {
+            renderWordlist();
+        });
 
-        // Theme Selection Logic
+        // Theme Selection Click
         themeOptions.forEach(option => {
             option.addEventListener('click', () => {
                 const selectedTheme = option.dataset.value;
                 setTheme(selectedTheme);
-                // Optional: Close modal immediately or wait
-                setTimeout(closeThemeModal, 200);
+                setTimeout(closeThemeFn, 200); // Close after selection
             });
         });
 
@@ -1098,7 +1126,7 @@
             unevaluatedIndex: 0,
             wordStatuses: {},
             wordDisplayCounts: {},
-            reviewWordPool: [],
+            // reviewWordPool: [], // REMOVED: Inefficient memory usage
             currentWord: null,
             previousWord: null,
             wordHistory: [],
@@ -1139,9 +1167,12 @@
         const answerSection = $('answer-section');
         const answerReading = $('answer-reading');
         const answerMeaning = $('answer-meaning');
+        
+        // Chips & Hints
         const wordChips = $('word-chips');
         const displayCountChip = $('display-count-chip');
         const statusChip = $('status-chip');
+        const tapHint = $('tap-hint');
 
         const prevAnswerBar = $('prev-answer-bar');
         const prevAnswerContent = $('prev-answer-content');
@@ -1164,10 +1195,6 @@
         const editWordBtn = $('edit-word-btn');
         const reverseModeToggle = $('reverse-mode-toggle');
 
-        const settingsToggle = $('settings-toggle');
-        const settingsModal = $('settings-modal');
-        const settingsModalOverlay = $('settings-modal-overlay');
-        const settingsCloseBtn = $('settings-close-btn');
         const settingsSaveBtn = $('settings-save-btn');
         const probCorrectInput = $('prob-correct');
         const probReviewInput = $('prob-review');
@@ -1210,14 +1237,9 @@
         const swipeLeft = $('swipe-left');
         const swipeRight = $('swipe-right');
 
-        // New feature elements
-        const wordlistToggle = $('wordlist-toggle');
-        const wordlistModalOverlay = $('wordlist-modal-overlay');
-        const wordlistModal = $('wordlist-modal');
         const wordlistSearch = $('wordlist-search');
         const wordlistContainer = $('wordlist-container');
         const wordlistCount = $('wordlist-count');
-        const wordlistCloseBtn = $('wordlist-close-btn');
 
         const ttsQuestionBtn = $('tts-question-btn');
         const ttsAnswerBtn = $('tts-answer-btn');
@@ -1282,15 +1304,20 @@
             }
         });
 
+        // Question Click Handler
         questionSection.addEventListener('click', (e) => {
             if (window.getSelection().toString().length > 0) return;
             
             if (state.answerVisible) {
                 answerSection.classList.add('hidden');
                 state.answerVisible = false;
+                wordChips.classList.remove('hidden');
+                tapHint.classList.remove('hidden');
             } else {
                 answerSection.classList.remove('hidden');
                 state.answerVisible = true;
+                wordChips.classList.add('hidden');
+                tapHint.classList.add('hidden');
             }
         });
 
@@ -1384,7 +1411,7 @@
                 unevaluatedIndex: state.unevaluatedIndex,
                 wordStatuses: state.wordStatuses,
                 wordDisplayCounts: state.wordDisplayCounts,
-                reviewWordPool: state.reviewWordPool,
+                // reviewWordPool: state.reviewWordPool, // REMOVED
                 wordHistory: state.wordHistory,
                 historyIndex: state.historyIndex,
                 probabilities: state.probabilities,
@@ -1423,7 +1450,7 @@
                 unevaluatedIndex: 0,
                 wordStatuses: {},
                 wordDisplayCounts: {},
-                reviewWordPool: [],
+                // reviewWordPool: [], // REMOVED
                 currentWord: null,
                 previousWord: null,
                 wordHistory: [],
@@ -1435,7 +1462,7 @@
                 answerVisible: false,
                 editingFromList: null
             };
-            closeSettingsModal();
+            closeSettingsFn();
             showModal('Reset Complete', 'All data deleted.');
             updateResumeButton(false);
             setView('setup');
@@ -1487,7 +1514,7 @@
                 } else {
                     rebuildUnevaluatedList();
                     saveTestState();
-                    closeSettingsModal();
+                    closeSettingsFn();
                     showModal('✅ Done', `Deleted.`);
                     startTest();
                     updateStatsDisplay();
@@ -1576,6 +1603,36 @@
             showModal('Success', `Added ${addedCount} words.`);
         }
 
+        // --- NEW: Weighted Random Logic ---
+        function getWeightedRandomWord() {
+            const candidates = [];
+            let totalWeight = 0;
+            
+            state.allWords.forEach(word => {
+                const status = state.wordStatuses[word.id];
+                if (!status) return; // Only reviewed words
+                
+                let weight = 0;
+                if (status === 'correct') weight = state.probabilities.correct;
+                else if (status === 'review') weight = state.probabilities.review;
+                else if (status === 'incorrect') weight = state.probabilities.incorrect;
+                
+                if (weight > 0) {
+                    candidates.push({ word, weight });
+                    totalWeight += weight;
+                }
+            });
+
+            if (candidates.length === 0) return null;
+
+            let random = Math.random() * totalWeight;
+            for (const candidate of candidates) {
+                random -= candidate.weight;
+                if (random <= 0) return candidate.word;
+            }
+            return candidates[candidates.length - 1].word;
+        }
+
         // Test Loop
         function startTest() {
             if (state.allWords.length === 0) {
@@ -1591,9 +1648,7 @@
             
             rebuildUnevaluatedList();
             
-            if (state.testPhase === 'retest' && state.reviewWordPool.length === 0) {
-                buildReviewWordPool();
-            }
+            // Removed buildReviewWordPool check
             
             if (!state.currentWord) {
                 nextWord();
@@ -1626,7 +1681,7 @@
                     if (state.unevaluatedWordIds.length === 0) {
                         state.testPhase = 'retest';
                         showModal('🎉 Phase 1 Complete', 'Review Mode');
-                        buildReviewWordPool();
+                        // No need to build pool
                         nextWord();
                         return;
                     }
@@ -1634,21 +1689,18 @@
                 state.currentWord = state.wordMap.get(state.unevaluatedWordIds[state.unevaluatedIndex]);
                 state.unevaluatedIndex++;
             } else if (state.testPhase === 'retest') {
-                if (state.reviewWordPool.length === 0) {
-                    if (state.allWords.every(word => state.wordStatuses[word.id] === 'correct')) {
+                const word = getWeightedRandomWord();
+                if (!word) {
+                     if (state.allWords.every(word => state.wordStatuses[word.id] === 'correct')) {
                         state.testPhase = 'finished';
                         displayFinishedScreen();
                         saveTestState();
                         return;
                     }
-                    buildReviewWordPool();
-                    if (state.reviewWordPool.length === 0) {
-                        displayFinishedScreen();
-                        return;
-                    }
+                    displayFinishedScreen();
+                    return;
                 }
-                const poolIndex = Math.floor(Math.random() * state.reviewWordPool.length);
-                state.currentWord = state.wordMap.get(state.reviewWordPool[poolIndex]);
+                state.currentWord = word;
             } else if (state.testPhase === 'finished') {
                 displayFinishedScreen();
                 return;
@@ -1696,18 +1748,7 @@
             nextWordBtn.disabled = false;
         }
 
-        function buildReviewWordPool() {
-            const newPool = [];
-            state.allWords.forEach(word => {
-                const status = state.wordStatuses[word.id];
-                if (!status) return;
-                const prob = status === 'correct' ? state.probabilities.correct : (status === 'review' ? state.probabilities.review : state.probabilities.incorrect);
-                for (let i = 0; i < Math.max(1, Math.round(prob * 100)); i++) {
-                    newPool.push(word.id);
-                }
-            });
-            state.reviewWordPool = newPool;
-        }
+        // Removed: buildReviewWordPool
 
         function escapeHTML(str) {
             return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -1745,10 +1786,9 @@
             
             statusChip.textContent = statusText;
             statusChip.className = `chip ${statusClass}`;
-            wordChips.classList.remove('hidden');
         }
 
-        // Font Size Adjustment logic (From v3)
+        // Font Size Adjustment logic
         function adjustFontSize(element, text) {
             element.classList.remove('size-normal', 'size-medium', 'size-small', 'size-tiny');
             const len = text.length;
@@ -1761,6 +1801,10 @@
         function displayWord(word) {
             state.answerVisible = false;
             answerSection.classList.add('hidden');
+            
+            wordChips.classList.remove('hidden');
+            tapHint.classList.remove('hidden');
+
             displayPreviousAnswer();
             updateWordChips(word);
             
@@ -1798,7 +1842,7 @@
             void wordCard.offsetWidth;
             wordCard.classList.add(`${res}-flash`);
             rebuildUnevaluatedList();
-            if (state.testPhase === 'retest') buildReviewWordPool();
+            // Removed buildReviewWordPool call
             nextWord();
         });
 
@@ -1862,6 +1906,41 @@
             }
         });
 
+        // Settings Buttons
+        [probCorrectInput, probReviewInput, probIncorrectInput].forEach(i => i.addEventListener('input', updateProbabilityTotal));
+
+        function updateProbabilityTotal() {
+            const tot = (parseInt(probCorrectInput.value)||0) + (parseInt(probReviewInput.value)||0) + (parseInt(probIncorrectInput.value)||0);
+            probTotal.textContent = `Total: ${tot}%`;
+            probTotal.className = `prob-total ${tot===100?'prob-total-valid':'prob-total-invalid'}`;
+            settingsSaveBtn.disabled = tot !== 100;
+        }
+
+        settingsSaveBtn.addEventListener('click', () => {
+            state.probabilities = {
+                correct: parseInt(probCorrectInput.value)/100,
+                review: parseInt(probReviewInput.value)/100,
+                incorrect: parseInt(probIncorrectInput.value)/100
+            };
+            saveTestState();
+            showModal('Saved', 'Settings updated.');
+            closeSettingsFn(); // Use Unified Close
+            // Removed buildReviewWordPool call
+        });
+
+        resetDataBtn.addEventListener('click', () => showConfirmModal('⚠️ Warning', 'Delete all data?', resetAppData));
+        
+        gotoRegisterBtn.addEventListener('click', () => {
+            closeSettingsFn();
+            setView('setup');
+        });
+
+        reverseModeToggle.addEventListener('change', e => {
+            state.reverseMode = e.target.checked;
+            saveTestState();
+            if(state.currentWord) displayWord(state.currentWord);
+        });
+
         // UI Updates
         function updateResumeButton(hasData) {
             if (hasData && state.allWords.length > 0) {
@@ -1878,19 +1957,26 @@
 
         function updateStatsDisplay() {
             const counts = { unevaluated: 0, correct: 0, review: 0, incorrect: 0 };
-            state.allWords.forEach(w => counts[state.wordStatuses[w.id] || 'unevaluated']++);
+            state.allWords.forEach(w => {
+                const status = state.wordStatuses[w.id] || 'unevaluated';
+                if (counts[status] !== undefined) counts[status]++;
+            });
             
             unevaluatedCount.textContent = counts.unevaluated;
             correctCount.textContent = counts.correct;
             reviewCount.textContent = counts.review;
             incorrectCount.textContent = counts.incorrect;
             
-            unevaluatedProgressBar.style.width = state.allWords.length ? `${((state.allWords.length - counts.unevaluated) / state.allWords.length) * 100}%` : '0%';
-            unevaluatedProgressText.textContent = `${state.allWords.length - counts.unevaluated} / ${state.allWords.length}`;
+            const total = state.allWords.length;
+            const evalCount = total - counts.unevaluated;
+            
+            unevaluatedProgressBar.style.width = total ? `${(evalCount / total) * 100}%` : '0%';
+            unevaluatedProgressText.textContent = `${evalCount} / ${total}`;
             unevaluatedProgress.style.display = counts.unevaluated > 0 ? 'block' : 'none';
             
-            overallProgressBar.style.width = state.allWords.length ? `${((counts.correct + counts.review * 0.5) / state.allWords.length) * 100}%` : '0%';
-            overallProgressText.textContent = `${(counts.correct + counts.review * 0.5).toFixed(1)} / ${state.allWords.length}`;
+            const weighted = counts.correct + counts.review * 0.5;
+            overallProgressBar.style.width = total ? `${(weighted / total) * 100}%` : '0%';
+            overallProgressText.textContent = `${weighted.toFixed(1)} / ${total}`;
         }
 
         // TTS
@@ -1912,9 +1998,13 @@
             if (!('speechSynthesis' in window)) return;
             speechSynthesis.cancel();
             const ut = new SpeechSynthesisUtterance(text);
+            
+            // --- UPDATED LANGUAGE DETECTION ---
             if (/[\uAC00-\uD7AF]/.test(text)) ut.lang = 'ko-KR';
             else if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) ut.lang = 'ja-JP';
-            else if (/[\u4E00-\u9FFF]/.test(text)) ut.lang = 'zh-CN';
+            // Prefer Japanese for Kanji-only words in a Japanese app context
+            // Move Chinese detection to fallback if strictly needed
+            else if (/[\u4E00-\u9FFF]/.test(text)) ut.lang = 'ja-JP'; 
             else ut.lang = 'en-US';
             
             if (btn) btn.classList.add('speaking');
@@ -1969,6 +2059,48 @@
         });
 
         importBtn.addEventListener('click', () => importFileInput.click());
+        
+        // --- IMPROVED CSV PARSING ---
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            const result = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const matches = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        if (inQuotes && line[j + 1] === '"') {
+                            current += '"';
+                            j++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        matches.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                matches.push(current);
+                
+                if (matches.length >= 2) {
+                    result.push({
+                        word: matches[0].trim(),
+                        reading: matches[1].trim(),
+                        meaning: matches[2] ? matches[2].trim() : matches[1].trim() // fallback
+                    });
+                }
+            }
+            return result;
+        }
 
         importFileInput.addEventListener('change', e => {
             if(e.target.files.length) {
@@ -1995,20 +2127,18 @@
                             showModal('Imported', `${added} words.`);
                         } catch(x){ showModal('Error', 'Invalid JSON'); }
                     } else {
-                        const lines = c.split('\n').filter(l=>l.trim());
+                        // Use improved CSV parser
+                        const parsed = parseCSV(c);
                         let added = 0;
-                        for(let i=1; i<lines.length; i++) {
-                            const p = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                            if(!p || p.length < 2) continue;
-                            const w = p[0].replace(/"/g,''), r = p[1].replace(/"/g,''), m = p[2]?p[2].replace(/"/g,''):r;
-                            const id = createWordId(w,r);
+                        parsed.forEach(p => {
+                            const id = createWordId(p.word, p.reading);
                             if(!state.wordMap.has(id)) {
-                                const nw = { id, word:w, reading:r, meaning:m, initialOrder: state.allWords.length };
+                                const nw = { id, word:p.word, reading:p.reading, meaning:p.meaning, initialOrder: state.allWords.length };
                                 state.allWords.push(nw);
                                 state.wordMap.set(id,nw);
                                 added++;
                             }
-                        }
+                        });
                         saveAllWords(state.allWords);
                         saveTestState();
                         rebuildUnevaluatedList();
@@ -2021,7 +2151,7 @@
             }
         });
 
-        // Word List
+        // Word List Rendering
         function renderWordlist() {
             const filter = document.querySelector('.filter-chip.active').dataset.filter;
             const term = wordlistSearch.value.toLowerCase().trim();
@@ -2056,17 +2186,6 @@
             }).join('');
         }
 
-        wordlistToggle.addEventListener('click', () => {
-            wordlistModalOverlay.classList.add('active');
-            wordlistModal.classList.add('active');
-            renderWordlist();
-        });
-
-        wordlistCloseBtn.addEventListener('click', () => {
-            wordlistModalOverlay.classList.remove('active');
-            wordlistModal.classList.remove('active');
-        });
-
         wordlistSearch.addEventListener('input', renderWordlist);
 
         document.querySelectorAll('.filter-chip').forEach(c => c.addEventListener('click', () => {
@@ -2080,8 +2199,7 @@
             if(i) {
                 const w = state.wordMap.get(i.dataset.id);
                 if(w) {
-                    wordlistModalOverlay.classList.remove('active');
-                    wordlistModal.classList.remove('active');
+                    closeWordlistFn();
                     editWordInput.value = w.word;
                     editReadingInput.value = w.reading||'';
                     editMeaningInput.value = w.meaning;
@@ -2092,66 +2210,7 @@
             }
         });
 
-        // Settings
-        settingsToggle.addEventListener('click', () => {
-            probCorrectInput.value = Math.round(state.probabilities.correct * 100);
-            probReviewInput.value = Math.round(state.probabilities.review * 100);
-            probIncorrectInput.value = Math.round(state.probabilities.incorrect * 100);
-            updateProbabilityTotal();
-            updateDeleteCounts();
-            updateDeleteByStatusButton();
-            reverseModeToggle.checked = state.reverseMode;
-            settingsModalOverlay.classList.add('active');
-            settingsModal.classList.add('active');
-        });
-
-        settingsCloseBtn.addEventListener('click', () => {
-            settingsModalOverlay.classList.remove('active');
-            settingsModal.classList.remove('active');
-        });
-        
-        settingsModalOverlay.addEventListener('click', () => {
-            settingsModalOverlay.classList.remove('active');
-            settingsModal.classList.remove('active');
-        });
-
-        [probCorrectInput, probReviewInput, probIncorrectInput].forEach(i => i.addEventListener('input', updateProbabilityTotal));
-
-        function updateProbabilityTotal() {
-            const tot = (parseInt(probCorrectInput.value)||0) + (parseInt(probReviewInput.value)||0) + (parseInt(probIncorrectInput.value)||0);
-            probTotal.textContent = `Total: ${tot}%`;
-            probTotal.className = `prob-total ${tot===100?'prob-total-valid':'prob-total-invalid'}`;
-            settingsSaveBtn.disabled = tot !== 100;
-        }
-
-        settingsSaveBtn.addEventListener('click', () => {
-            state.probabilities = {
-                correct: parseInt(probCorrectInput.value)/100,
-                review: parseInt(probReviewInput.value)/100,
-                incorrect: parseInt(probIncorrectInput.value)/100
-            };
-            saveTestState();
-            showModal('Saved', 'Settings updated.');
-            settingsModalOverlay.classList.remove('active');
-            settingsModal.classList.remove('active');
-            if (state.testPhase === 'retest') buildReviewWordPool();
-        });
-
-        resetDataBtn.addEventListener('click', () => showConfirmModal('⚠️ Warning', 'Delete all data?', resetAppData));
-        
-        gotoRegisterBtn.addEventListener('click', () => {
-            settingsModalOverlay.classList.remove('active');
-            settingsModal.classList.remove('active');
-            setView('setup');
-        });
-
-        reverseModeToggle.addEventListener('change', e => {
-            state.reverseMode = e.target.checked;
-            saveTestState();
-            if(state.currentWord) displayWord(state.currentWord);
-        });
-
-        // Modal Drag
+        // Unified Drag Handler
         document.querySelectorAll('.modal-drag-area').forEach(area => {
             let startY = 0, currentY = 0, active = false;
             const modal = area.closest('.modal-sheet');
