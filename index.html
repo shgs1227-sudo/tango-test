@@ -1126,7 +1126,6 @@
             unevaluatedIndex: 0,
             wordStatuses: {},
             wordDisplayCounts: {},
-            // reviewWordPool: [], // REMOVED: Inefficient memory usage
             currentWord: null,
             previousWord: null,
             wordHistory: [],
@@ -1411,7 +1410,6 @@
                 unevaluatedIndex: state.unevaluatedIndex,
                 wordStatuses: state.wordStatuses,
                 wordDisplayCounts: state.wordDisplayCounts,
-                // reviewWordPool: state.reviewWordPool, // REMOVED
                 wordHistory: state.wordHistory,
                 historyIndex: state.historyIndex,
                 probabilities: state.probabilities,
@@ -1450,7 +1448,6 @@
                 unevaluatedIndex: 0,
                 wordStatuses: {},
                 wordDisplayCounts: {},
-                // reviewWordPool: [], // REMOVED
                 currentWord: null,
                 previousWord: null,
                 wordHistory: [],
@@ -1648,8 +1645,6 @@
             
             rebuildUnevaluatedList();
             
-            // Removed buildReviewWordPool check
-            
             if (!state.currentWord) {
                 nextWord();
             } else {
@@ -1681,7 +1676,6 @@
                     if (state.unevaluatedWordIds.length === 0) {
                         state.testPhase = 'retest';
                         showModal('🎉 Phase 1 Complete', 'Review Mode');
-                        // No need to build pool
                         nextWord();
                         return;
                     }
@@ -1747,8 +1741,6 @@
             prevWordBtn.disabled = state.historyIndex <= 0;
             nextWordBtn.disabled = false;
         }
-
-        // Removed: buildReviewWordPool
 
         function escapeHTML(str) {
             return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -1842,7 +1834,6 @@
             void wordCard.offsetWidth;
             wordCard.classList.add(`${res}-flash`);
             rebuildUnevaluatedList();
-            // Removed buildReviewWordPool call
             nextWord();
         });
 
@@ -1925,7 +1916,6 @@
             saveTestState();
             showModal('Saved', 'Settings updated.');
             closeSettingsFn(); // Use Unified Close
-            // Removed buildReviewWordPool call
         });
 
         resetDataBtn.addEventListener('click', () => showConfirmModal('⚠️ Warning', 'Delete all data?', resetAppData));
@@ -2002,8 +1992,6 @@
             // --- UPDATED LANGUAGE DETECTION ---
             if (/[\uAC00-\uD7AF]/.test(text)) ut.lang = 'ko-KR';
             else if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) ut.lang = 'ja-JP';
-            // Prefer Japanese for Kanji-only words in a Japanese app context
-            // Move Chinese detection to fallback if strictly needed
             else if (/[\u4E00-\u9FFF]/.test(text)) ut.lang = 'ja-JP'; 
             else ut.lang = 'en-US';
             
@@ -2210,39 +2198,53 @@
             }
         });
 
-        // Unified Drag Handler
-        document.querySelectorAll('.modal-drag-area').forEach(area => {
-            let startY = 0, currentY = 0, active = false;
-            const modal = area.closest('.modal-sheet');
-            const overlay = modal.previousElementSibling;
+        // Improved Modal Drag & Swipe-to-Close Handler
+        document.querySelectorAll('.modal-sheet').forEach(modal => {
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+            let isAtTop = true;
             
-            area.addEventListener('touchstart', e => {
-                active = true;
-                startY = e.touches[0].clientY;
-                modal.style.transition = 'none';
-            });
+            modal.addEventListener('touchstart', e => {
+                const content = modal; // Modal is the scroll container
+                isAtTop = content.scrollTop <= 0;
+                
+                if (isAtTop) {
+                    startY = e.touches[0].clientY;
+                    isDragging = true;
+                }
+            }, { passive: true });
             
-            document.addEventListener('touchmove', e => {
-                if (!active) return;
+            modal.addEventListener('touchmove', e => {
+                if (!isDragging) return;
+                
                 currentY = e.touches[0].clientY;
                 const diff = currentY - startY;
-                if (diff > 0) {
+                
+                if (diff > 0 && isAtTop) {
+                    if (e.cancelable) e.preventDefault();
+                    modal.style.transition = 'none';
                     modal.style.transform = `translateY(${diff}px)`;
-                    overlay.style.opacity = Math.max(0, 1 - diff/300);
+                } else {
+                    isDragging = false;
+                    modal.style.transform = '';
                 }
-            });
+            }, { passive: false });
             
-            document.addEventListener('touchend', () => {
-                if (!active) return;
-                active = false;
+            modal.addEventListener('touchend', e => {
+                if (!isDragging) return;
+                isDragging = false;
+                
                 modal.style.transition = '';
                 const diff = currentY - startY;
-                if (diff > 100) {
+                const overlay = modal.previousElementSibling;
+                
+                if (diff > 120 && isAtTop) {
                     modal.classList.remove('active');
-                    overlay.classList.remove('active');
+                    if (overlay) overlay.classList.remove('active');
+                    setTimeout(() => { modal.style.transform = ''; }, 300);
                 } else {
                     modal.style.transform = '';
-                    overlay.style.opacity = '';
                 }
             });
         });
