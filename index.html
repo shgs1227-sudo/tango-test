@@ -552,7 +552,7 @@
         .modal-drag-area { padding: 16px 0 12px; margin: -20px -20px 8px; cursor: grab; display: flex; flex-direction: column; align-items: center; border-radius: 24px 24px 0 0; }
         
         .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
-        .modal-message { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
+        .modal-message { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; white-space: pre-wrap; }
         
         .modal-btn { width: 100%; height: 50px; border-radius: 14px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.15s ease; }
         .modal-btn:active { transform: scale(0.97); }
@@ -1553,52 +1553,103 @@
             }
         }
 
+        // --- NEW: Transparent Registration Logic ---
         function handleSaveWords() {
             const rawText = wordInput.value.trim();
             if (!rawText) { showModal('Error', 'Enter words first.'); return; }
             
             setView('loading');
-            let newWords = [...state.allWords];
-            let addedCount = 0;
             
-            const lines = rawText.split('\n').filter(line => line.trim() !== '');
+            const lines = rawText.split('\n');
+            const newWords = [...state.allWords];
+            let successCount = 0;
+            let skippedCount = 0;
+            let errorDetails = [];
+
             for (let i = 0; i < lines.length; i++) {
-                const parts = lines[i].split('_').map(part => part.trim());
-                let word, reading, meaning;
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // Parse Strategy: Tab > | > _ > Multiple Spaces > Single Space (Fallback, Careful!)
+                let parts;
+                if (line.includes('\t')) parts = line.split('\t');
+                else if (line.includes('|')) parts = line.split('|');
+                else if (line.includes('_')) parts = line.split('_');
+                else {
+                    // Try splitting by 2 or more spaces first (Safest for "give up  yameru")
+                    const multiSpaceParts = line.split(/\s{2,}/);
+                    if (multiSpaceParts.length >= 2) {
+                        parts = multiSpaceParts;
+                    } else {
+                         // Fallback: Split by any space, BUT check if it results in valid count (2 or 3)
+                         // This allows "word meaning" but might break "give up meaning" -> "give", "up", "meaning" (3 parts, OK)
+                         // But "give up meaning desc" -> 4 parts (Error)
+                         parts = line.split(/\s+/);
+                         if (parts.length < 2) {
+                             errorDetails.push(`Line ${i+1}: '${line}' (No separator found)`);
+                             continue;
+                         }
+                    }
+                }
+
+                parts = parts.map(p => p.trim()).filter(p => p);
                 
-                if (parts.length === 2) {
-                    [word, meaning] = parts;
-                    reading = '';
-                } else if (parts.length === 3) {
-                    [word, reading, meaning] = parts;
-                } else {
+                if (parts.length < 2) {
+                    errorDetails.push(`Line ${i+1}: '${line}' (Needs word and meaning)`);
                     continue;
                 }
                 
+                if (parts.length > 3) {
+                     // Try to merge extra parts if they were split by single spaces unintentionally?
+                     // No, better to error out than guess wrong.
+                     errorDetails.push(`Line ${i+1}: '${line}' (Too many parts: ${parts.length})`);
+                     continue;
+                }
+
+                let word, reading, meaning;
+                if (parts.length === 2) {
+                    [word, meaning] = parts;
+                    reading = '';
+                } else {
+                    [word, reading, meaning] = parts;
+                }
+
                 const wordId = createWordId(word, reading);
-                if (state.wordMap.has(wordId)) continue;
                 
+                if (state.wordMap.has(wordId)) {
+                    skippedCount++;
+                    continue;
+                }
+
                 const newWordEntry = { id: wordId, word, reading: reading || '', meaning, initialOrder: newWords.length };
                 newWords.push(newWordEntry);
                 state.wordMap.set(wordId, newWordEntry);
-                addedCount++;
-            }
-            
-            if (addedCount === 0) {
-                showModal('Notice', 'No new words added.');
-                setView('setup');
-                return;
+                successCount++;
             }
             
             state.allWords = newWords;
             saveAllWords(newWords);
             rebuildUnevaluatedList();
             saveTestState();
-            startTest();
             
-            wordInput.value = '';
-            showModal('Success', `Added ${addedCount} words.`);
+            // Generate Report
+            let reportMsg = `Success: ${successCount}\nSkipped (Duplicate): ${skippedCount}`;
+            if (errorDetails.length > 0) {
+                reportMsg += `\nErrors: ${errorDetails.length}\n\n[Error Details]\n${errorDetails.slice(0, 5).join('\n')}`;
+                if (errorDetails.length > 5) reportMsg += `\n...and ${errorDetails.length - 5} more.`;
+            }
+
+            if (successCount > 0) {
+                startTest();
+                wordInput.value = '';
+            } else {
+                setView('setup');
+            }
+            
+            showModal('Registration Report', reportMsg);
         }
+
+        saveWordsBtn.addEventListener('click', handleSaveWords);
 
         // --- NEW: Weighted Random Logic ---
         function getWeightedRandomWord() {
@@ -1685,7 +1736,7 @@
             } else if (state.testPhase === 'retest') {
                 const word = getWeightedRandomWord();
                 if (!word) {
-                     if (state.allWords.every(word => state.wordStatuses[word.id] === 'correct')) {
+                      if (state.allWords.every(word => state.wordStatuses[word.id] === 'correct')) {
                         state.testPhase = 'finished';
                         displayFinishedScreen();
                         saveTestState();
@@ -2198,20 +2249,24 @@
             }
         });
 
-        // Improved Modal Drag & Swipe-to-Close Handler
+        // --- NEW: Improved Modal Drag & Swipe-to-Close Handler ---
+        // Prevents swipe-to-close from interfering with scrollable content like word lists
         document.querySelectorAll('.modal-sheet').forEach(modal => {
             let startY = 0;
             let currentY = 0;
             let isDragging = false;
-            let isAtTop = true;
             
             modal.addEventListener('touchstart', e => {
-                const content = modal; // Modal is the scroll container
-                isAtTop = content.scrollTop <= 0;
+                const content = modal; // Modal itself is the scroll container
+                const isScrollable = content.scrollHeight > content.clientHeight;
+                const isAtTop = content.scrollTop <= 0;
                 
-                if (isAtTop) {
+                // Only allow drag if content is not scrollable OR content is at the top
+                if (!isScrollable || isAtTop) {
                     startY = e.touches[0].clientY;
                     isDragging = true;
+                } else {
+                    isDragging = false; // Disable dragging when scrolled down
                 }
             }, { passive: true });
             
@@ -2221,12 +2276,20 @@
                 currentY = e.touches[0].clientY;
                 const diff = currentY - startY;
                 
-                if (diff > 0 && isAtTop) {
-                    if (e.cancelable) e.preventDefault();
+                // Only move if dragging down
+                if (diff > 0) {
+                    // Double check we are still at top if scrollable
+                    if (modal.scrollTop > 0) {
+                        isDragging = false;
+                        modal.style.transform = '';
+                        return;
+                    }
+
+                    if (e.cancelable) e.preventDefault(); // Prevent scrolling
                     modal.style.transition = 'none';
                     modal.style.transform = `translateY(${diff}px)`;
                 } else {
-                    isDragging = false;
+                    // Dragging up (scrolling logic handles this usually, but reset transform just in case)
                     modal.style.transform = '';
                 }
             }, { passive: false });
@@ -2239,7 +2302,7 @@
                 const diff = currentY - startY;
                 const overlay = modal.previousElementSibling;
                 
-                if (diff > 120 && isAtTop) {
+                if (diff > 120) { // Threshold to close
                     modal.classList.remove('active');
                     if (overlay) overlay.classList.remove('active');
                     setTimeout(() => { modal.style.transform = ''; }, 300);
